@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "skills": {
+    "Creative Portfolio Resume": {
+      "source": "paramchoudhary/resumeskills",
+      "sourceType": "github",
+      "computedHash": "7d5b43be429472794468bddd2ea658e233c6c0e14c3cee6ef1ca6cb275d87c83"
+    },
+    "cv-builder": {
+      "source": "claude-office-skills/skills",
+      "sourceType": "github",
+      "computedHash": "35a1c02fd106a28e9aad913eacec56b8da4278c9af609c31b829307cc9320974"
+    },
+    "cv-creator": {
+      "source": "erichowens/some_claude_skills",
+      "sourceType": "github",
+      "computedHash": "4dfb869542a478b6e413a4b96024d9c5626096b8bee1df033fe13a20a9a5180e"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "computedHash": "645b891da1edbae76ab79c7b088d4e73397464f8396edaf773c0e01971ce75d6"
+    },
+    "gsap-core": {
+      "source": "greensock/gsap-skills",
+      "sourceType": "github",
+      "computedHash": "b891c9ed42d9319685250231085ebe21538f2c844613b277b9dd2b3ff529a542"
+    },
+    "gsap-performance": {
+      "source": "greensock/gsap-skills",
+      "sourceType": "github",
+      "computedHash": "da73dbf11663abb1a880e1796367f84b19877db4a16186b36d1dce96fe0ce983"
+    },
+    "gsap-scrolltrigger": {
+      "source": "greensock/gsap-skills",
+      "sourceType": "github",
+      "computedHash": "358dd3381c74fc4be8db5a94e0cd008bf0fa7c1ccd45999671b0d61b9d9ffd9b"
+    },
+    "interactive-portfolio": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "computedHash": "216425756047fb5bb34d32ccafd973576d248f8290182d775eeff33f8c224397"
+    },
+    "tailwindcss-responsive-darkmode": {
+      "source": "josiahsiegel/claude-plugin-marketplace",
+      "sourceType": "github",
+      "computedHash": "d79ac55dc7b3022be0737e7b30f7207ffea82a0ef8e8359ac8c65a7e0bea57a4"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "9fb08ab39585f6f770d0c1c735f83e619aba2089d7ad50ba2a305eff715e08b9"
+    }
+  }
+}
