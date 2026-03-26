@@ -1,18 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { personal } from "../data/portfolio";
 
 const navLinks = [
   { href: "#about", label: "About" },
   { href: "#experience", label: "Experience" },
   { href: "#education", label: "Education" },
   { href: "#skills", label: "Skills" },
-  { href: "#projects", label: "Projects" },
+  { href: "#projects", label: "Work" },
   { href: "#contact", label: "Contact" },
 ];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -20,148 +20,146 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
+  const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    event.preventDefault();
     setMenuOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <nav
-      ref={navRef}
       style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
+        inset: "0 0 auto 0",
         zIndex: 1000,
-        padding: "0 40px",
         height: "72px",
+        padding: "0 40px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        transition: "background 0.4s ease, border-color 0.4s ease",
-        background: scrolled ? "rgba(0,0,0,0.92)" : "transparent",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
+        background: scrolled ? "rgba(8, 10, 15, 0.8)" : "transparent",
+        borderBottom: scrolled ? "1px solid rgba(255, 244, 227, 0.08)" : "1px solid transparent",
+        backdropFilter: scrolled ? "blur(16px)" : "none",
+        transition: "background 0.3s ease, border-color 0.3s ease",
       }}
     >
-      {/* Name / Logo text */}
       <a
         href="#hero"
-        onClick={(e) => handleNavClick(e, "#hero")}
+        onClick={(event) => handleNavClick(event, "#hero")}
         style={{
           fontFamily: "var(--font-heading)",
           fontWeight: 700,
-          fontSize: "18px",
+          fontSize: "1rem",
           color: "var(--text-primary)",
           textDecoration: "none",
-          letterSpacing: "-0.03em",
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
         }}
       >
-        Gal Guštin
+        {personal.name}
       </a>
 
-      {/* Desktop links */}
-      <div
-        style={{
-          display: "flex",
-          gap: "36px",
-          alignItems: "center",
-        }}
-        className="nav-desktop"
-      >
+      <div className="nav-desktop" style={{ display: "flex", gap: "32px", alignItems: "center" }}>
         {navLinks.map((link) => (
           <a
             key={link.href}
             href={link.href}
-            onClick={(e) => handleNavClick(e, link.href)}
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "13px",
-              color: "var(--text-secondary)",
-              textDecoration: "none",
-              letterSpacing: "0.02em",
-              transition: "color 0.2s",
-            }}
-            onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "var(--text-primary)")}
-            onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "var(--text-secondary)")}
+            onClick={(event) => handleNavClick(event, link.href)}
+            className="nav-link"
           >
             {link.label}
           </a>
         ))}
       </div>
 
-      {/* Hamburger */}
       <button
-        onClick={() => setMenuOpen(!menuOpen)}
+        onClick={() => setMenuOpen((open) => !open)}
+        className="nav-hamburger"
+        aria-label="Toggle menu"
+        aria-expanded={menuOpen}
         style={{
+          display: "none",
           background: "none",
           border: "none",
-          cursor: "pointer",
           padding: "8px",
-          display: "none",
+          cursor: "pointer",
           flexDirection: "column",
           gap: "5px",
         }}
-        className="nav-hamburger"
-        aria-label="Toggle menu"
       >
-        {[0, 1, 2].map((i) => (
+        {[0, 1, 2].map((index) => (
           <span
-            key={i}
+            key={index}
             style={{
-              display: "block",
-              width: i === 1 ? "20px" : "24px",
+              width: index === 1 ? "18px" : "24px",
               height: "1.5px",
               background: "var(--text-primary)",
-              transition: "width 0.2s",
+              display: "block",
             }}
           />
         ))}
       </button>
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: "72px",
-            left: 0,
-            right: 0,
-            background: "rgba(0,0,0,0.96)",
-            borderBottom: "1px solid var(--border)",
-            padding: "24px 40px 32px",
-            backdropFilter: "blur(20px)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-          }}
-        >
+      {menuOpen ? (
+        <div className="nav-mobile-menu">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              style={{
-                fontFamily: "var(--font-heading)",
-                fontSize: "20px",
-                fontWeight: 600,
-                color: "var(--text-primary)",
-                textDecoration: "none",
-              }}
+              onClick={(event) => handleNavClick(event, link.href)}
+              className="nav-mobile-link"
             >
               {link.label}
             </a>
           ))}
         </div>
-      )}
+      ) : null}
 
       <style>{`
+        .nav-link {
+          color: var(--text-secondary);
+          text-decoration: none;
+          font-family: var(--font-body);
+          font-size: 13px;
+          letter-spacing: 0.04em;
+          transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+          color: var(--text-primary);
+        }
+
+        .nav-mobile-menu {
+          position: fixed;
+          top: 72px;
+          left: 0;
+          right: 0;
+          padding: 24px 40px 32px;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          background: rgba(8, 10, 15, 0.96);
+          border-bottom: 1px solid var(--border);
+          backdrop-filter: blur(24px);
+        }
+
+        .nav-mobile-link {
+          color: var(--text-primary);
+          text-decoration: none;
+          font-family: var(--font-heading);
+          font-size: 1.2rem;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
         @media (max-width: 768px) {
-          .nav-desktop { display: none !important; }
-          .nav-hamburger { display: flex !important; }
+          .nav-desktop {
+            display: none !important;
+          }
+
+          .nav-hamburger {
+            display: flex !important;
+          }
         }
       `}</style>
     </nav>

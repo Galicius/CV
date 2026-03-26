@@ -48,6 +48,7 @@ export function Skills() {
                 </span>
                 <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
               </div>
+
               <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
                 {group.skills.map((skill) => (
                   <span key={skill} className="skill-badge">
