@@ -1474,6 +1474,20 @@ body::after {
   font-family: var(--font-mono);
   letter-spacing: 0.1em;
 }
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  border-radius: 8px;
+}
+.project-preview-link:hover .preview-overlay {
+  opacity: 1;
+}
 @media (max-width: 768px) {
   .section {
     padding: 80px 0;

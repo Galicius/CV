@@ -4,7 +4,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { languages } from "../data/portfolio";
 import { useStaggerReveal } from "../hooks/useScrollAnimation";
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const levelPercent: Record<string, number> = {
   A1: 12, A2: 25, B1: 45, B2: 60, C1: 80, C2: 95, Native: 100,

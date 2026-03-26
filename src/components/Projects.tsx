@@ -3,7 +3,9 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { projects } from "../data/portfolio";
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 function ExternalLinkIcon() {
   return (
@@ -140,24 +142,42 @@ function ProjectCard({ project, featured }: ProjectCardProps) {
         {project.description}
       </p>
 
-      {/* Embedded Iframe */}
-      {(project as any).iframeSrc && (
-        <div style={{
-          width: "100%",
-          height: "320px",
-          borderRadius: "8px",
-          overflow: "hidden",
-          marginBottom: "20px",
-          border: "1px solid var(--border)",
-          background: "var(--bg-primary)",
-        }}>
-          <iframe 
-            src={(project as any).iframeSrc} 
-            title={project.title}
-            style={{ width: "100%", height: "100%", border: "none" }}
-            loading="lazy"
-          />
-        </div>
+      {/* Site Preview Image */}
+      {(project as any).previewImg && (
+        <a
+          href={project.links.live}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ display: "block", marginBottom: "20px", textDecoration: "none", position: "relative" }}
+          className="project-preview-link"
+        >
+          <div style={{
+            width: "100%",
+            height: "220px",
+            borderRadius: "8px",
+            overflow: "hidden",
+            border: "1px solid var(--border)",
+            background: "var(--bg-secondary)",
+            position: "relative",
+          }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={(project as any).previewImg}
+              alt={`${project.title} preview`}
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
+            />
+            {/* Hover overlay */}
+            <div className="preview-overlay">
+              <span style={{
+                display: "flex", alignItems: "center", gap: "6px",
+                fontFamily: "var(--font-mono)", fontSize: "11px",
+                color: "#fff", letterSpacing: "0.08em",
+              }}>
+                VISIT SITE <ExternalLinkIcon />
+              </span>
+            </div>
+          </div>
+        </a>
       )}
 
       {/* Footer */}

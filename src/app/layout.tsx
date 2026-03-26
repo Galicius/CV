@@ -29,7 +29,7 @@ export default function RootLayout({
         />
         <link rel="icon" href="data:image/png;base64,iVBORw0KGgo=" />
       </head>
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
