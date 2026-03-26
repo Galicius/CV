@@ -118,20 +118,12 @@ export function Languages() {
                           }}
                         >
                           <span
-                            style={{
-                              fontFamily: "var(--font-body)",
-                              fontSize: "12px",
-                              color: "var(--text-muted)",
-                            }}
+                            className="language-skill-label"
                           >
                             {label}
                           </span>
                           <span
-                            style={{
-                              fontFamily: "var(--font-mono)",
-                              fontSize: "11px",
-                              color: "var(--text-secondary)",
-                            }}
+                            className="language-skill-value"
                           >
                             {level}
                           </span>

@@ -16,6 +16,23 @@ function ExternalLinkIcon() {
   );
 }
 
+function ClientWorkIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M3 7h18M7 3v8M17 3v8M5 11h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2Z" />
+    </svg>
+  );
+}
+
+function StudyProjectIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M12 4 3 9l9 5 9-5-9-5Z" />
+      <path d="M7 11.2V16c0 1.2 2.2 3 5 3s5-1.8 5-3v-4.8" />
+    </svg>
+  );
+}
+
 function ProjectCard({ project, featured = false }: { project: Project; featured?: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -156,6 +173,7 @@ export function Projects() {
             onClick={() => setMode("client")}
             aria-pressed={mode === "client"}
           >
+            <ClientWorkIcon />
             Client Work
           </button>
           <button
@@ -164,6 +182,7 @@ export function Projects() {
             onClick={() => setMode("study")}
             aria-pressed={mode === "study"}
           >
+            <StudyProjectIcon />
             Study Projects
           </button>
         </div>

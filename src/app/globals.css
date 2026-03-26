@@ -473,6 +473,9 @@ h5 {
 }
 
 .project-toggle__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   border: 0;
   border-radius: 999px;
   padding: 10px 16px;
@@ -548,6 +551,18 @@ h5 {
 .language-level {
   padding: 4px 10px;
   color: var(--text-muted);
+}
+
+.language-skill-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted) !important;
+}
+
+.language-skill-value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary) !important;
 }
 
 .language-legend {
