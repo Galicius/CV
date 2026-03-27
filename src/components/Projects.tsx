@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { projects, type Project } from "../data/portfolio";
+import { useLanguage } from "../context/LanguageContext";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -34,6 +35,7 @@ function StudyProjectIcon() {
 }
 
 function ProjectCard({ project }: { project: Project }) {
+  const { t, lang } = useLanguage();
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -52,28 +54,6 @@ function ProjectCard({ project }: { project: Project }) {
 
   return (
     <article ref={cardRef} className="project-card stagger-item">
-      <div className="project-card__header">
-        <div>
-          <div className="project-card__title-row">
-            <h3 className="project-card__title">{project.title}</h3>
-            <span className="status-active">{project.status}</span>
-          </div>
-          <p className="project-card__subtitle">{project.subtitle}</p>
-        </div>
-        <a
-          href={project.links.live}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-card__icon"
-          title={`Visit ${project.title}`}
-          aria-label={`Visit ${project.title}`}
-        >
-          <ExternalLinkIcon />
-        </a>
-      </div>
-
-      <p className="project-card__description">{project.description}</p>
-
       {project.previewImg ? (
         <a
           href={project.links.live}
@@ -91,12 +71,34 @@ function ProjectCard({ project }: { project: Project }) {
             />
             <div className="preview-overlay">
               <span className="preview-overlay__label">
-                Visit Site <ExternalLinkIcon />
+                {t("projects.visit")} <ExternalLinkIcon />
               </span>
             </div>
           </div>
         </a>
       ) : null}
+
+      <div className="project-card__header">
+        <div>
+          <div className="project-card__title-row">
+            <h3 className="project-card__title">{project.title}</h3>
+            <span className="status-active">{project.status[lang as keyof typeof project.status]}</span>
+          </div>
+          <p className="project-card__subtitle">{project.subtitle[lang as keyof typeof project.subtitle]}</p>
+        </div>
+        <a
+          href={project.links.live}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="project-card__icon"
+          title={`Visit ${project.title}`}
+          aria-label={`Visit ${project.title}`}
+        >
+          <ExternalLinkIcon />
+        </a>
+      </div>
+
+      <p className="project-card__description">{project.description[lang as keyof typeof project.description]}</p>
 
       <div className="project-card__footer">
         <div className="project-card__tags">
@@ -106,13 +108,14 @@ function ProjectCard({ project }: { project: Project }) {
             </span>
           ))}
         </div>
-        <span className="project-card__period">{project.period}</span>
+        <span className="project-card__period">{project.period[lang as keyof typeof project.period]}</span>
       </div>
     </article>
   );
 }
 
 export function Projects() {
+  const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<"client" | "study">("client");
 
@@ -152,15 +155,15 @@ export function Projects() {
       <div className="section-inner">
         <div className="projects-heading">
           <div>
-            <p className="section-label">Selected Work</p>
+            <p className="section-label">{t("projects.label")}</p>
             <h2 className="section-title">
-              Things I&apos;ve
+              {t("projects.title1")}
               <br />
-              <span style={{ color: "var(--text-muted)" }}>built</span>
+              <span style={{ color: "var(--text-muted)" }}>{t("projects.title2")}</span>
             </h2>
           </div>
           <p className="projects-intro">
-            Browse recent client work by default, or switch to the study projects that shaped how I build products.
+            {t("projects.intro")}
           </p>
         </div>
 
@@ -172,7 +175,7 @@ export function Projects() {
             aria-pressed={mode === "client"}
           >
             <ClientWorkIcon />
-            Client Work
+            {t("projects.tab.client")}
           </button>
           <button
             type="button"
@@ -181,7 +184,7 @@ export function Projects() {
             aria-pressed={mode === "study"}
           >
             <StudyProjectIcon />
-            Study Projects
+            {t("projects.tab.study")}
           </button>
         </div>
 

@@ -1,17 +1,19 @@
 import { personal } from "../data/portfolio";
 import { useFadeInUp } from "../hooks/useScrollAnimation";
-
-const stats = [
-  { value: "4+", label: "Years of study" },
-  { value: "8+", label: "Projects built" },
-  { value: "15+", label: "Technologies" },
-  { value: "3", label: "Languages spoken" },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export function About() {
+  const { t, lang } = useLanguage();
   const headRef = useFadeInUp(0);
   const bioRef = useFadeInUp(0.1);
   const statsRef = useFadeInUp(0.2);
+
+  const stats = [
+    { value: "4+", label: t("about.years") },
+    { value: "8+", label: t("about.projects") },
+    { value: "15+", label: t("about.tech") },
+    { value: "3", label: t("about.langs") },
+  ];
 
   return (
     <section id="about" className="section">
@@ -19,10 +21,10 @@ export function About() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }} className="about-grid">
           {/* Left */}
           <div ref={headRef as React.RefObject<HTMLDivElement>}>
-            <p className="section-label">About me</p>
+            <p className="section-label">{t("about.label")}</p>
             <h2 className="section-title" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: "32px" }}>
-              Building things<br />
-              <span style={{ color: "var(--text-muted)" }}>that matter</span>
+              {t("about.title1")}<br />
+              <span style={{ color: "var(--text-muted)" }}>{t("about.title2")}</span>
             </h2>
             <p
               ref={bioRef as React.RefObject<HTMLParagraphElement>}
@@ -33,7 +35,7 @@ export function About() {
                 marginBottom: "24px",
               }}
             >
-              {personal.about}
+              {personal.about[lang as keyof typeof personal.about]}
             </p>
             <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
               <a

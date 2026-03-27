@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import { personal } from "../data/portfolio";
 
-const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#experience", label: "Experience" },
-  { href: "#education", label: "Education" },
-  { href: "#skills", label: "Skills" },
-  { href: "#projects", label: "Work" },
-  { href: "#contact", label: "Contact" },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export function Navbar() {
+  const { t, lang, setLang } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = [
+    { href: "#about", label: "nav.about" },
+    { href: "#experience", label: "nav.experience" },
+    { href: "#education", label: "nav.education" },
+    { href: "#skills", label: "nav.skills" },
+    { href: "#projects", label: "nav.work" },
+    { href: "#contact", label: "nav.contact" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -67,9 +70,35 @@ export function Navbar() {
             onClick={(event) => handleNavClick(event, link.href)}
             className="nav-link"
           >
-            {link.label}
+            {t(link.label)}
           </a>
         ))}
+        {/* 
+        <button
+          onClick={() => setLang(lang === "en" ? "sl" : "en")}
+          style={{
+            background: "none",
+            border: "1px solid var(--border)",
+            color: "var(--text-secondary)",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontFamily: "var(--font-mono)",
+            fontSize: "12px",
+            transition: "color 0.2s ease, border-color 0.2s ease"
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "var(--text-primary)";
+            e.currentTarget.style.borderColor = "var(--text-secondary)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "var(--text-secondary)";
+            e.currentTarget.style.borderColor = "var(--border)";
+          }}
+        >
+          {lang === "en" ? "SI" : "EN"}
+        </button>
+        */}
       </div>
 
       <button
@@ -109,9 +138,31 @@ export function Navbar() {
               onClick={(event) => handleNavClick(event, link.href)}
               className="nav-mobile-link"
             >
-              {link.label}
+              {t(link.label)}
             </a>
           ))}
+          {/*
+          <button
+            onClick={() => {
+              setLang(lang === "en" ? "sl" : "en");
+              setMenuOpen(false);
+            }}
+            style={{
+              background: "none",
+              border: "1px solid var(--border)",
+              color: "var(--text-primary)",
+              padding: "8px 16px",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontFamily: "var(--font-mono)",
+              fontSize: "14px",
+              marginTop: "8px",
+              alignSelf: "flex-start",
+            }}
+          >
+            Language: {lang === "en" ? "Slovenian" : "English"}
+          </button>
+          */}
         </div>
       ) : null}
 

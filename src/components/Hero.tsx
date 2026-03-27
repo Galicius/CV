@@ -1,8 +1,10 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { personal } from "../data/portfolio";
+import { useLanguage } from "../context/LanguageContext";
 
 export function Hero() {
+  const { t, lang } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -77,9 +79,9 @@ export function Hero() {
               width: "8px",
               height: "8px",
               borderRadius: "50%",
-              background: "rgba(255,255,255,0.5)",
+              background: "#2ecc71",
               display: "inline-block",
-              boxShadow: "0 0 12px rgba(255,255,255,0.3)",
+              boxShadow: "0 0 12px rgba(46, 204, 113, 0.4)",
             }}
           />
           <span
@@ -91,7 +93,7 @@ export function Hero() {
               color: "var(--text-muted)",
             }}
           >
-            Available for opportunities
+            {t("hero.available")}
           </span>
         </div>
 
@@ -134,7 +136,7 @@ export function Hero() {
             fontWeight: 400,
           }}
         >
-          {personal.subtitle}
+          {personal.subtitle[lang as keyof typeof personal.subtitle]}
           <span style={{ display: "block", marginTop: "8px", color: "var(--text-muted)", fontSize: "13px", fontFamily: "var(--font-mono)" }}>
             {personal.location}
           </span>
@@ -153,7 +155,7 @@ export function Hero() {
               document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" });
             }}
           >
-            View Projects
+            {t("hero.viewProjects")}
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -162,7 +164,7 @@ export function Hero() {
             href={`mailto:${personal.email}`}
             className="btn-outline"
           >
-            Get in Touch
+            {t("hero.getInTouch")}
           </a>
         </div>
       </div>
@@ -204,7 +206,7 @@ export function Hero() {
             whiteSpace: "nowrap",
           }}
         >
-          Scroll
+          {t("hero.scroll")}
         </span>
         <style>{`
           @keyframes scrollLine {

@@ -30,6 +30,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { LanguageProvider } from "../context/LanguageContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +39,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${instrumentSans.variable} ${syne.variable} ${ibmPlexMono.variable}`}>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

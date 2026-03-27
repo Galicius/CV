@@ -1,5 +1,6 @@
 import { useFadeInUp } from "../hooks/useScrollAnimation";
 import { personal } from "../data/portfolio";
+import { useLanguage } from "../context/LanguageContext";
 
 const contactItems = [
   {
@@ -58,6 +59,7 @@ const contactItems = [
 ];
 
 export function Contact() {
+  const { t } = useLanguage();
   const sectionRef = useFadeInUp(0);
   const cardRef = useFadeInUp(0.15);
 
@@ -68,9 +70,9 @@ export function Contact() {
           ref={sectionRef as React.RefObject<HTMLDivElement>}
           style={{ textAlign: "center", maxWidth: "540px", margin: "0 auto 64px" }}
         >
-          <p className="section-label" style={{ justifyContent: "center" }}>Contact</p>
+          <p className="section-label" style={{ justifyContent: "center" }}>{t("contact.label")}</p>
           <h2 className="section-title" style={{ marginBottom: "20px" }}>
-            Let&apos;s work<br /><span style={{ color: "var(--text-muted)" }}>together</span>
+            {t("contact.title1")}<br /><span style={{ color: "var(--text-muted)" }}>{t("contact.title2")}</span>
           </h2>
           <p style={{
             fontFamily: "var(--font-body)",
@@ -78,7 +80,7 @@ export function Contact() {
             color: "var(--text-secondary)",
             lineHeight: 1.7,
           }}>
-            I&apos;m open to internships, full-time positions, and interesting project collaborations. Feel free to reach out!
+            {t("contact.text")}
           </p>
         </div>
 
@@ -145,7 +147,7 @@ export function Contact() {
             className="btn-primary"
             style={{ fontSize: "16px", padding: "18px 40px" }}
           >
-            Say Hello
+            {t("contact.button")}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
               <polyline points="22,6 12,13 2,6"/>

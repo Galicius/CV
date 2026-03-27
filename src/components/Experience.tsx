@@ -1,8 +1,10 @@
 import { useRef } from "react";
 import { experiences } from "../data/portfolio";
 import { useStaggerReveal } from "../hooks/useScrollAnimation";
+import { useLanguage } from "../context/LanguageContext";
 
 export function Experience() {
+  const { t, lang } = useLanguage();
   const containerRef = useStaggerReveal(".stagger-item");
   const headRef = useRef<HTMLDivElement>(null);
 
@@ -10,8 +12,8 @@ export function Experience() {
     <section id="experience" className="section" style={{ background: "var(--bg-secondary)" }}>
       <div className="section-inner">
         <div ref={headRef}>
-          <p className="section-label">Work Experience</p>
-          <h2 className="section-title">Where I&apos;ve<br /><span style={{ color: "var(--text-muted)" }}>worked</span></h2>
+          <p className="section-label">{t("exp.label")}</p>
+          <h2 className="section-title">{t("exp.title1")}<br /><span style={{ color: "var(--text-muted)" }}>{t("exp.title2")}</span></h2>
         </div>
 
         <div
@@ -40,7 +42,7 @@ export function Experience() {
                   letterSpacing: "0.05em",
                   marginBottom: "8px",
                 }}>
-                  {exp.period}
+                  {exp.period[lang as keyof typeof exp.period]}
                 </div>
                 <div style={{
                   fontFamily: "var(--font-heading)",
@@ -56,7 +58,7 @@ export function Experience() {
                   color: "var(--text-muted)",
                   marginTop: "4px",
                 }}>
-                  {exp.location}
+                  {exp.location[lang as keyof typeof exp.location]}
                 </div>
               </div>
 
@@ -77,7 +79,7 @@ export function Experience() {
                   color: "var(--text-primary)",
                   marginBottom: "12px",
                 }}>
-                  {exp.role}
+                  {exp.role[lang as keyof typeof exp.role]}
                 </h3>
                 <p style={{
                   fontFamily: "var(--font-body)",
@@ -86,7 +88,7 @@ export function Experience() {
                   lineHeight: 1.7,
                   margin: 0,
                 }}>
-                  {exp.description}
+                  {exp.description[lang as keyof typeof exp.description]}
                 </p>
               </div>
             </div>

@@ -4,22 +4,25 @@ import {
   toolSkills, deploymentSkills,
 } from "../data/portfolio";
 
-const groups = [
-  { label: "Languages", skills: programmingSkills },
-  { label: "Frameworks & Libraries", skills: frameworkSkills },
-  { label: "Databases", skills: databaseSkills },
-  { label: "Tools & Platforms", skills: toolSkills },
-  { label: "Deployment", skills: deploymentSkills },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export function Skills() {
+  const { t } = useLanguage();
   const containerRef = useStaggerReveal(".skill-group");
+
+  const groups = [
+    { label: t("skills.group1"), skills: programmingSkills },
+    { label: t("skills.group2"), skills: frameworkSkills },
+    { label: t("skills.group3"), skills: databaseSkills },
+    { label: t("skills.group4"), skills: toolSkills },
+    { label: t("skills.group5"), skills: deploymentSkills },
+  ];
 
   return (
     <section id="skills" className="section" style={{ background: "var(--bg-secondary)" }}>
       <div className="section-inner">
-        <p className="section-label">Technical Skills</p>
-        <h2 className="section-title">What I<br /><span style={{ color: "var(--text-muted)" }}>work with</span></h2>
+        <p className="section-label">{t("skills.label")}</p>
+        <h2 className="section-title">{t("skills.title1")}<br /><span style={{ color: "var(--text-muted)" }}>{t("skills.title2")}</span></h2>
 
         <div
           ref={containerRef as React.RefObject<HTMLDivElement>}
