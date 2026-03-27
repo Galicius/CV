@@ -88,23 +88,11 @@ export function About() {
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: "1px",
-              background: "var(--border)",
-              borderRadius: "12px",
-              overflow: "hidden",
+              gap: "48px 40px",
             }}
           >
             {stats.map((stat, i) => (
-              <div
-                key={i}
-                style={{
-                  padding: "36px 28px",
-                  background: "var(--bg-card)",
-                  transition: "background 0.2s",
-                }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--bg-card)")}
-              >
+              <div key={i}>
                 <div
                   style={{
                     fontFamily: "var(--font-heading)",
@@ -113,6 +101,7 @@ export function About() {
                     color: "var(--text-primary)",
                     letterSpacing: "-0.03em",
                     marginBottom: "8px",
+                    lineHeight: 1,
                   }}
                 >
                   {stat.value}

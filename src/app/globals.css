@@ -2,7 +2,7 @@
 
 :root {
   --bg-primary: #0a0d12;
-  --bg-secondary: #121722;
+  --bg-secondary: transparent;
   --bg-card: rgba(17, 23, 34, 0.84);
   --bg-card-hover: rgba(23, 31, 46, 0.92);
   --border: rgba(255, 244, 227, 0.1);
@@ -12,9 +12,9 @@
   --text-muted: rgba(255, 247, 234, 0.46);
   --accent: #ffb86c;
   --glow: rgba(255, 184, 108, 0.12);
-  --font-heading: "Syne", sans-serif;
-  --font-body: "Instrument Sans", sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
+  --font-heading: var(--font-syne), sans-serif;
+  --font-body: var(--font-instrument-sans), sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), monospace;
 }
 
 *,
@@ -43,17 +43,7 @@ body {
 }
 
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(rgba(255, 247, 234, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 247, 234, 0.02) 1px, transparent 1px);
-  background-size: 72px 72px;
-  mask-image: radial-gradient(circle at center, black 50%, transparent 95%);
-  opacity: 0.5;
-  z-index: -2;
+  display: none;
 }
 
 body::after {
@@ -133,23 +123,21 @@ h5 {
   color: var(--text-primary);
 }
 
+/* Card — now borderless, transparent, just spacing */
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 28px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    background 0.3s ease;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  backdrop-filter: none;
+  box-shadow: none;
+  transition: none;
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border-hover);
-  background: var(--bg-card-hover);
+  transform: none;
+  border-color: transparent;
+  background: transparent;
 }
 
 .divider {
@@ -159,18 +147,28 @@ h5 {
   background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
+/* Tags — minimal inline text, no pill shape */
 .tag {
   display: inline-flex;
   align-items: center;
-  padding: 5px 11px;
-  border: 1px solid rgba(255, 247, 234, 0.12);
-  border-radius: 999px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  background: rgba(255, 247, 234, 0.03);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  background: transparent;
+}
+
+.tag::after {
+  content: "·";
+  margin-left: 8px;
+  color: rgba(255, 247, 234, 0.2);
+}
+
+.tag:last-child::after {
+  content: none;
 }
 
 .btn-primary,
@@ -242,24 +240,30 @@ h5 {
   flex-shrink: 0;
 }
 
+/* Skill badges — simple text, no pills */
 .skill-badge {
-  padding: 8px 14px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-secondary);
-  background: rgba(255, 247, 234, 0.03);
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease;
+  background: transparent;
+  transition: color 0.2s ease;
+  position: relative;
 }
 
 .skill-badge:hover {
-  transform: translateY(-2px);
-  border-color: var(--border-hover);
+  transform: none;
+  border-color: transparent;
   color: var(--text-primary);
+}
+
+/* Skill badge separators via parent gap + commas */
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
 }
 
 .level-bar {
@@ -284,40 +288,32 @@ h5 {
 .project-card {
   position: relative;
   overflow: hidden;
-  padding: 26px;
-  background: linear-gradient(180deg, rgba(19, 24, 35, 0.94), rgba(13, 17, 25, 0.92));
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  backdrop-filter: blur(12px);
+  padding: 32px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  backdrop-filter: none;
   transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    border-color 0.3s ease;
 }
 
 .project-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  opacity: 0;
-  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 184, 108, 0.12), transparent 45%);
-  transition: opacity 0.25s ease;
-  pointer-events: none;
+  content: none;
 }
 
 .project-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 184, 108, 0.32);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.26);
+  transform: none;
+  border-color: var(--border-hover);
+  box-shadow: none;
 }
 
 .project-card:hover::before {
-  opacity: 1;
+  opacity: 0;
 }
 
-.project-card.featured {
-  background: linear-gradient(180deg, rgba(23, 29, 43, 0.96), rgba(13, 17, 25, 0.95));
+.project-card:last-child {
+  border-bottom: none;
 }
 
 .project-card__header,
@@ -329,7 +325,7 @@ h5 {
 }
 
 .project-card__header {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .project-card__title-row {
@@ -382,7 +378,7 @@ h5 {
 .project-card__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 0;
 }
 
 .project-card__period {
@@ -399,8 +395,8 @@ h5 {
   height: 240px;
   margin-bottom: 20px;
   overflow: hidden;
-  border: 1px solid rgba(255, 247, 234, 0.1);
-  border-radius: 18px;
+  border: 1px solid rgba(255, 247, 234, 0.06);
+  border-radius: 12px;
   background: #0d121b;
 }
 
@@ -464,12 +460,12 @@ h5 {
 
 .project-toggle {
   display: inline-flex;
-  gap: 8px;
+  gap: 4px;
   margin-bottom: 28px;
-  padding: 6px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: rgba(255, 247, 234, 0.03);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
 }
 
 .project-toggle__button {
@@ -477,16 +473,18 @@ h5 {
   align-items: center;
   gap: 8px;
   border: 0;
-  border-radius: 999px;
-  padding: 10px 16px;
+  border-radius: 0;
+  padding: 8px 0;
+  margin-right: 24px;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: color 0.2s ease;
+  border-bottom: 1px solid transparent;
 }
 
 .project-toggle__button:hover {
@@ -494,62 +492,66 @@ h5 {
 }
 
 .project-toggle__button.is-active {
-  background: rgba(255, 184, 108, 0.12);
-  color: #ffd7a1;
-  transform: translateY(-1px);
+  color: var(--text-primary);
+  background: transparent;
+  transform: none;
+  border-bottom: 1px solid var(--accent);
 }
 
 .projects-grid {
   display: grid;
-  gap: 18px;
+  gap: 0;
 }
 
-.projects-grid--featured {
+.projects-grid--all {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-bottom: 18px;
+  gap: 0 48px;
 }
 
-.projects-grid--rest {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
+/* Status — simple text label, no pill */
 .status-active {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
-  border: 1px solid rgba(255, 184, 108, 0.24);
-  border-radius: 999px;
-  background: rgba(255, 184, 108, 0.08);
-  color: #ffd7a1;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-.language-chip,
+/* Language chips — simplified */
+.language-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+}
+
 .language-level {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 999px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-}
-
-.language-chip {
-  min-width: 38px;
-  padding: 5px 10px;
-  color: var(--text-secondary);
-  background: rgba(255, 247, 234, 0.04);
-}
-
-.language-level {
-  padding: 4px 10px;
   color: var(--text-muted);
 }
 
@@ -571,10 +573,11 @@ h5 {
   align-items: center;
   gap: 20px;
   margin-top: 48px;
-  padding: 20px 24px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: rgba(255, 247, 234, 0.02);
+  padding: 20px 0;
+  border: none;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
 }
 
 .language-legend__label,
@@ -606,7 +609,7 @@ h5 {
 
 @media (max-width: 960px) {
   .projects-heading,
-  .projects-grid--featured {
+  .projects-grid--all {
     grid-template-columns: 1fr;
   }
 
@@ -632,6 +635,67 @@ h5 {
 
   .project-shot {
     height: 200px;
+  }
+
+  .mobile-horizontal-scroll {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(84%, 1fr);
+    overflow-x: auto;
+    overflow-y: visible;
+    gap: 16px;
+    padding-bottom: 6px;
+    margin-inline: -4px;
+    padding-inline: 4px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-horizontal-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .mobile-horizontal-scroll__item {
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  .mobile-horizontal-scroll__item--project,
+  .mobile-horizontal-scroll__item--experience,
+  .mobile-horizontal-scroll__item--education,
+  .mobile-horizontal-scroll__item--language {
+    width: 100%;
+  }
+
+  .projects-grid.mobile-horizontal-scroll {
+    grid-template-columns: none !important;
+  }
+
+  .projects-grid--all.mobile-horizontal-scroll {
+    margin-bottom: 18px;
+  }
+
+  .experience-list.mobile-horizontal-scroll {
+    align-items: stretch;
+  }
+
+  .timeline-item.mobile-horizontal-scroll__item--experience {
+    padding: 24px 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .education-grid.mobile-horizontal-scroll,
+  .languages-grid.mobile-horizontal-scroll {
+    grid-template-columns: none !important;
+  }
+
+  .language-legend {
+    margin-top: 28px;
   }
 }
 

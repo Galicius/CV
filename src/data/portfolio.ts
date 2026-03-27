@@ -17,7 +17,7 @@ export type Project = {
 };
 
 export const personal = {
-  name: "Gal Gustin",
+  name: "Gal Guštin",
   title: "Full-Stack Developer",
   subtitle: "Full-stack developer building polished web experiences and practical mobile products.",
   location: "Maribor / Celje, Slovenia",
@@ -122,15 +122,16 @@ export const toolSkills = [
 export const deploymentSkills = ["Vercel", "Google Cloud"];
 
 export const languages = [
+
+  {
+    name: "English",
+    level: "C1",
+    skills: { listening: "C2", reading: "C2", production: "C2", interaction: "C2", writing: "C2" },
+  },
   {
     name: "Slovenian",
     level: "Native",
     skills: { listening: "Native", reading: "Native", production: "Native", interaction: "Native", writing: "Native" },
-  },
-  {
-    name: "English",
-    level: "C1",
-    skills: { listening: "C1", reading: "C1", production: "C1", interaction: "B2", writing: "B2" },
   },
   {
     name: "German",

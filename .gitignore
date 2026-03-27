@@ -1,34 +1,44 @@
-# dependencies (bun install)
+# dependencies
 node_modules
 
-# output
+# next.js
+.next
 out
+
+# build output
 dist
 *.tgz
+
+# env files
+.env
+.env*.local
+
+# logs
+*.log
 
 # code coverage
 coverage
 *.lcov
-
-# logs
-logs
-_.log
-report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
-
-# dotenv environment variable files
-.env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
 
 # caches
 .eslintcache
 .cache
 *.tsbuildinfo
 
-# IntelliJ based IDEs
-.idea
+# lock files (keep one — bun.lock)
+package-lock.json
 
-# Finder (MacOS) folder config
+# OS files
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.idea
+.vscode
+*.swp
+*.swo
+
+# agents / skills metadata
+.agents
+skills-lock.json

@@ -33,7 +33,7 @@ function StudyProjectIcon() {
   );
 }
 
-function ProjectCard({ project, featured = false }: { project: Project; featured?: boolean }) {
+function ProjectCard({ project }: { project: Project }) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ function ProjectCard({ project, featured = false }: { project: Project; featured
   }, []);
 
   return (
-    <article ref={cardRef} className={`project-card stagger-item${featured ? " featured" : ""}`}>
+    <article ref={cardRef} className="project-card stagger-item">
       <div className="project-card__header">
         <div>
           <div className="project-card__title-row">
@@ -86,7 +86,7 @@ function ProjectCard({ project, featured = false }: { project: Project; featured
               src={project.previewImg}
               alt={`${project.title} website preview`}
               fill
-              sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
+              sizes="(max-width: 768px) 84vw, (max-width: 1200px) 50vw, 33vw"
               className="project-shot__image"
             />
             <div className="preview-overlay">
@@ -146,8 +146,6 @@ export function Projects() {
     if (mode === "client" && project.showOnClientView) return true;
     return false;
   });
-  const featured = visibleProjects.filter((project) => project.featured);
-  const rest = visibleProjects.filter((project) => !project.featured);
 
   return (
     <section id="projects" className="section">
@@ -188,15 +186,11 @@ export function Projects() {
         </div>
 
         <div ref={containerRef}>
-          <div className="projects-grid projects-grid--featured">
-            {featured.map((project) => (
-              <ProjectCard key={project.id} project={project} featured />
-            ))}
-          </div>
-
-          <div className="projects-grid projects-grid--rest">
-            {rest.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+          <div className="projects-grid projects-grid--all mobile-horizontal-scroll">
+            {visibleProjects.map((project) => (
+              <div key={project.id} className="mobile-horizontal-scroll__item mobile-horizontal-scroll__item--project">
+                <ProjectCard project={project} />
+              </div>
             ))}
           </div>
         </div>

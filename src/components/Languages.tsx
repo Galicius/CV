@@ -71,14 +71,22 @@ export function Languages() {
         <div ref={barsRef}>
           <div
             ref={containerRef as React.RefObject<HTMLDivElement>}
+            className="languages-grid mobile-horizontal-scroll"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: "16px",
+              gap: "0 40px",
             }}
           >
-            {languages.map((lang) => (
-              <div key={lang.name} className="stagger-item card">
+            {languages.map((lang, i) => (
+              <div
+                key={lang.name}
+                className="stagger-item mobile-horizontal-scroll__item mobile-horizontal-scroll__item--language"
+                style={{
+                  padding: "32px 0",
+                  borderBottom: i < languages.length - 1 ? "1px solid var(--border)" : "none",
+                }}
+              >
                 <div
                   style={{
                     display: "flex",
@@ -117,16 +125,8 @@ export function Languages() {
                             marginBottom: "6px",
                           }}
                         >
-                          <span
-                            className="language-skill-label"
-                          >
-                            {label}
-                          </span>
-                          <span
-                            className="language-skill-value"
-                          >
-                            {level}
-                          </span>
+                          <span className="language-skill-label">{label}</span>
+                          <span className="language-skill-value">{level}</span>
                         </div>
                         <div className="level-bar">
                           <div className="level-fill" style={{ width: `${percent}%` }} />

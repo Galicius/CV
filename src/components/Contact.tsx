@@ -70,7 +70,7 @@ export function Contact() {
         >
           <p className="section-label" style={{ justifyContent: "center" }}>Contact</p>
           <h2 className="section-title" style={{ marginBottom: "20px" }}>
-            Let's work<br /><span style={{ color: "var(--text-muted)" }}>together</span>
+            Let&apos;s work<br /><span style={{ color: "var(--text-muted)" }}>together</span>
           </h2>
           <p style={{
             fontFamily: "var(--font-body)",
@@ -78,7 +78,7 @@ export function Contact() {
             color: "var(--text-secondary)",
             lineHeight: 1.7,
           }}>
-            I'm open to internships, full-time positions, and interesting project collaborations. Feel free to reach out!
+            I&apos;m open to internships, full-time positions, and interesting project collaborations. Feel free to reach out!
           </p>
         </div>
 

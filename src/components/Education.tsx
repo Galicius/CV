@@ -12,36 +12,19 @@ export function Education() {
 
         <div
           ref={containerRef as React.RefObject<HTMLDivElement>}
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px" }}
+          className="education-grid mobile-horizontal-scroll"
+          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "0" }}
         >
           {education.map((edu, i) => (
             <div
               key={edu.id}
-              className="stagger-item card"
+              className="stagger-item mobile-horizontal-scroll__item mobile-horizontal-scroll__item--education"
               style={{
                 position: "relative",
-                borderColor: i === 0 ? "rgba(255,255,255,0.12)" : "var(--border)",
+                padding: "32px 0",
+                borderBottom: i < education.length - 1 ? "1px solid var(--border)" : "none",
               }}
             >
-              {i === 0 && (
-                <div style={{
-                  position: "absolute",
-                  top: "20px",
-                  right: "20px",
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "9px",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: "var(--text-muted)",
-                  background: "rgba(255,255,255,0.05)",
-                  padding: "4px 10px",
-                  borderRadius: "100px",
-                  border: "1px solid var(--border)",
-                }}>
-                  Current
-                </div>
-              )}
-
               <div style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "11px",
@@ -91,17 +74,22 @@ export function Education() {
                 fontFamily: "var(--font-mono)",
                 fontSize: "11px",
                 color: "var(--text-muted)",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
               }}>
                 {edu.location}
                 {edu.level && (
-                  <span style={{
-                    marginLeft: "12px",
-                    padding: "2px 8px",
-                    border: "1px solid var(--border)",
-                    borderRadius: "4px",
-                  }}>
-                    {edu.level}
-                  </span>
+                  <>
+                    <span style={{ color: "rgba(255,247,234,0.2)" }}>·</span>
+                    <span>{edu.level}</span>
+                  </>
+                )}
+                {i === 0 && (
+                  <>
+                    <span style={{ color: "rgba(255,247,234,0.2)" }}>·</span>
+                    <span style={{ color: "var(--accent)", fontSize: "10px", letterSpacing: "0.12em" }}>CURRENT</span>
+                  </>
                 )}
               </div>
             </div>

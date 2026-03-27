@@ -1,14 +1,31 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Mono, Instrument_Sans, Syne } from "next/font/google";
 import "./globals.css";
 
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  variable: "--font-instrument-sans",
+});
+
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-syne",
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-ibm-plex-mono",
+  weight: ["400", "500"],
+});
+
 export const metadata: Metadata = {
-  title: "Gal Gustin | Full-Stack Developer",
+  title: "Gal Guštin | Full-Stack Developer",
   description:
-    "Portfolio of Gal Gustin, a full-stack developer building web and mobile products with strong visual execution and practical product thinking.",
-  keywords: ["Gal Gustin", "developer portfolio", "Next.js developer", "full-stack developer", "Slovenia"],
+    "Portfolio of Gal Guštin, a full-stack developer building web and mobile products with strong visual execution and practical product thinking.",
+  keywords: ["Gal Guštin", "developer portfolio", "Next.js developer", "full-stack developer", "Slovenia"],
   openGraph: {
-    title: "Gal Gustin | Full-Stack Developer",
-    description: "Selected work, experience, and contact details for Gal Gustin.",
+    title: "Gal Guštin | Full-Stack Developer",
+    description: "Selected work, experience, and contact details for Gal Guštin.",
     type: "website",
   },
 };
@@ -19,15 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${instrumentSans.variable} ${syne.variable} ${ibmPlexMono.variable}`}>
       <body suppressHydrationWarning>{children}</body>
     </html>
   );

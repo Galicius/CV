@@ -23,7 +23,7 @@ export function Skills() {
 
         <div
           ref={containerRef as React.RefObject<HTMLDivElement>}
-          style={{ display: "flex", flexDirection: "column", gap: "48px" }}
+          style={{ display: "flex", flexDirection: "column", gap: "36px" }}
         >
           {groups.map((group) => (
             <div key={group.label} className="skill-group">
@@ -32,7 +32,7 @@ export function Skills() {
                   display: "flex",
                   alignItems: "center",
                   gap: "16px",
-                  marginBottom: "20px",
+                  marginBottom: "16px",
                 }}
               >
                 <span
@@ -42,6 +42,7 @@ export function Skills() {
                     letterSpacing: "0.15em",
                     textTransform: "uppercase",
                     color: "var(--text-muted)",
+                    flexShrink: 0,
                   }}
                 >
                   {group.label}
@@ -49,10 +50,24 @@ export function Skills() {
                 <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
               </div>
 
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                {group.skills.map((skill) => (
-                  <span key={skill} className="skill-badge">
-                    {skill}
+              <div style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "12px",
+                color: "var(--text-secondary)",
+                lineHeight: 2,
+              }}>
+                {group.skills.map((skill, i) => (
+                  <span key={skill} className="skill-item">
+                    <span
+                      style={{ transition: "color 0.2s", cursor: "default" }}
+                      onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
+                      onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}
+                    >
+                      {skill}
+                    </span>
+                    {i < group.skills.length - 1 && (
+                      <span style={{ color: "rgba(255,247,234,0.2)", margin: "0 10px" }}>·</span>
+                    )}
                   </span>
                 ))}
               </div>

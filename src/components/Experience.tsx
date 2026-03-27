@@ -11,17 +11,18 @@ export function Experience() {
       <div className="section-inner">
         <div ref={headRef}>
           <p className="section-label">Work Experience</p>
-          <h2 className="section-title">Where I've<br /><span style={{ color: "var(--text-muted)" }}>worked</span></h2>
+          <h2 className="section-title">Where I&apos;ve<br /><span style={{ color: "var(--text-muted)" }}>worked</span></h2>
         </div>
 
         <div
           ref={containerRef as React.RefObject<HTMLDivElement>}
+          className="experience-list mobile-horizontal-scroll"
           style={{ display: "flex", flexDirection: "column", gap: "0" }}
         >
           {experiences.map((exp, i) => (
             <div
               key={exp.id}
-              className="stagger-item timeline-item"
+              className="stagger-item timeline-item mobile-horizontal-scroll__item mobile-horizontal-scroll__item--experience"
               style={{
                 display: "grid",
                 gridTemplateColumns: "200px 1px 1fr",
@@ -68,10 +69,7 @@ export function Experience() {
               </div>
 
               {/* Content */}
-              <div
-                className="card"
-                style={{ marginBottom: i < experiences.length - 1 ? "0" : "0" }}
-              >
+              <div>
                 <h3 style={{
                   fontFamily: "var(--font-heading)",
                   fontSize: "16px",
@@ -98,9 +96,12 @@ export function Experience() {
 
       <style>{`
         @media (max-width: 768px) {
+          .experience-list {
+            gap: 0 !important;
+          }
           .timeline-item {
             grid-template-columns: 1fr !important;
-            gap: 12px !important;
+            gap: 14px !important;
           }
           .timeline-item > :first-child { text-align: left !important; }
           .timeline-line, .timeline-dot { display: none !important; }
