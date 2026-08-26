@@ -1,4 +1,3 @@
-import { useStaggerReveal } from "../hooks/useScrollAnimation";
 import {
   programmingSkills, frameworkSkills, databaseSkills,
   toolSkills, deploymentSkills,
@@ -8,7 +7,6 @@ import { useLanguage } from "../context/LanguageContext";
 
 export function Skills() {
   const { t } = useLanguage();
-  const containerRef = useStaggerReveal(".skill-group");
 
   const groups = [
     { label: t("skills.group1"), skills: programmingSkills },
@@ -25,7 +23,6 @@ export function Skills() {
         <h2 className="section-title">{t("skills.title1")}<br /><span style={{ color: "var(--text-muted)" }}>{t("skills.title2")}</span></h2>
 
         <div
-          ref={containerRef as React.RefObject<HTMLDivElement>}
           style={{ display: "flex", flexDirection: "column", gap: "36px" }}
         >
           {groups.map((group) => (

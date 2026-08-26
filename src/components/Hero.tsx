@@ -10,19 +10,21 @@ export function Hero() {
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const metaRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const tl = gsap.timeline({ delay: 0.2 });
-      tl.from(gridRef.current, { autoAlpha: 0, duration: 1.5, ease: "power2.out" })
-        .from(metaRef.current, { y: 20, autoAlpha: 0, duration: 0.6, ease: "power3.out" }, "-=0.8")
-        .from(titleRef.current, { y: 40, autoAlpha: 0, duration: 0.9, ease: "power3.out" }, "-=0.4")
-        .from(subtitleRef.current, { y: 24, autoAlpha: 0, duration: 0.7, ease: "power3.out" }, "-=0.5")
-        .from(ctaRef.current, { y: 20, autoAlpha: 0, duration: 0.6, ease: "power3.out" }, "-=0.3")
-        .from(scrollRef.current, { autoAlpha: 0, duration: 0.6, ease: "power2.out" }, "-=0.2");
+      const tl = gsap.timeline({ delay: 0.12, defaults: { ease: "power2.out" } });
+      tl.from([metaRef.current, titleRef.current], {
+        y: 22,
+        autoAlpha: 0,
+        duration: 0.72,
+        stagger: 0.08,
+      }).from(
+        [subtitleRef.current, ctaRef.current],
+        { y: 12, autoAlpha: 0, duration: 0.5, stagger: 0.06 },
+        "-=0.36",
+      );
     });
     return () => mm.revert();
   }, []);
@@ -47,22 +49,6 @@ export function Hero() {
         margin: "0 auto",
       }}
     >
-      {/* Background grid lines removed */}
-
-      {/* Radial glow */}
-      <div
-        style={{
-          position: "absolute",
-          top: "30%",
-          left: "-10%",
-          width: "600px",
-          height: "600px",
-          background: "radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
-
       <div style={{ position: "relative", zIndex: 1 }}>
         {/* Meta line */}
         <div
@@ -171,7 +157,6 @@ export function Hero() {
 
       {/* Scroll indicator */}
       <div
-        ref={scrollRef}
         onClick={scrollToAbout}
         style={{
           position: "absolute",
@@ -192,7 +177,6 @@ export function Hero() {
             width: "1px",
             height: "40px",
             background: "var(--text-secondary)",
-            animation: "scrollLine 2s ease-in-out infinite",
           }}
         />
         <span
@@ -208,12 +192,6 @@ export function Hero() {
         >
           {t("hero.scroll")}
         </span>
-        <style>{`
-          @keyframes scrollLine {
-            0%, 100% { transform: scaleY(1); transform-origin: top; }
-            50% { transform: scaleY(0.5); transform-origin: top; }
-          }
-        `}</style>
       </div>
     </section>
   );

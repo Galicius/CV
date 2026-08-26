@@ -1,12 +1,8 @@
 import { personal } from "../data/portfolio";
-import { useFadeInUp } from "../hooks/useScrollAnimation";
 import { useLanguage } from "../context/LanguageContext";
 
 export function About() {
   const { t, lang } = useLanguage();
-  const headRef = useFadeInUp(0);
-  const bioRef = useFadeInUp(0.1);
-  const statsRef = useFadeInUp(0.2);
 
   const stats = [
     { value: "4+", label: t("about.years") },
@@ -20,14 +16,13 @@ export function About() {
       <div className="section-inner">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }} className="about-grid">
           {/* Left */}
-          <div ref={headRef as React.RefObject<HTMLDivElement>}>
+          <div>
             <p className="section-label">{t("about.label")}</p>
             <h2 className="section-title" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: "32px" }}>
               {t("about.title1")}<br />
               <span style={{ color: "var(--text-muted)" }}>{t("about.title2")}</span>
             </h2>
             <p
-              ref={bioRef as React.RefObject<HTMLParagraphElement>}
               style={{
                 color: "var(--text-secondary)",
                 lineHeight: 1.8,
@@ -86,7 +81,6 @@ export function About() {
 
           {/* Right — Stats */}
           <div
-            ref={statsRef as React.RefObject<HTMLDivElement>}
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",

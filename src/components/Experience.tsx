@@ -1,30 +1,25 @@
-import { useRef } from "react";
 import { experiences } from "../data/portfolio";
-import { useStaggerReveal } from "../hooks/useScrollAnimation";
 import { useLanguage } from "../context/LanguageContext";
 
 export function Experience() {
   const { t, lang } = useLanguage();
-  const containerRef = useStaggerReveal(".stagger-item");
-  const headRef = useRef<HTMLDivElement>(null);
 
   return (
     <section id="experience" className="section" style={{ background: "var(--bg-secondary)" }}>
       <div className="section-inner">
-        <div ref={headRef}>
+        <div>
           <p className="section-label">{t("exp.label")}</p>
           <h2 className="section-title">{t("exp.title1")}<br /><span style={{ color: "var(--text-muted)" }}>{t("exp.title2")}</span></h2>
         </div>
 
         <div
-          ref={containerRef as React.RefObject<HTMLDivElement>}
           className="experience-list mobile-horizontal-scroll"
           style={{ display: "flex", flexDirection: "column", gap: "0" }}
         >
           {experiences.map((exp, i) => (
             <div
               key={exp.id}
-              className="stagger-item timeline-item mobile-horizontal-scroll__item mobile-horizontal-scroll__item--experience"
+              className="timeline-item mobile-horizontal-scroll__item mobile-horizontal-scroll__item--experience"
               style={{
                 display: "grid",
                 gridTemplateColumns: "200px 1px 1fr",

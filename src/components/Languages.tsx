@@ -1,13 +1,5 @@
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { languages } from "../data/portfolio";
-import { useStaggerReveal } from "../hooks/useScrollAnimation";
 import { useLanguage } from "../context/LanguageContext";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const levelPercent: Record<string, number> = {
   A1: 12,
@@ -30,8 +22,6 @@ const flagByLanguage: Record<string, string> = {
 
 export function Languages() {
   const { t, lang: currentLang } = useLanguage();
-  const containerRef = useStaggerReveal(".stagger-item");
-  const barsRef = useRef<HTMLDivElement>(null);
 
   const skillLabels = [
     { key: "listening", label: t("lang.listening") },
@@ -40,27 +30,6 @@ export function Languages() {
     { key: "interaction", label: t("lang.interaction") },
     { key: "writing", label: t("lang.writing") },
   ];
-
-  useEffect(() => {
-    const container = barsRef.current;
-    if (!container) return;
-
-    const mm = gsap.matchMedia();
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      ScrollTrigger.create({
-        trigger: container,
-        start: "top 80%",
-        once: true,
-        onEnter: () => {
-          container.querySelectorAll<HTMLElement>(".level-fill").forEach((fill) => {
-            fill.classList.add("animated");
-          });
-        },
-      });
-    });
-
-    return () => mm.revert();
-  }, []);
 
   return (
     <section id="languages" className="section" style={{ background: "var(--bg-secondary)" }}>
@@ -72,9 +41,8 @@ export function Languages() {
           <span style={{ color: "var(--text-muted)" }}>{t("lang.title2")}</span>
         </h2>
 
-        <div ref={barsRef}>
+        <div>
           <div
-            ref={containerRef as React.RefObject<HTMLDivElement>}
             className="languages-grid mobile-horizontal-scroll"
             style={{
               display: "grid",
@@ -85,7 +53,7 @@ export function Languages() {
             {languages.map((lang, i) => (
               <div
                 key={lang.keyName}
-                className="stagger-item mobile-horizontal-scroll__item mobile-horizontal-scroll__item--language"
+                className="mobile-horizontal-scroll__item mobile-horizontal-scroll__item--language"
                 style={{
                   padding: "32px 0",
                   borderBottom: i < languages.length - 1 ? "1px solid var(--border)" : "none",

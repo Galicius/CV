@@ -25,8 +25,6 @@ export const personal = {
   },
   location: "Maribor / Celje, Slovenia",
   email: "gal.gustin@gmail.com",
-  phone: "+386 40 596 474",
-  whatsapp: "40596474",
   github: "https://github.com/Galicius",
   about: {
     en: "I am a Master's student at FERI focused on computer science and data technologies. I like shipping useful digital products, solving messy technical problems, and turning ideas into interfaces that feel clear and reliable. My strongest work sits at the intersection of frontend craft, product thinking, and full-stack execution.",

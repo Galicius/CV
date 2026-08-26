@@ -1,4 +1,3 @@
-import { useFadeInUp } from "../hooks/useScrollAnimation";
 import { personal } from "../data/portfolio";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -11,27 +10,6 @@ const contactItems = [
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
         <polyline points="22,6 12,13 2,6"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Phone",
-    value: personal.phone,
-    href: `tel:${personal.phone}`,
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
-      </svg>
-    ),
-  },
-  {
-    label: "WhatsApp",
-    value: personal.whatsapp,
-    href: `https://wa.me/386${personal.whatsapp}`,
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/>
-        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
       </svg>
     ),
   },
@@ -60,14 +38,11 @@ const contactItems = [
 
 export function Contact() {
   const { t } = useLanguage();
-  const sectionRef = useFadeInUp(0);
-  const cardRef = useFadeInUp(0.15);
 
   return (
     <section id="contact" className="section">
       <div className="section-inner">
         <div
-          ref={sectionRef as React.RefObject<HTMLDivElement>}
           style={{ textAlign: "center", maxWidth: "540px", margin: "0 auto 64px" }}
         >
           <p className="section-label" style={{ justifyContent: "center" }}>{t("contact.label")}</p>
@@ -85,37 +60,33 @@ export function Contact() {
         </div>
 
         <div
-          ref={cardRef as React.RefObject<HTMLDivElement>}
           style={{
             maxWidth: "640px",
             margin: "0 auto",
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: "1px",
-            background: "var(--border)",
-            borderRadius: "16px",
-            overflow: "hidden",
-            border: "1px solid var(--border)",
+            gap: "12px",
           }}
         >
           {contactItems.map((item, i) => (
             <a
               key={item.label}
               href={item.href}
-              target={item.label !== "Email" && item.label !== "Phone" ? "_blank" : undefined}
+              target={item.label !== "Email" ? "_blank" : undefined}
               rel="noopener noreferrer"
               style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: "8px",
                 padding: "24px 28px",
-                background: "var(--bg-card)",
+                background: "#10151e",
+                boxShadow: "0 12px 32px rgba(0, 0, 0, 0.2)",
                 textDecoration: "none",
-                transition: "background 0.2s",
+                transition: "background-color 180ms ease, box-shadow 180ms ease",
                 gridColumn: i === contactItems.length - 1 && contactItems.length % 2 !== 0 ? "1 / -1" : undefined,
               }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--bg-card)")}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#151c27")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "#10151e")}
             >
               <div style={{ color: "var(--text-muted)" }}>{item.icon}</div>
               <div style={{

@@ -1,13 +1,7 @@
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState } from "react";
 import { projects, type Project } from "../data/portfolio";
 import { useLanguage } from "../context/LanguageContext";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 function ExternalLinkIcon() {
   return (
@@ -36,24 +30,8 @@ function StudyProjectIcon() {
 
 function ProjectCard({ project }: { project: Project }) {
   const { t, lang } = useLanguage();
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const element = cardRef.current;
-    if (!element) return;
-
-    const onMouseMove = (event: MouseEvent) => {
-      const rect = element.getBoundingClientRect();
-      element.style.setProperty("--mx", `${event.clientX - rect.left}px`);
-      element.style.setProperty("--my", `${event.clientY - rect.top}px`);
-    };
-
-    element.addEventListener("mousemove", onMouseMove);
-    return () => element.removeEventListener("mousemove", onMouseMove);
-  }, []);
-
   return (
-    <article ref={cardRef} className="project-card stagger-item">
+    <article className="project-card">
       {project.previewImg ? (
         <a
           href={project.links.live}
@@ -116,33 +94,7 @@ function ProjectCard({ project }: { project: Project }) {
 
 export function Projects() {
   const { t } = useLanguage();
-  const containerRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<"client" | "study">("client");
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const mm = gsap.matchMedia();
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const items = gsap.utils.toArray<HTMLElement>(".stagger-item", container);
-      gsap.from(items, {
-        y: 40,
-        autoAlpha: 0,
-        duration: 0.7,
-        stagger: 0.12,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: container,
-          start: "top 82%",
-          toggleActions: "play none none none",
-          once: true,
-        },
-      });
-    });
-
-    return () => mm.revert();
-  }, []);
 
   const visibleProjects = projects.filter((project) => {
     if (project.category === mode) return true;
@@ -188,7 +140,7 @@ export function Projects() {
           </button>
         </div>
 
-        <div ref={containerRef}>
+        <div>
           <div className="projects-grid projects-grid--all mobile-horizontal-scroll">
             {visibleProjects.map((project) => (
               <div key={project.id} className="mobile-horizontal-scroll__item mobile-horizontal-scroll__item--project">

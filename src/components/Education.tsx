@@ -1,10 +1,8 @@
-import { useStaggerReveal } from "../hooks/useScrollAnimation";
 import { education } from "../data/portfolio";
 import { useLanguage } from "../context/LanguageContext";
 
 export function Education() {
   const { t, lang } = useLanguage();
-  const containerRef = useStaggerReveal(".stagger-item");
 
   return (
     <section id="education" className="section">
@@ -13,14 +11,13 @@ export function Education() {
         <h2 className="section-title">{t("edu.title1")}<br /><span style={{ color: "var(--text-muted)" }}>{t("edu.title2")}</span></h2>
 
         <div
-          ref={containerRef as React.RefObject<HTMLDivElement>}
           className="education-grid mobile-horizontal-scroll"
           style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "0" }}
         >
           {education.map((edu, i) => (
             <div
               key={edu.id}
-              className="stagger-item mobile-horizontal-scroll__item mobile-horizontal-scroll__item--education"
+              className="mobile-horizontal-scroll__item mobile-horizontal-scroll__item--education"
               style={{
                 position: "relative",
                 padding: "32px 0",
