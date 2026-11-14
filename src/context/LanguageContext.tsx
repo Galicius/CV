@@ -30,6 +30,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.available": "Available for opportunities",
     "hero.viewProjects": "View Projects",
     "hero.getInTouch": "Get in Touch",
+    "hero.downloadCv": "Download CV (PDF, EN)",
     "hero.scroll": "Scroll",
 
     "about.label": "About me",
@@ -96,6 +97,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.available": "Na voljo za priložnosti",
     "hero.viewProjects": "Poglej projekte",
     "hero.getInTouch": "Stopi v stik",
+    "hero.downloadCv": "Prenesi CV (PDF, EN)",
     "hero.scroll": "Drsaj",
 
     "about.label": "O meni",
