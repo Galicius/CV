@@ -55,21 +55,21 @@ export function Hero({ lang, t }: { lang: Language; t: Translator }) {
           </p>
 
           <ul className="actions grid-12 col-span-full lg:row-start-2">
-            <li className="col-span-full md:col-span-4">
+            <li className="col-span-full lg:col-span-4">
               <a href="/cv.pdf" download="Gal-Gustin-CV.pdf" className="action action--primary action--down bleed rule-b">
                 <span className="label">{t("hero.cvLabel")}</span>
                 <span className="action__value">{t("hero.downloadCv")}</span>
                 <Arrow dir="down" />
               </a>
             </li>
-            <li className="col-span-full md:col-span-4">
+            <li className="col-span-full lg:col-span-4">
               <a href={`mailto:${personal.email}`} className="action action--out bleed rule-b">
                 <span className="label">{t("hero.getInTouch")}</span>
                 <span className="action__value">{personal.email}</span>
                 <Arrow dir="right" />
               </a>
             </li>
-            <li className="col-span-full md:col-span-4">
+            <li className="col-span-full lg:col-span-4">
               <ExternalLink href={personal.github} t={t} className="action action--out bleed rule-b">
                 <span className="label">GitHub</span>
                 <span className="action__value">{githubHandle}</span>

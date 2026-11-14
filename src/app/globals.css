@@ -630,8 +630,7 @@ body {
   }
 }
 
-@media (min-width: 768px) {
-
+@media (min-width: 1024px) {
   .actions {
     border-bottom: 1px solid var(--rule);
   }
@@ -645,9 +644,7 @@ body {
   .actions li + li .action {
     border-left: 1px solid var(--rule);
   }
-}
 
-@media (min-width: 1024px) {
   .guides span {
     grid-column: span 1;
   }
@@ -1099,13 +1096,13 @@ body {
 .cefr {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
   border-top: 1px solid var(--rule-strong);
 }
 
 .cefr th,
 .cefr td {
-  padding: 12px 6px 12px 0;
+  padding: 12px 4px 12px 0;
   text-align: left;
   vertical-align: baseline;
   border-bottom: 1px solid var(--rule);
@@ -1114,10 +1111,6 @@ body {
 .cefr thead th {
   vertical-align: bottom;
   padding-block: 12px 10px;
-}
-
-.cefr__col-skill {
-  width: 30%;
 }
 
 .cefr__lang-code {
@@ -1135,8 +1128,6 @@ body {
   font-size: 0.6875rem;
   font-weight: 500;
   color: var(--ink-2);
-  hyphens: auto;
-  overflow-wrap: anywhere;
 }
 
 .cefr tbody th {
@@ -1144,6 +1135,10 @@ body {
   font-weight: 500;
   line-height: 1.25;
   color: var(--ink-2);
+}
+
+.cefr td {
+  line-height: 1.1;
 }
 
 .cefr__level {
@@ -1183,6 +1178,10 @@ body {
 }
 
 @media (min-width: 768px) {
+  .cefr {
+    table-layout: fixed;
+  }
+
   .cefr__col-skill {
     width: 25%;
   }
@@ -1399,7 +1398,7 @@ a.contact-row:focus-visible {
 }
 
 .lost__code {
-  font-size: clamp(9rem, 42vw, 40rem);
+  font-size: clamp(9rem, 50vw, 40rem);
   font-weight: 800;
   font-stretch: 82%;
   letter-spacing: -0.06em;
