@@ -1,154 +1,122 @@
 import Image from "next/image";
-import { useState } from "react";
+import { pick, type Language, type Translator } from "../context/LanguageContext";
 import { projects, type Project } from "../data/portfolio";
-import { useLanguage } from "../context/LanguageContext";
+import { Arrow, ExternalLink, SectionHead, pad } from "./ui";
 
-function ExternalLinkIcon() {
+type Props = { lang: Language; t: Translator };
+
+function Stack({ items }: { items: string[] }) {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3" />
-    </svg>
+    <ul className="stack">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
   );
 }
 
-function ClientWorkIcon() {
+/** Client work: larger rows with a screenshot plate. */
+function FeatureRow({ project, index, lang, t }: Props & { project: Project; index: number }) {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M3 7h18M7 3v8M17 3v8M5 11h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2Z" />
-    </svg>
-  );
-}
+    <li className="row feature grid-12 bleed rule-b">
+      <div className="col-span-full lg:col-span-5">
+        <p className="feature__meta mono">
+          <span>{pad(index)}</span>
+          <span>{pick(project.period, lang)}</span>
+          <span>{pick(project.status, lang)}</span>
+        </p>
+        <h4 className="feature__title">
+          <ExternalLink href={project.links.live} t={t} className="row-link">
+            {project.title}
+          </ExternalLink>
+        </h4>
+        <p className="row__sub">{pick(project.subtitle, lang)}</p>
+      </div>
 
-function StudyProjectIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M12 4 3 9l9 5 9-5-9-5Z" />
-      <path d="M7 11.2V16c0 1.2 2.2 3 5 3s5-1.8 5-3v-4.8" />
-    </svg>
-  );
-}
-
-function ProjectCard({ project }: { project: Project }) {
-  const { t, lang } = useLanguage();
-  return (
-    <article className="project-card">
-      {project.previewImg ? (
-        <a
-          href={project.links.live}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-preview-link"
-        >
-          <div className="project-shot">
-            <Image
-              src={project.previewImg}
-              alt={`${project.title} website preview`}
-              fill
-              sizes="(max-width: 768px) 84vw, (max-width: 1200px) 50vw, 33vw"
-              className="project-shot__image"
-            />
-            <div className="preview-overlay">
-              <span className="preview-overlay__label">
-                {t("projects.visit")} <ExternalLinkIcon />
-              </span>
-            </div>
-          </div>
-        </a>
+      {project.preview ? (
+        <div className="shot col-span-full lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1">
+          <Image
+            src={project.preview.src}
+            width={project.preview.width}
+            height={project.preview.height}
+            alt={t("projects.preview", { title: project.title })}
+            sizes="(min-width: 1680px) 950px, (min-width: 1024px) 57vw, calc(100vw - 32px)"
+          />
+        </div>
       ) : null}
 
-      <div className="project-card__header">
-        <div>
-          <div className="project-card__title-row">
-            <h3 className="project-card__title">{project.title}</h3>
-            <span className="status-active">{project.status[lang as keyof typeof project.status]}</span>
-          </div>
-          <p className="project-card__subtitle">{project.subtitle[lang as keyof typeof project.subtitle]}</p>
+      <div className="feature__body col-span-full lg:col-span-5">
+        <p className="row__desc">{pick(project.description, lang)}</p>
+        <div className="mt-4">
+          <Stack items={project.tech} />
         </div>
-        <a
-          href={project.links.live}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-card__icon"
-          title={`Visit ${project.title}`}
-          aria-label={`Visit ${project.title}`}
-        >
-          <ExternalLinkIcon />
-        </a>
+        <span className="feature__visit" aria-hidden="true">
+          {t("projects.visit")}
+          <Arrow dir="out" />
+        </span>
       </div>
-
-      <p className="project-card__description">{project.description[lang as keyof typeof project.description]}</p>
-
-      <div className="project-card__footer">
-        <div className="project-card__tags">
-          {project.tech.map((tech) => (
-            <span key={tech} className="tag">
-              {tech}
-            </span>
-          ))}
-        </div>
-        <span className="project-card__period">{project.period[lang as keyof typeof project.period]}</span>
-      </div>
-    </article>
+      <Arrow dir="out" className="row__arrow" />
+    </li>
   );
 }
 
-export function Projects() {
-  const { t } = useLanguage();
-  const [mode, setMode] = useState<"client" | "study">("client");
+/** Study projects: dense index rows, description always visible. */
+function IndexRow({ project, index, lang, t }: Props & { project: Project; index: number }) {
+  return (
+    <li className="row grid-12 bleed rule-b">
+      <span className="row__idx col-span-full lg:col-span-1">{pad(index)}</span>
+      <div className="col-span-full lg:col-span-4">
+        <h4 className="row__title">
+          <ExternalLink href={project.links.live} t={t} className="row-link">
+            {project.title}
+          </ExternalLink>
+        </h4>
+        <p className="row__sub">{pick(project.subtitle, lang)}</p>
+      </div>
+      <p className="row__desc col-span-full lg:col-span-4">{pick(project.description, lang)}</p>
+      <div className="row__meta col-span-full lg:col-span-3">
+        <span className="mono">{pick(project.period, lang)}</span>
+        <Stack items={project.tech} />
+      </div>
+      <Arrow dir="out" className="row__arrow" />
+    </li>
+  );
+}
 
-  const visibleProjects = projects.filter((project) => {
-    if (project.category === mode) return true;
-    if (mode === "client" && project.showOnClientView) return true;
-    return false;
-  });
+export function Projects({ lang, t }: Props) {
+  const client = projects.filter((project) => project.category === "client");
+  const study = projects.filter((project) => project.category === "study");
 
   return (
-    <section id="projects" className="section">
-      <div className="section-inner">
-        <div className="projects-heading">
-          <div>
-            <p className="section-label">{t("projects.label")}</p>
-            <h2 className="section-title">
-              {t("projects.title1")}
-              <br />
-              <span style={{ color: "var(--text-muted)" }}>{t("projects.title2")}</span>
-            </h2>
-          </div>
-          <p className="projects-intro">
-            {t("projects.intro")}
-          </p>
-        </div>
+    <section id="work" className="section" aria-labelledby="work-title">
+      <div className="wrap">
+        <SectionHead id="work" title={t("projects.label")} intro={t("projects.intro")} />
 
-        <div className="project-toggle" role="tablist" aria-label="Project categories">
-          <button
-            type="button"
-            className={`project-toggle__button${mode === "client" ? " is-active" : ""}`}
-            onClick={() => setMode("client")}
-            aria-pressed={mode === "client"}
-          >
-            <ClientWorkIcon />
-            {t("projects.tab.client")}
-          </button>
-          <button
-            type="button"
-            className={`project-toggle__button${mode === "study" ? " is-active" : ""}`}
-            onClick={() => setMode("study")}
-            aria-pressed={mode === "study"}
-          >
-            <StudyProjectIcon />
-            {t("projects.tab.study")}
-          </button>
+        <div className="group-head">
+          <h3>{t("projects.client")}</h3>
+          <span className="label">{pad(client.length)}</span>
         </div>
+        <ol>
+          {client.map((project, i) => (
+            <FeatureRow key={project.id} project={project} index={i + 1} lang={lang} t={t} />
+          ))}
+        </ol>
 
-        <div>
-          <div className="projects-grid projects-grid--all mobile-horizontal-scroll">
-            {visibleProjects.map((project) => (
-              <div key={project.id} className="mobile-horizontal-scroll__item mobile-horizontal-scroll__item--project">
-                <ProjectCard project={project} />
-              </div>
-            ))}
-          </div>
+        <div className="group-head mt-16 lg:mt-24">
+          <h3>{t("projects.study")}</h3>
+          <span className="label">{pad(study.length)}</span>
         </div>
+        <div className="index-head grid-12 label" aria-hidden="true">
+          <span className="col-span-1">{t("col.no")}</span>
+          <span className="col-span-4">{t("col.project")}</span>
+          <span className="col-span-4">{t("col.description")}</span>
+          <span className="col-span-3">{t("col.periodStack")}</span>
+        </div>
+        <ol>
+          {study.map((project, i) => (
+            <IndexRow key={project.id} project={project} index={client.length + i + 1} lang={lang} t={t} />
+          ))}
+        </ol>
       </div>
     </section>
   );

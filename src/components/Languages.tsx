@@ -1,129 +1,100 @@
+import { pick, type Language, type Translator } from "../context/LanguageContext";
 import { languages } from "../data/portfolio";
-import { useLanguage } from "../context/LanguageContext";
+import { SectionHead } from "./ui";
 
-const levelPercent: Record<string, number> = {
-  A1: 12,
-  A2: 25,
-  B1: 45,
-  B2: 60,
-  C1: 80,
-  C2: 95,
-  Native: 100,
-};
-
-// Labels moved inside component
-
-const flagByLanguage: Record<string, string> = {
-  Slovenian: "SI",
+const ISO_CODE: Record<string, string> = {
   English: "EN",
+  Slovenian: "SL",
   German: "DE",
   Russian: "RU",
 };
 
-export function Languages() {
-  const { t, lang: currentLang } = useLanguage();
-
-  const skillLabels = [
+/**
+ * CEFR breakdown as one table: skills down the side, languages across.
+ * Four narrow value columns keep it intact on a 360px phone.
+ */
+export function Languages({ lang, t }: { lang: Language; t: Translator }) {
+  const skills = [
     { key: "listening", label: t("lang.listening") },
     { key: "reading", label: t("lang.reading") },
     { key: "production", label: t("lang.speaking") },
     { key: "interaction", label: t("lang.interaction") },
     { key: "writing", label: t("lang.writing") },
-  ];
+  ] as const;
+
+  const display = (level: string) => (level === "Native" ? t("lang.native") : level);
+  const levelClass = (level: string) => `cefr__level${level.length > 2 ? " cefr__level--word" : ""}`;
 
   return (
-    <section id="languages" className="section" style={{ background: "var(--bg-secondary)" }}>
-      <div className="section-inner">
-        <p className="section-label">{t("lang.label")}</p>
-        <h2 className="section-title">
-          {t("lang.title1")}
-          <br />
-          <span style={{ color: "var(--text-muted)" }}>{t("lang.title2")}</span>
-        </h2>
+    <section id="languages" className="section" aria-labelledby="languages-title">
+      <div className="wrap">
+        <SectionHead id="languages" title={t("lang.label")} />
 
-        <div>
-          <div
-            className="languages-grid mobile-horizontal-scroll"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: "0 40px",
-            }}
-          >
-            {languages.map((lang, i) => (
-              <div
-                key={lang.keyName}
-                className="mobile-horizontal-scroll__item mobile-horizontal-scroll__item--language"
-                style={{
-                  padding: "32px 0",
-                  borderBottom: i < languages.length - 1 ? "1px solid var(--border)" : "none",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "24px",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <span className="language-chip">{flagByLanguage[lang.keyName] ?? lang.keyName.slice(0, 2).toUpperCase()}</span>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-heading)",
-                        fontSize: "16px",
-                        fontWeight: 600,
-                        color: "var(--text-primary)",
-                      }}
-                    >
-                      {lang.name[currentLang as keyof typeof lang.name]}
-                    </span>
-                  </div>
-                  <span className="language-level">{lang.level[currentLang as keyof typeof lang.level]}</span>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {skillLabels.map(({ key, label }) => {
-                    const level = lang.skills[key as keyof typeof lang.skills];
-                    const percent = levelPercent[level] ?? (level === "Materni jezik" ? 100 : 0);
-
-                    return (
-                      <div key={key}>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            marginBottom: "6px",
-                          }}
-                        >
-                          <span className="language-skill-label">{label}</span>
-                          <span className="language-skill-value">{level}</span>
-                        </div>
-                        <div className="level-bar">
-                          <div className="level-fill" style={{ width: `${percent}%` }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+        <table className="cefr">
+          <caption className="sr-only">{t("lang.caption")}</caption>
+          <colgroup>
+            <col className="cefr__col-skill" />
+            {languages.map((language) => (
+              <col key={language.keyName} />
             ))}
-          </div>
-        </div>
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col" className="label">
+                {t("lang.skill")}
+              </th>
+              {languages.map((language) => (
+                <th key={language.keyName} scope="col">
+                  <span className="cefr__lang-code" aria-hidden="true">
+                    {ISO_CODE[language.keyName]}
+                  </span>
+                  <span className="cefr__lang-name">{pick(language.name, lang)}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="cefr__overall">
+              <th scope="row">{t("lang.overall")}</th>
+              {languages.map((language) => {
+                const level = pick(language.level, lang);
+                return (
+                  <td key={language.keyName}>
+                    <span className={levelClass(level)}>{level}</span>
+                  </td>
+                );
+              })}
+            </tr>
+            {skills.map((skill) => (
+              <tr key={skill.key}>
+                <th scope="row">{skill.label}</th>
+                {languages.map((language) => {
+                  const level = language.skills[skill.key];
+                  return (
+                    <td key={language.keyName}>
+                      <span className={levelClass(display(level))}>{display(level)}</span>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-        <div className="language-legend">
-          <span className="language-legend__label">{t("lang.scale")}</span>
+        <div className="cefr-key mono">
+          <p className="label w-full sm:w-auto">{t("lang.scale")}</p>
+          <dl className="contents">
           {[
-            { range: "A1-A2", desc: t("lang.basic") },
-            { range: "B1-B2", desc: t("lang.independent") },
-            { range: "C1-C2", desc: t("lang.proficient") },
+            { range: "A1–A2", desc: t("lang.basic") },
+            { range: "B1–B2", desc: t("lang.independent") },
+            { range: "C1–C2", desc: t("lang.proficient") },
           ].map((item) => (
-            <div key={item.range} className="language-legend__item">
-              <span className="language-legend__range">{item.range}</span>
-              <span className="language-legend__desc">{item.desc}</span>
+            <div key={item.range}>
+              <dt>{item.range}</dt>
+              <dd>{item.desc}</dd>
             </div>
           ))}
+          </dl>
         </div>
       </div>
     </section>

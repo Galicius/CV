@@ -1,218 +1,54 @@
-import { useEffect, useState } from "react";
+import { LANGUAGE_SWITCH_ENABLED, type Language, type Translator } from "../context/LanguageContext";
 import { personal } from "../data/portfolio";
+import { LanguageSwitch } from "./LanguageSwitch";
+import { NavMenu } from "./NavMenu";
+import { ThemeToggle } from "./ThemeToggle";
+import { SECTIONS, pad } from "./ui";
 
-import { useLanguage } from "../context/LanguageContext";
-
-export function Navbar() {
-  const { t, lang, setLang } = useLanguage();
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const navLinks = [
-    { href: "#about", label: "nav.about" },
-    { href: "#experience", label: "nav.experience" },
-    { href: "#education", label: "nav.education" },
-    { href: "#skills", label: "nav.skills" },
-    { href: "#projects", label: "nav.work" },
-    { href: "#contact", label: "nav.contact" },
-  ];
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    event.preventDefault();
-    setMenuOpen(false);
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
-  };
+export function Navbar({ lang, t }: { lang: Language; t: Translator }) {
+  const items = SECTIONS.map((section, i) => ({
+    href: `#${section.id}`,
+    num: pad(i + 1),
+    label: t(section.nav),
+  }));
 
   return (
-    <nav
-      style={{
-        position: "fixed",
-        inset: "0 0 auto 0",
-        zIndex: 1000,
-        height: "72px",
-        padding: "0 40px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        background: scrolled ? "rgba(8, 10, 15, 0.8)" : "transparent",
-        borderBottom: scrolled ? "1px solid rgba(255, 244, 227, 0.08)" : "1px solid transparent",
-        backdropFilter: scrolled ? "blur(16px)" : "none",
-        transition: "background 0.3s ease, border-color 0.3s ease",
-      }}
-    >
-      <a
-        href="#hero"
-        onClick={(event) => handleNavClick(event, "#hero")}
-        style={{
-          fontFamily: "var(--font-heading)",
-          fontWeight: 700,
-          fontSize: "1rem",
-          color: "var(--text-primary)",
-          textDecoration: "none",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-        }}
-      >
-        {personal.name}
+    <header id="top" className="site-header">
+      <a href="#main" className="skip-link">
+        {t("a11y.skip")}
       </a>
+      <div className="wrap site-header__bar">
+        <a href="#top" className="brand" aria-label={t("nav.home")}>
+          {personal.name}
+        </a>
 
-      <div className="nav-desktop" style={{ display: "flex", gap: "32px", alignItems: "center" }}>
-        {navLinks.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            onClick={(event) => handleNavClick(event, link.href)}
-            className="nav-link"
-          >
-            {t(link.label)}
-          </a>
-        ))}
-        {/* 
-        <button
-          onClick={() => setLang(lang === "en" ? "sl" : "en")}
-          style={{
-            background: "none",
-            border: "1px solid var(--border)",
-            color: "var(--text-secondary)",
-            padding: "4px 8px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            transition: "color 0.2s ease, border-color 0.2s ease"
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = "var(--text-primary)";
-            e.currentTarget.style.borderColor = "var(--text-secondary)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = "var(--text-secondary)";
-            e.currentTarget.style.borderColor = "var(--border)";
-          }}
-        >
-          {lang === "en" ? "SI" : "EN"}
-        </button>
-        */}
-      </div>
+        <nav aria-label={t("nav.label")}>
+          <ul className="nav-list">
+            {items.map((item) => (
+              <li key={item.href}>
+                <a href={item.href} className="nav-link">
+                  <span className="nav-link__num" aria-hidden="true">
+                    {item.num}
+                  </span>
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-      <button
-        onClick={() => setMenuOpen((open) => !open)}
-        className="nav-hamburger"
-        aria-label="Toggle menu"
-        aria-expanded={menuOpen}
-        style={{
-          display: "none",
-          background: "none",
-          border: "none",
-          padding: "8px",
-          cursor: "pointer",
-          flexDirection: "column",
-          gap: "5px",
-        }}
-      >
-        {[0, 1, 2].map((index) => (
-          <span
-            key={index}
-            style={{
-              width: index === 1 ? "18px" : "24px",
-              height: "1.5px",
-              background: "var(--text-primary)",
-              display: "block",
-            }}
+        <div className="header-tools">
+          {LANGUAGE_SWITCH_ENABLED ? <LanguageSwitch lang={lang} t={t} /> : null}
+          <ThemeToggle label={t("theme.label")} lightLabel={t("theme.light")} darkLabel={t("theme.dark")} />
+          <NavMenu
+            items={items}
+            menuLabel={t("nav.menu")}
+            closeLabel={t("nav.close")}
+            navLabel={t("nav.label")}
+            footer={LANGUAGE_SWITCH_ENABLED ? <LanguageSwitch lang={lang} t={t} /> : null}
           />
-        ))}
-      </button>
-
-      {menuOpen ? (
-        <div className="nav-mobile-menu">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(event) => handleNavClick(event, link.href)}
-              className="nav-mobile-link"
-            >
-              {t(link.label)}
-            </a>
-          ))}
-          {/*
-          <button
-            onClick={() => {
-              setLang(lang === "en" ? "sl" : "en");
-              setMenuOpen(false);
-            }}
-            style={{
-              background: "none",
-              border: "1px solid var(--border)",
-              color: "var(--text-primary)",
-              padding: "8px 16px",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontFamily: "var(--font-mono)",
-              fontSize: "14px",
-              marginTop: "8px",
-              alignSelf: "flex-start",
-            }}
-          >
-            Language: {lang === "en" ? "Slovenian" : "English"}
-          </button>
-          */}
         </div>
-      ) : null}
-
-      <style>{`
-        .nav-link {
-          color: var(--text-secondary);
-          text-decoration: none;
-          font-family: var(--font-body);
-          font-size: 13px;
-          letter-spacing: 0.04em;
-          transition: color 0.2s ease;
-        }
-
-        .nav-link:hover {
-          color: var(--text-primary);
-        }
-
-        .nav-mobile-menu {
-          position: fixed;
-          top: 72px;
-          left: 0;
-          right: 0;
-          padding: 24px 40px 32px;
-          display: flex;
-          flex-direction: column;
-          gap: 18px;
-          background: rgba(8, 10, 15, 0.96);
-          border-bottom: 1px solid var(--border);
-          backdrop-filter: blur(24px);
-        }
-
-        .nav-mobile-link {
-          color: var(--text-primary);
-          text-decoration: none;
-          font-family: var(--font-heading);
-          font-size: 1.2rem;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-        }
-
-        @media (max-width: 768px) {
-          .nav-desktop {
-            display: none !important;
-          }
-
-          .nav-hamburger {
-            display: flex !important;
-          }
-        }
-      `}</style>
-    </nav>
+      </div>
+    </header>
   );
 }

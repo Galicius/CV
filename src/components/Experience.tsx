@@ -1,109 +1,36 @@
+import { pick, type Language, type Translator } from "../context/LanguageContext";
 import { experiences } from "../data/portfolio";
-import { useLanguage } from "../context/LanguageContext";
+import { SectionHead, pad } from "./ui";
 
-export function Experience() {
-  const { t, lang } = useLanguage();
-
+export function Experience({ lang, t }: { lang: Language; t: Translator }) {
   return (
-    <section id="experience" className="section" style={{ background: "var(--bg-secondary)" }}>
-      <div className="section-inner">
-        <div>
-          <p className="section-label">{t("exp.label")}</p>
-          <h2 className="section-title">{t("exp.title1")}<br /><span style={{ color: "var(--text-muted)" }}>{t("exp.title2")}</span></h2>
-        </div>
+    <section id="experience" className="section" aria-labelledby="experience-title">
+      <div className="wrap">
+        <SectionHead id="experience" title={t("exp.label")} />
 
-        <div
-          className="experience-list mobile-horizontal-scroll"
-          style={{ display: "flex", flexDirection: "column", gap: "0" }}
-        >
+        <div className="index-head grid-12 label border-t border-[var(--rule-strong)]" aria-hidden="true">
+          <span className="col-span-1">{t("col.no")}</span>
+          <span className="col-span-4">{t("col.role")}</span>
+          <span className="col-span-4">{t("col.description")}</span>
+          <span className="col-span-3">{t("col.periodPlace")}</span>
+        </div>
+        <ol className="max-lg:border-t max-lg:border-[var(--rule-strong)]">
           {experiences.map((exp, i) => (
-            <div
-              key={exp.id}
-              className="timeline-item mobile-horizontal-scroll__item mobile-horizontal-scroll__item--experience"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "200px 1px 1fr",
-                gap: "0 32px",
-                paddingBottom: i < experiences.length - 1 ? "48px" : "0",
-                alignItems: "start",
-              }}
-            >
-              {/* Date / Company */}
-              <div style={{ paddingTop: "4px", textAlign: "right" }}>
-                <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  color: "var(--text-muted)",
-                  letterSpacing: "0.05em",
-                  marginBottom: "8px",
-                }}>
-                  {exp.period[lang as keyof typeof exp.period]}
-                </div>
-                <div style={{
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  color: "var(--text-secondary)",
-                }}>
-                  {exp.company}
-                </div>
-                <div style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "11px",
-                  color: "var(--text-muted)",
-                  marginTop: "4px",
-                }}>
-                  {exp.location[lang as keyof typeof exp.location]}
-                </div>
+            <li key={exp.id} className="row grid-12 bleed rule-b">
+              <span className="row__idx col-span-full lg:col-span-1">{pad(i + 1)}</span>
+              <div className="col-span-full lg:col-span-4">
+                <h3 className="row__title">{pick(exp.role, lang)}</h3>
+                <p className="row__sub">{exp.company}</p>
               </div>
-
-              {/* Timeline line + dot */}
-              <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <div className="timeline-dot" style={{ marginTop: "6px" }} />
-                {i < experiences.length - 1 && (
-                  <div className="timeline-line" style={{ flex: 1, marginTop: "8px" }} />
-                )}
-              </div>
-
-              {/* Content */}
-              <div>
-                <h3 style={{
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  color: "var(--text-primary)",
-                  marginBottom: "12px",
-                }}>
-                  {exp.role[lang as keyof typeof exp.role]}
-                </h3>
-                <p style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "14px",
-                  color: "var(--text-secondary)",
-                  lineHeight: 1.7,
-                  margin: 0,
-                }}>
-                  {exp.description[lang as keyof typeof exp.description]}
-                </p>
-              </div>
-            </div>
+              <p className="row__desc col-span-full lg:col-span-4">{pick(exp.description, lang)}</p>
+              <p className="row__meta col-span-full lg:col-span-3">
+                <span className="mono">{pick(exp.period, lang)}</span>
+                <span className="mono">{pick(exp.location, lang)}</span>
+              </p>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .experience-list {
-            gap: 0 !important;
-          }
-          .timeline-item {
-            grid-template-columns: 1fr !important;
-            gap: 14px !important;
-          }
-          .timeline-item > :first-child { text-align: left !important; }
-          .timeline-line, .timeline-dot { display: none !important; }
-        }
-      `}</style>
     </section>
   );
 }
