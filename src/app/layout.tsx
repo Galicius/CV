@@ -1,50 +1,82 @@
-import type { Metadata } from "next";
-import { IBM_Plex_Mono, Instrument_Sans, Syne } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Fraunces, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { themeScript } from "../lib/theme";
 import "./globals.css";
 
-const instrumentSans = Instrument_Sans({
-  subsets: ["latin"],
-  variable: "--font-instrument-sans",
+// Display face: the name, headings and ledes. Variable weight + optical size.
+const fraunces = Fraunces({
+  subsets: ["latin", "latin-ext"],
+  axes: ["opsz", "WONK"],
+  style: "normal",
+  display: "swap",
+  variable: "--font-fraunces",
 });
 
-const syne = Syne({
-  subsets: ["latin"],
-  variable: "--font-syne",
+const frauncesItalic = Fraunces({
+  subsets: ["latin", "latin-ext"],
+  axes: ["opsz", "WONK"],
+  style: "italic",
+  preload: false,
+  display: "swap",
+  variable: "--font-fraunces-italic",
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  variable: "--font-ibm-plex-mono",
-  weight: ["400", "500"],
+// Text face: body copy, navigation, buttons. Variable weight.
+const schibsted = Schibsted_Grotesk({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-schibsted",
 });
+
+// Dates and metadata in the margins. One weight.
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+  preload: false,
+  display: "swap",
+  variable: "--font-plex-mono",
+});
+
+const description =
+  "CV and portfolio of Gal Guštin, a full-stack developer and Master's student in Maribor, Slovenia, building web and mobile products.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.galgustin.com"),
   title: "Gal Guštin | Full-Stack Developer",
-  description:
-    "Portfolio of Gal Guštin, a full-stack developer building web and mobile products with strong visual execution and practical product thinking.",
+  description,
   keywords: ["Gal Guštin", "developer portfolio", "Next.js developer", "full-stack developer", "Slovenia"],
+  authors: [{ name: "Gal Guštin" }],
   openGraph: {
     title: "Gal Guštin | Full-Stack Developer",
-    description: "Selected work, experience, and contact details for Gal Guštin.",
-    type: "website",
+    description: "Selected work, experience, education and contact details for Gal Guštin.",
+    type: "profile",
+    locale: "en_GB",
+  },
+  twitter: {
+    card: "summary",
+    title: "Gal Guštin | Full-Stack Developer",
+    description,
   },
 };
 
-import { LanguageProvider } from "../context/LanguageContext";
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+};
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${instrumentSans.variable} ${syne.variable} ${ibmPlexMono.variable}`}>
-      <body suppressHydrationWarning>
-        <LanguageProvider>
-          {children}
-        </LanguageProvider>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${frauncesItalic.variable} ${schibsted.variable} ${plexMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body>
+        {children}
         <Analytics />
         <SpeedInsights />
       </body>

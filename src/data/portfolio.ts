@@ -7,7 +7,13 @@ export type Project = {
   period: { en: string; sl: string };
   featured: boolean;
   tech: string[];
-  previewImg?: string;
+  /** Optimised top-of-page crop (16:10) of the full-page capture in `original`. */
+  preview?: {
+    src: string;
+    width: number;
+    height: number;
+    original: string;
+  };
   category: "client" | "study";
   showOnClientView?: boolean;
   links: {
@@ -103,6 +109,18 @@ export const education = [
   },
 ];
 
+export const aiSkills = [
+  "Claude Code",
+  "Codex",
+  "Multi-agent orchestration",
+  "MCP servers",
+  "Local LLMs (llama.cpp)",
+  "Whisper fine-tuning (LoRA)",
+  "PyTorch (ROCm)",
+  "Hugging Face Transformers",
+  "ComfyUI",
+];
+
 export const programmingSkills = [
   "JavaScript",
   "TypeScript",
@@ -180,7 +198,12 @@ export const projects: Project[] = [
     featured: true,
     category: "client",
     tech: ["WordPress", "Elementor", "Responsive UI"],
-    previewImg: "/previews/screencapture-aljafakin-si-2026-03-26-14_27_23.png",
+    preview: {
+      src: "/previews/aljafakin-top.webp",
+      width: 1600,
+      height: 1000,
+      original: "/previews/screencapture-aljafakin-si-2026-03-26-14_27_23.png",
+    },
     links: {
       live: "https://aljafakin.si",
     },
@@ -201,7 +224,12 @@ export const projects: Project[] = [
     featured: true,
     category: "client",
     tech: ["Next.js", "Image Optimization", "Frontend Design"],
-    previewImg: "/previews/screencapture-piranha-si-2026-03-26-14_27_51.png",
+    preview: {
+      src: "/previews/piranha-top.webp",
+      width: 1600,
+      height: 1000,
+      original: "/previews/screencapture-piranha-si-2026-03-26-14_27_51.png",
+    },
     links: {
       live: "https://piranha.si",
     },
@@ -222,7 +250,12 @@ export const projects: Project[] = [
     featured: false,
     category: "client",
     tech: ["Next.js", "Python", "Google Cloud Run"],
-    previewImg: "/previews/screencapture-vozniski-si-2026-03-26-14_28_25.png",
+    preview: {
+      src: "/previews/vozniski-top.webp",
+      width: 1600,
+      height: 1000,
+      original: "/previews/screencapture-vozniski-si-2026-03-26-14_28_25.png",
+    },
     links: {
       live: "https://vozniski.si",
     },

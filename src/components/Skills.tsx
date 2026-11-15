@@ -1,14 +1,11 @@
-import {
-  programmingSkills, frameworkSkills, databaseSkills,
-  toolSkills, deploymentSkills,
-} from "../data/portfolio";
+import { getTranslator, type Language } from "../context/LanguageContext";
+import { aiSkills, databaseSkills, deploymentSkills, frameworkSkills, programmingSkills, toolSkills } from "../data/portfolio";
+import { Section } from "./primitives";
 
-import { useLanguage } from "../context/LanguageContext";
-
-export function Skills() {
-  const { t } = useLanguage();
-
+export function Skills({ lang }: { lang: Language }) {
+  const t = getTranslator(lang);
   const groups = [
+    { label: t("skills.groupAi"), skills: aiSkills },
     { label: t("skills.group1"), skills: programmingSkills },
     { label: t("skills.group2"), skills: frameworkSkills },
     { label: t("skills.group3"), skills: databaseSkills },
@@ -17,64 +14,21 @@ export function Skills() {
   ];
 
   return (
-    <section id="skills" className="section" style={{ background: "var(--bg-secondary)" }}>
-      <div className="section-inner">
-        <p className="section-label">{t("skills.label")}</p>
-        <h2 className="section-title">{t("skills.title1")}<br /><span style={{ color: "var(--text-muted)" }}>{t("skills.title2")}</span></h2>
-
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "36px" }}
-        >
-          {groups.map((group) => (
-            <div key={group.label} className="skill-group">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                  marginBottom: "16px",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "11px",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "var(--text-muted)",
-                    flexShrink: 0,
-                  }}
-                >
-                  {group.label}
-                </span>
-                <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
-              </div>
-
-              <div style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "12px",
-                color: "var(--text-secondary)",
-                lineHeight: 2,
-              }}>
-                {group.skills.map((skill, i) => (
-                  <span key={skill} className="skill-item">
-                    <span
-                      style={{ transition: "color 0.2s", cursor: "default" }}
-                      onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
-                      onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}
-                    >
-                      {skill}
-                    </span>
-                    {i < group.skills.length - 1 && (
-                      <span style={{ color: "rgba(255,247,234,0.2)", margin: "0 10px" }}>·</span>
-                    )}
-                  </span>
+    <Section id="skills" number={4} title={t("skills.label")}>
+      <dl className="skills">
+        {groups.map((group) => (
+          <div key={group.label} className="entry skills__row">
+            <dt className="entry__meta skills__group">{group.label}</dt>
+            <dd className="entry__body">
+              <ul className="run-in" role="list">
+                {group.skills.map((skill) => (
+                  <li key={skill}>{skill}</li>
                 ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+              </ul>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </Section>
   );
 }

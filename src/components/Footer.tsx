@@ -1,59 +1,27 @@
+import { getTranslator, type Language } from "../context/LanguageContext";
 import { personal } from "../data/portfolio";
+import { ExternalLink } from "./primitives";
 
-export function Footer() {
+export function Footer({ lang }: { lang: Language }) {
+  const t = getTranslator(lang);
   const year = new Date().getFullYear();
 
   return (
-    <footer
-      style={{
-        borderTop: "1px solid var(--border)",
-        padding: "32px 40px",
-        maxWidth: "1200px",
-        margin: "0 auto",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: "16px",
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "11px",
-          color: "var(--text-muted)",
-          letterSpacing: "0.05em",
-        }}
-      >
-        Copyright {year} {personal.name}
-      </div>
-      <div
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "11px",
-          color: "var(--text-muted)",
-          letterSpacing: "0.05em",
-        }}
-      >
-        Built with Next.js, GSAP, and Tailwind CSS
-      </div>
-      <a
-        href={personal.github}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "11px",
-          color: "var(--text-muted)",
-          textDecoration: "none",
-          letterSpacing: "0.05em",
-          transition: "color 0.2s ease",
-        }}
-        onMouseEnter={(event) => ((event.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
-        onMouseLeave={(event) => ((event.currentTarget as HTMLElement).style.color = "var(--text-muted)")}
-      >
-        GitHub
-      </a>
+    <footer className="site-footer page">
+      <p>
+        {t("footer.copyright")} {year} {personal.name}
+      </p>
+      <p className="site-footer__colophon">
+        {t("footer.built")} {t("footer.colophon")}
+      </p>
+      <p className="site-footer__links">
+        <ExternalLink href={personal.github} t={t} className="text-link">
+          GitHub
+        </ExternalLink>
+        <a href="#top" className="text-link">
+          {t("footer.top")}
+        </a>
+      </p>
     </footer>
   );
 }
