@@ -1,59 +1,28 @@
+import type { Translator } from "../context/LanguageContext";
 import { personal } from "../data/portfolio";
+import { Arrow, ExternalLink } from "./ui";
 
-export function Footer() {
+export function Footer({ t }: { t: Translator }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer
-      style={{
-        borderTop: "1px solid var(--border)",
-        padding: "32px 40px",
-        maxWidth: "1200px",
-        margin: "0 auto",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: "16px",
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "11px",
-          color: "var(--text-muted)",
-          letterSpacing: "0.05em",
-        }}
-      >
-        Copyright {year} {personal.name}
+    <footer className="site-footer">
+      <div className="wrap site-footer__inner mono">
+        <p>
+          © {year} {personal.name}
+        </p>
+        <p className="site-footer__credit">{t("footer.credit")}</p>
+        <div className="site-footer__end">
+          <ExternalLink href={personal.github} t={t}>
+            GitHub
+            <Arrow dir="out" />
+          </ExternalLink>
+          <a href="#top">
+            {t("footer.top")}
+            <Arrow dir="up" />
+          </a>
+        </div>
       </div>
-      <div
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "11px",
-          color: "var(--text-muted)",
-          letterSpacing: "0.05em",
-        }}
-      >
-        Built with Next.js, GSAP, and Tailwind CSS
-      </div>
-      <a
-        href={personal.github}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "11px",
-          color: "var(--text-muted)",
-          textDecoration: "none",
-          letterSpacing: "0.05em",
-          transition: "color 0.2s ease",
-        }}
-        onMouseEnter={(event) => ((event.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
-        onMouseLeave={(event) => ((event.currentTarget as HTMLElement).style.color = "var(--text-muted)")}
-      >
-        GitHub
-      </a>
     </footer>
   );
 }

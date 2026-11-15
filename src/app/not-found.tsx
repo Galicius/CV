@@ -1,51 +1,32 @@
-export default function NotFound() {
+import Link from "next/link";
+import { getTranslator } from "../context/LanguageContext";
+import { personal } from "../data/portfolio";
+import { getLang } from "../lib/i18n";
+import { Arrow } from "../components/ui";
+
+export default async function NotFound() {
+  const t = getTranslator(await getLang());
+
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "48px 24px",
-      }}
-    >
-      <div
-        style={{
-          textAlign: "center",
-          maxWidth: "420px",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "11px",
-            letterSpacing: "0.16em",
-            textTransform: "uppercase",
-            color: "var(--text-muted)",
-            marginBottom: "16px",
-          }}
-        >
-          Not Found
+    <main className="lost">
+      <div className="wrap site-header__bar border-b border-[var(--rule)]">
+        <Link href="/" className="brand">
+          {personal.name}
+        </Link>
+      </div>
+      <div className="wrap grid-12 flex-1 content-end gap-y-6 pb-10 pt-12">
+        <p className="label col-span-full">{t("notFound.label")}</p>
+        <p className="lost__code col-span-full" aria-hidden="true">
+          404
         </p>
-        <h1
-          style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "clamp(2.4rem, 5vw, 4rem)",
-            lineHeight: 0.95,
-            marginBottom: "16px",
-            color: "var(--text-primary)",
-          }}
-        >
-          This page does not exist.
-        </h1>
-        <p
-          style={{
-            color: "var(--text-secondary)",
-            lineHeight: 1.7,
-          }}
-        >
-          The page you were looking for could not be found.
-        </p>
+        <div className="col-span-full border-t-2 border-[var(--rule-strong)] pt-4 lg:col-span-6">
+          <h1 className="sec-title text-[clamp(2.25rem,5vw,4.5rem)]">{t("notFound.title")}</h1>
+          <p className="sec-intro mt-4">{t("notFound.text")}</p>
+          <Link href="/" className="feature__visit">
+            {t("notFound.home")}
+            <Arrow dir="right" />
+          </Link>
+        </div>
       </div>
     </main>
   );
