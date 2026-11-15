@@ -9,7 +9,7 @@ export function Footer({ lang }: { lang: Language }) {
   return (
     <footer className="site-footer page">
       <p>
-        {t("footer.copyright")} © {year} {personal.name}
+        {t("footer.copyright")} {year} {personal.name}
       </p>
       <p className="site-footer__colophon">
         {t("footer.built")} {t("footer.colophon")}

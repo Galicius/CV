@@ -2,16 +2,25 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { THEME_COLORS, themeScript } from "../lib/theme";
+import { themeScript } from "../lib/theme";
 import "./globals.css";
 
 // Display face: the name, headings and ledes. Variable weight + optical size.
 const fraunces = Fraunces({
   subsets: ["latin", "latin-ext"],
-  axes: ["opsz"],
-  style: ["normal", "italic"],
+  axes: ["opsz", "WONK"],
+  style: "normal",
   display: "swap",
   variable: "--font-fraunces",
+});
+
+const frauncesItalic = Fraunces({
+  subsets: ["latin", "latin-ext"],
+  axes: ["opsz", "WONK"],
+  style: "italic",
+  preload: false,
+  display: "swap",
+  variable: "--font-fraunces-italic",
 });
 
 // Text face: body copy, navigation, buttons. Variable weight.
@@ -25,6 +34,7 @@ const schibsted = Schibsted_Grotesk({
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin", "latin-ext"],
   weight: "400",
+  preload: false,
   display: "swap",
   variable: "--font-plex-mono",
 });
@@ -58,11 +68,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${schibsted.variable} ${plexMono.variable}`}
+      className={`${fraunces.variable} ${frauncesItalic.variable} ${schibsted.variable} ${plexMono.variable}`}
       suppressHydrationWarning
     >
       <head>
-        <meta name="theme-color" content={THEME_COLORS.light} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>

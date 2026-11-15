@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FocusEvent, type ReactNode } from "react";
 
 /**
  * Disclosure for the section navigation on narrow screens. On wide screens the
@@ -33,10 +33,18 @@ export function MobileMenu({ label, navLabel, children }: { label: string; navLa
     };
   }, [open]);
 
+  const onBlur = (event: FocusEvent<HTMLElement>) => {
+    const target = event.relatedTarget;
+    if (!(target instanceof Node) || (!panelRef.current?.contains(target) && !buttonRef.current?.contains(target))) {
+      setOpen(false);
+    }
+  };
+
   return (
     <>
       <button
         ref={buttonRef}
+        onBlur={onBlur}
         type="button"
         className="menu-button"
         aria-expanded={open}
@@ -51,6 +59,7 @@ export function MobileMenu({ label, navLabel, children }: { label: string; navLa
       </button>
       <nav
         ref={panelRef}
+        onBlur={onBlur}
         id="site-nav"
         className="site-nav"
         aria-label={navLabel}

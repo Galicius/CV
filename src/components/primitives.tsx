@@ -76,7 +76,7 @@ export function Section({
 }) {
   const headingId = `${id}-title`;
   return (
-    <section id={id} aria-labelledby={headingId} className={`section page${className ? ` ${className}` : ""}`}>
+    <section tabIndex={-1} id={id} aria-labelledby={headingId} className={`section page${className ? ` ${className}` : ""}`}>
       <div className="section__head">
         <p className="section__number" aria-hidden="true">
           §&nbsp;{number}

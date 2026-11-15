@@ -14,7 +14,7 @@ export function Masthead({ lang }: { lang: Language }) {
   return (
     <div className="masthead page">
       <p className="masthead__kicker">
-        <span>{t("masthead.kicker")}</span>
+        <span>{personal.title}</span>
         <span>{personal.location}</span>
       </p>
 
@@ -22,7 +22,6 @@ export function Masthead({ lang }: { lang: Language }) {
 
       <div className="masthead__grid">
         <div className="masthead__role">
-          <p className="masthead__title">{personal.title}</p>
           <p className="masthead__status">{t("hero.available")}</p>
         </div>
 

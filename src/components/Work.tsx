@@ -27,7 +27,7 @@ function Plate({ project, index, lang }: { project: Project; index: number; lang
               width={preview.width}
               height={preview.height}
               alt={t("projects.alt", { title: project.title })}
-              sizes="(min-width: 1440px) 620px, (min-width: 1100px) 44vw, (min-width: 800px) 54vw, calc(100vw - 2.5rem)"
+              sizes="(min-width: 1440px) 505px, (min-width: 1100px) calc(58vw - 280px), (min-width: 800px) calc(58vw - 80px), calc(100vw - 4rem)"
               className="plate__image"
             />
           </div>

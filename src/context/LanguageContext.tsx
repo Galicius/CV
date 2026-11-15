@@ -22,7 +22,6 @@ export const translations = {
   en: {
     "a11y.skip": "Skip to content",
     "a11y.newTab": "(opens in a new tab)",
-    "a11y.download": "(PDF download)",
 
     "nav.label": "Sections",
     "nav.menu": "Menu",
@@ -38,7 +37,6 @@ export const translations = {
     "switch.en": "English",
     "switch.sl": "Slovenščina",
 
-    "masthead.kicker": "Curriculum Vitae",
     "hero.available": "Available for opportunities",
     "hero.downloadCv": "Download CV (PDF, EN)",
 
@@ -103,7 +101,6 @@ export const translations = {
   sl: {
     "a11y.skip": "Preskoči na vsebino",
     "a11y.newTab": "(odpre se v novem zavihku)",
-    "a11y.download": "(prenos PDF)",
 
     "nav.label": "Razdelki",
     "nav.menu": "Meni",
@@ -119,7 +116,6 @@ export const translations = {
     "switch.en": "English",
     "switch.sl": "Slovenščina",
 
-    "masthead.kicker": "Življenjepis",
     "hero.available": "Na voljo za priložnosti",
     "hero.downloadCv": "Prenesi CV (PDF, EN)",
 
@@ -129,12 +125,12 @@ export const translations = {
     "about.langs": "Govorjeni jeziki",
 
     "projects.label": "Izbrano delo",
-    "projects.intro": "Spletne strani, ki sem jih izdelal za naročnike in so v živo, ter študijski projekti, ki so oblikovali moj način gradnje produktov.",
+    "projects.intro": "Objavljene spletne strani za naročnike, nato študijski projekti, ki so oblikovali moj način gradnje produktov.",
     "projects.tab.client": "Delo za naročnike",
     "projects.tab.study": "Študijski projekti",
     "projects.visit": "Obišči stran",
     "projects.figure": "Sl.",
-    "projects.alt": "Domača stran spletne strani {title}",
+    "projects.alt": "Naslovnica spletnega mesta {title}",
     "projects.stack": "Tehnologije",
     "projects.link": "Povezava",
 
@@ -173,7 +169,7 @@ export const translations = {
 
     "footer.copyright": "Copyright",
     "footer.built": "Izdelano z Next.js in Tailwind CSS.",
-    "footer.colophon": "Stavljeno v pisavah Fraunces, Schibsted Grotesk in IBM Plex Mono.",
+    "footer.colophon": "Stavljeno s pisavami Fraunces, Schibsted Grotesk in IBM Plex Mono.",
     "footer.top": "Na vrh",
 
     "notFound.kicker": "Napaka 404",
