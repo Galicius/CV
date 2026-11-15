@@ -43,6 +43,7 @@ const description =
   "CV and portfolio of Gal Guštin, a full-stack developer and Master's student in Maribor, Slovenia, building web and mobile products.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.galgustin.com"),
   title: "Gal Guštin | Full-Stack Developer",
   description,
   keywords: ["Gal Guštin", "developer portfolio", "Next.js developer", "full-stack developer", "Slovenia"],
