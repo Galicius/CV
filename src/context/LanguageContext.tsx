@@ -60,6 +60,7 @@ export const translations = {
     "edu.label": "Education",
 
     "skills.label": "Technical skills",
+    "skills.groupAi": "AI & agents",
     "skills.group1": "Languages",
     "skills.group2": "Frameworks & libraries",
     "skills.group3": "Databases",
@@ -139,6 +140,7 @@ export const translations = {
     "edu.label": "Izobraževanje",
 
     "skills.label": "Tehnične veščine",
+    "skills.groupAi": "UI in agenti",
     "skills.group1": "Jeziki",
     "skills.group2": "Ogrodja in knjižnice",
     "skills.group3": "Podatkovne baze",

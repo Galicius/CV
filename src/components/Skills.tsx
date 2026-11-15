@@ -1,10 +1,11 @@
 import { getTranslator, type Language } from "../context/LanguageContext";
-import { databaseSkills, deploymentSkills, frameworkSkills, programmingSkills, toolSkills } from "../data/portfolio";
+import { aiSkills, databaseSkills, deploymentSkills, frameworkSkills, programmingSkills, toolSkills } from "../data/portfolio";
 import { Section } from "./primitives";
 
 export function Skills({ lang }: { lang: Language }) {
   const t = getTranslator(lang);
   const groups = [
+    { label: t("skills.groupAi"), skills: aiSkills },
     { label: t("skills.group1"), skills: programmingSkills },
     { label: t("skills.group2"), skills: frameworkSkills },
     { label: t("skills.group3"), skills: databaseSkills },

@@ -109,6 +109,18 @@ export const education = [
   },
 ];
 
+export const aiSkills = [
+  "Claude Code",
+  "Codex",
+  "Multi-agent orchestration",
+  "MCP servers",
+  "Local LLMs (llama.cpp)",
+  "Whisper fine-tuning (LoRA)",
+  "PyTorch (ROCm)",
+  "Hugging Face Transformers",
+  "ComfyUI",
+];
+
 export const programmingSkills = [
   "JavaScript",
   "TypeScript",
