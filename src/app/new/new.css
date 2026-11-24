@@ -302,7 +302,14 @@
   font-size: 0.95rem;
 }
 
-.ix-filter button {
+.ix-filter [data-slot="segmented-control"] {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: inherit;
+}
+
+.ix-filter [data-slot="segmented-control-item"] {
   padding: 0;
   border: 0;
   background: none;
@@ -311,15 +318,25 @@
   cursor: pointer;
 }
 
-.ix-filter button:hover {
+.ix-filter [data-slot="segmented-control-item"]:is(:hover, [data-checked]) {
   color: var(--ink);
 }
 
-.ix-filter button[aria-pressed="true"] {
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.3em;
+/* The underline under the chosen lane slides to the next one. */
+.ix-filter [data-slot="segmented-control-indicator"] {
+  position: absolute;
+  top: calc(var(--segmented-control-indicator-top) + var(--segmented-control-indicator-height) - 2px);
+  left: var(--segmented-control-indicator-left);
+  width: var(--segmented-control-indicator-width);
+  height: 1px;
+  background: var(--ink);
+  transition-property: top, left, width;
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ix-filter [data-slot="segmented-control-indicator"][data-activation-direction="none"] {
+  transition: none;
 }
 
 .ix-note {
@@ -367,6 +384,13 @@
 .ix-row {
   border-top: 1px solid var(--rule);
   background: var(--paper);
+}
+
+.ix [data-slot="accordion-header"] {
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-wrap: inherit;
 }
 
 .ix-row__head {
@@ -436,10 +460,6 @@
   padding: 0.25rem 0 2rem;
 }
 
-.ix-body[hidden] {
-  display: none;
-}
-
 .ix-body__text {
   display: grid;
   gap: 0.9rem;
@@ -487,29 +507,19 @@
   }
 }
 
-.ix-row[data-open] .ix-body:not([hidden]) {
-  animation: ix-open 0.25s ease-out;
-}
-
-@keyframes ix-open {
-  from {
-    opacity: 0;
-  }
-}
-
 .ix-float {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 20;
   width: 20rem;
+  overflow: visible;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s;
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity 0.15s,
+    scale 0.15s;
 }
 
-.ix-float[data-on] {
-  opacity: 1;
+.ix-float:is([data-starting-style], [data-ending-style]) {
+  opacity: 0;
+  scale: 0.96;
 }
 
 .ix-float img {
