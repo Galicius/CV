@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { LANES, LANE_LABEL, STATUS_LABEL, worksFor, type Work } from "../../data/showcase";
+import { ParticleStage } from "./particles/ParticleStage";
 import { store, useStore } from "./store";
 
 /** Rows glide from their old position when the filter changes. */
@@ -26,7 +27,7 @@ function useFlip(key: string, list: React.RefObject<HTMLOListElement | null>) {
   }, [key, list]);
 }
 
-function Row({ work, open }: { work: Work; open: boolean }) {
+function Row({ work, open, stage }: { work: Work; open: boolean; stage: boolean }) {
   const id = `work-${work.slug}`;
   return (
     <li id={id} data-slug={work.slug} className="ix-row" data-open={open || undefined}>
@@ -36,7 +37,6 @@ function Row({ work, open }: { work: Work; open: boolean }) {
         aria-expanded={open}
         aria-controls={`${id}-body`}
         onClick={() => store.openWork(open ? null : work.slug)}
-        data-preview={work.slug}
       >
         <span className="ix-year">{work.year}</span>
         <span className="ix-title">{work.title}</span>
@@ -46,6 +46,7 @@ function Row({ work, open }: { work: Work; open: boolean }) {
         </span>
       </button>
       <div id={`${id}-body`} className="ix-body" hidden={!open}>
+        {stage && <ParticleStage slug={work.slug} className="ix-stage" />}
         <div className="ix-body__text">
           <p>{work.summary}</p>
           <ul>
@@ -77,35 +78,19 @@ function Row({ work, open }: { work: Work; open: boolean }) {
   );
 }
 
-/** Screenshot that follows the pointer while it is over a row that has one. */
-function HoverPreview({ list }: { list: React.RefObject<HTMLOListElement | null> }) {
-  const [slug, setSlug] = useState<string | null>(null);
-  const box = useRef<HTMLDivElement>(null);
+const WIDE = "(min-width: 900px)";
+const onWideChange = (cb: () => void) => {
+  const query = window.matchMedia(WIDE);
+  query.addEventListener("change", cb);
+  return () => query.removeEventListener("change", cb);
+};
 
-  useLayoutEffect(() => {
-    const el = list.current!;
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const move = (e: PointerEvent) => {
-      if (!fine.matches) return;
-      const row = (e.target as HTMLElement).closest<HTMLElement>("[data-preview]");
-      const next = row?.closest("[data-open]") ? null : (row?.dataset.preview ?? null);
-      setSlug(next);
-      box.current?.style.setProperty("transform", `translate(${e.clientX + 24}px, ${e.clientY - 90}px)`);
-    };
-    const leave = () => setSlug(null);
-    el.addEventListener("pointermove", move);
-    el.addEventListener("pointerleave", leave);
-    return () => {
-      el.removeEventListener("pointermove", move);
-      el.removeEventListener("pointerleave", leave);
-    };
-  }, [list]);
-
-  const work = slug ? worksFor(null).find((w) => w.slug === slug) : undefined;
-  return (
-    <div ref={box} className="ix-float" aria-hidden="true" data-on={Boolean(work?.preview) || undefined}>
-      {work?.preview && <Image src={work.preview.src} width={480} height={300} alt="" loading="eager" />}
-    </div>
+/** True when the work list has room for the particle stage beside it. False on the server. */
+function useWide() {
+  return useSyncExternalStore(
+    onWideChange,
+    () => window.matchMedia(WIDE).matches,
+    () => false,
   );
 }
 
@@ -116,6 +101,13 @@ export function WorkIndex() {
   const shown = worksFor(lane);
   const list = useRef<HTMLOListElement>(null);
   useFlip(shown.map((w) => w.slug).join(), list);
+  const wide = useWide();
+  const [hovered, setHovered] = useState<string | null>(null);
+  const openShown = shown.some((w) => w.slug === open) ? open : null;
+  const onPointerOver = (e: React.PointerEvent) => {
+    const slug = (e.target as HTMLElement).closest<HTMLElement>("[data-slug]")?.dataset.slug;
+    if (slug) setHovered(slug);
+  };
 
   return (
     <>
@@ -127,12 +119,19 @@ export function WorkIndex() {
         ))}
         {source === "jev" && lane && <span className="ix-note">Filtered by the fit check below</span>}
       </div>
-      <ol className="ix" ref={list}>
-        {shown.map((work) => (
-          <Row key={work.slug} work={work} open={open === work.slug} />
-        ))}
-      </ol>
-      <HoverPreview list={list} />
+      {/* Hover is tracked on the list and the stage together, so the shape holds while the pointer moves onto it. */}
+      <div className="ix-wrap" onPointerOver={onPointerOver} onPointerLeave={() => setHovered(null)}>
+        <ol className="ix" ref={list}>
+          {shown.map((work) => (
+            <Row key={work.slug} work={work} open={open === work.slug} stage={!wide && open === work.slug} />
+          ))}
+        </ol>
+        {wide && (
+          <div className="ix-aside">
+            <ParticleStage slug={openShown ?? hovered} className="ix-stage" />
+          </div>
+        )}
+      </div>
     </>
   );
 }
