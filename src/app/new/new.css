@@ -16,6 +16,7 @@
   --rule: light-dark(#e8e8e8, #222222);
   --rule-strong: light-dark(#c8c8c8, #444444);
   --link: light-dark(#0033e6, #8fa6ff);
+  --error: light-dark(#b3261e, #ff8a80);
   --accent: var(--link);
   --font-display: var(--mn-font), system-ui, sans-serif;
   --gutter: 1.25rem;
@@ -107,6 +108,11 @@
   pointer-events: none;
 }
 
+.mn-btn[data-pending] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 .mn textarea,
 .mn input {
   display: block;
@@ -130,6 +136,53 @@
 .mn input:focus-visible {
   outline-offset: 0;
   border-color: var(--link);
+}
+
+.mn :is(textarea, input)[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+.mn [data-slot="field-error"] {
+  margin-top: 0.35rem;
+  color: var(--error);
+  font-size: 0.9rem;
+}
+
+/* Accordion and collapsible panels grow from zero height and fade in. Side padding keeps focus rings inside the clip. */
+.mn-panel {
+  margin-inline: -0.25rem;
+  padding-inline: 0.25rem;
+  overflow: hidden;
+  transition:
+    height 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.25s ease-out;
+}
+
+.mn-panel[data-slot="accordion-panel"] {
+  height: var(--accordion-panel-height);
+}
+
+.mn-panel[data-slot="collapsible-panel"] {
+  height: var(--collapsible-panel-height);
+}
+
+.mn-panel:is([data-starting-style], [data-ending-style]) {
+  height: 0;
+  opacity: 0;
+}
+
+/* Disclosure triangle that turns down while its panel is open. Inline-block keeps the link underline off it. */
+.mn [data-slot="collapsible-trigger"]::before {
+  content: "";
+  display: inline-block;
+  margin-inline-end: 0.45em;
+  border-block: 0.3em solid transparent;
+  border-inline-start: 0.5em solid;
+  transition: rotate 0.2s ease-out;
+}
+
+.mn [data-slot="collapsible-trigger"][data-open]::before {
+  rotate: 90deg;
 }
 
 /* ------------------------------------------------------------- layout -- */
