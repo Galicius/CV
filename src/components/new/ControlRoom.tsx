@@ -33,15 +33,15 @@ export function ControlRoom() {
   return (
     <div className="t3">
       <p>
-        I run Claude Code, Codex and OpenCode side by side in T3 Code, on my own subscriptions. Since {t3.since} that
-        has been {fmt(t3.threads)} threads. Agents started {fmt(t3.spawnedByAgents)} of them by handing work to other
-        agents, and {fmt(t3.worktrees)} ran in their own copy of the repository. By thread count the split is{" "}
-        {t3.families}.
+        I write specs, review diffs, and test the output while coding agents handle most of the implementation. I run
+        Claude Code, Codex, and OpenCode side by side in T3 Code on my own subscriptions. Since {t3.since}, that
+        covers {fmt(t3.threads)} threads: {fmt(t3.spawnedByAgents)} spawned by agents delegating subtasks and{" "}
+        {fmt(t3.worktrees)} run in separate copies of the repository ({t3.families}).
       </p>
       <p>
-        Since {tokens.since} the agents have used {billions(tokens.total)} tokens over {fmt(tokens.calls)} model calls
-        ({tokens.split}). {Math.round(tokens.cachedShare * 100)}% of those were cheap cache reads. At API list prices
-        that would have cost about ${fmt(Math.round(tokens.apiCostUsd / 10) * 10)}. I paid for subscriptions instead.
+        Since {tokens.since}, those runs used {billions(tokens.total)} tokens across {fmt(tokens.calls)} model calls (
+        {tokens.split}), with {Math.round(tokens.cachedShare * 100)}% as cache reads. At API list prices that volume
+        would cost roughly ${fmt(Math.round(tokens.apiCostUsd / 10) * 10)}; I run on subscriptions.
       </p>
 
       <div className="t3-charts">

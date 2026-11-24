@@ -78,7 +78,7 @@ function Row({ work, stage }: { work: Work; stage: boolean }) {
               src={work.preview.src}
               width={work.preview.width}
               height={work.preview.height}
-              alt={`${work.title} home page`}
+              alt={`${work.title} preview`}
               sizes="(min-width: 900px) 24rem, 100vw"
             />
           )}

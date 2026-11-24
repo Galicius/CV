@@ -55,11 +55,11 @@ function Result({ result }: { result: JevVerdict }) {
   return (
     <div className="fit-result">
       {result.mode === "demo" && (
-        <p className="mn-quiet">Demo answer. Jev isn&apos;t connected on this server, so a keyword match stood in.</p>
+        <p className="mn-quiet">Demo mode: Jev is unavailable on this server, so a keyword fallback was used.</p>
       )}
       <p className="fit-verdict">
-        Jev&apos;s answer: {result.verdict >= 0.5 ? "yes" : "no"},{" "}
-        {pct(result.verdict >= 0.5 ? result.verdict : 1 - result.verdict)} likely.
+        Jev verdict: {result.verdict >= 0.5 ? "yes" : "no"} (
+        {pct(result.verdict >= 0.5 ? result.verdict : 1 - result.verdict)} probability).
       </p>
 
       <h3>Fit</h3>
@@ -95,7 +95,7 @@ function Result({ result }: { result: JevVerdict }) {
 
       <h3>Kind of work</h3>
       <p>
-        {LANE_LABEL[result.lane.choice]}. The project list above now shows only this kind of work.
+        {LANE_LABEL[result.lane.choice]}. The Work list above is now filtered to this category.
       </p>
     </div>
   );
@@ -116,7 +116,7 @@ export function Desk() {
         }}
       >
         <Field>
-          <FieldLabel>Job ad, project brief or a yes-or-no question</FieldLabel>
+          <FieldLabel>Job ad, project brief, or yes-or-no question</FieldLabel>
           <Textarea
             value={brief}
             maxLength={BRIEF_MAX}
@@ -149,7 +149,7 @@ export function Desk() {
       </form>
 
       <div aria-live="polite">
-        {busy && <p className="mn-quiet">Jev is reading it…</p>}
+        {busy && <p className="mn-quiet">Querying Jev…</p>}
         {desk.status === "error" && (
           <p className="fit-error" role="alert">
             {desk.message}

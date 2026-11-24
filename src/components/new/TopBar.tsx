@@ -12,9 +12,9 @@ import { applyTheme, type Theme } from "../../lib/theme";
 
 const NAV = [
   { href: "#work", label: "Work" },
-  { href: "#setup", label: "Setup" },
   { href: "#fit", label: "Fit check" },
   { href: "#contact", label: "Contact" },
+  { href: "#setup", label: "Setup" },
 ];
 
 export function TopBar() {

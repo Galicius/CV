@@ -31,7 +31,7 @@ function ToolRunner({ tool }: { tool: Tool }) {
       <Field invalid={parsed === undefined}>
         <FieldLabel>Arguments (JSON)</FieldLabel>
         <Textarea rows={3} spellCheck={false} value={args} onValueChange={setArgs} />
-        <FieldError>That isn&apos;t valid JSON.</FieldError>
+        <FieldError>Invalid JSON.</FieldError>
       </Field>
       <Button
         className="mn-btn"
@@ -79,14 +79,14 @@ export function AgentConsole() {
     <div className="ag">
       <p>
         {webmcp === "active"
-          ? "Your browser supports WebMCP, so an AI agent can use these tools on this page right now."
-          : "Your browser doesn't support WebMCP yet. In browsers that do, an AI agent can use these tools on this page."}{" "}
-        The agent gets typed actions like &ldquo;list projects&rdquo; or &ldquo;draft a message&rdquo; instead of
-        guessing which buttons to press. It can draft a message but can&apos;t send one.
+          ? "This browser supports WebMCP; AI agents can call this page's tools directly."
+          : "This browser does not expose WebMCP. In browsers that do, AI agents can call this page's tools directly."}{" "}
+        Tools expose typed actions such as listing projects or drafting an email instead of DOM guessing. Agents can
+        draft a message but cannot send it.
       </p>
 
       <Collapsible>
-        <CollapsibleTrigger className="mn-link">Try the tools yourself</CollapsibleTrigger>
+        <CollapsibleTrigger className="mn-link">Inspect and run tools</CollapsibleTrigger>
         <CollapsiblePanel className="mn-panel">
           <Tabs className="ag-grid" orientation="vertical">
             <TabsList aria-label="Tools">

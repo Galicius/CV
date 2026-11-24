@@ -58,7 +58,7 @@ export function Contact() {
         </Field>
         <p className="ct-form__wide">
           <Button className="mn-btn" type="submit" disabled={!ready} focusableWhenDisabled>
-            Open in your email app
+            Open in email app
           </Button>
         </p>
       </form>

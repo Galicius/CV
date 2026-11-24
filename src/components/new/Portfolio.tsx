@@ -49,14 +49,10 @@ export function Portfolio({ particles = false }: { particles?: boolean }) {
           <WorkIndex particles={particles} />
         </Section>
 
-        <Section id="setup" title="Setup" wide>
-          <ControlRoom />
-        </Section>
-
         <Section id="fit" title="Fit check">
           <p>
-            Paste a job ad or a project brief, or ask a yes-or-no question about me. Jev, a decision model from
-            TypeSafe AI, reads it against my projects and answers with probabilities instead of prose.
+            Paste a job ad, project brief, or yes-or-no question. TypeSafe AI&apos;s Jev decision model evaluates it
+            against my projects and returns probabilities instead of prose.
           </p>
           <Desk />
         </Section>
@@ -71,6 +67,10 @@ export function Portfolio({ particles = false }: { particles?: boolean }) {
             {profile.education} {profile.languages}.
           </p>
           <Contact />
+        </Section>
+
+        <Section id="setup" title="Setup" wide>
+          <ControlRoom />
         </Section>
       </main>
       <footer className="mn-foot">© 2026 {profile.name}</footer>
