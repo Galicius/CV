@@ -1,5 +1,12 @@
 "use client";
 
+import { Button } from "@ui-sdk/react/button";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@ui-sdk/react/navigation-menu";
 import { useEffect, useState } from "react";
 import { applyTheme, type Theme } from "../../lib/theme";
 
@@ -28,16 +35,18 @@ export function TopBar() {
       <a className="mn-bar__name" href="#top">
         Gal Guštin
       </a>
-      <nav aria-label="Sections">
-        {NAV.map((item) => (
-          <a key={item.href} href={item.href}>
-            {item.label}
-          </a>
-        ))}
-        <button type="button" onClick={() => applyTheme(next)} disabled={!theme}>
+      <NavigationMenu aria-label="Sections">
+        <NavigationMenuList>
+          {NAV.map((item) => (
+            <NavigationMenuItem key={item.href}>
+              <NavigationMenuLink href={item.href}>{item.label}</NavigationMenuLink>
+            </NavigationMenuItem>
+          ))}
+        </NavigationMenuList>
+        <Button onClick={() => applyTheme(next)} disabled={!theme}>
           {next === "dark" ? "Dark" : "Light"}
-        </button>
-      </nav>
+        </Button>
+      </NavigationMenu>
     </header>
   );
 }

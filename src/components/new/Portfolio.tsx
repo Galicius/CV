@@ -1,3 +1,4 @@
+import { Separator } from "@ui-sdk/react/separator";
 import { AgentConsole } from "./AgentConsole";
 import { Contact } from "./Contact";
 import { ControlRoom } from "./ControlRoom";
@@ -6,6 +7,19 @@ import { TopBar } from "./TopBar";
 import { WebMcpBridge } from "./WebMcpBridge";
 import { WorkIndex } from "./WorkIndex";
 import { profile } from "../../data/showcase";
+
+/** A ruled-off section. The rule is only visual; the heading already tells sections apart. */
+function Section({ id, title, wide = false, children }: { id: string; title: string; wide?: boolean; children: React.ReactNode }) {
+  return (
+    <>
+      <Separator decorative className="mn-rule" />
+      <section id={id} className={wide ? "mn-section mn-section--wide" : "mn-section"} aria-labelledby={`${id}-h`}>
+        <h2 id={`${id}-h`}>{title}</h2>
+        {children}
+      </section>
+    </>
+  );
+}
 
 /** The /new page. `particles` swaps the floating screenshot for the particle stage (shown at /new/1). */
 export function Portfolio({ particles = false }: { particles?: boolean }) {
@@ -22,48 +36,42 @@ export function Portfolio({ particles = false }: { particles?: boolean }) {
           </p>
         </section>
 
-        <section id="now" className="mn-section" aria-labelledby="now-h">
-          <h2 id="now-h">Now</h2>
+        <Section id="now" title="Now">
           <p>
             <strong>
               {profile.job.title} at {profile.job.company}
             </strong>
             , since {profile.job.since}. {profile.job.summary}
           </p>
-        </section>
+        </Section>
 
-        <section id="work" className="mn-section mn-section--wide" aria-labelledby="work-h">
-          <h2 id="work-h">Work</h2>
+        <Section id="work" title="Work" wide>
           <WorkIndex particles={particles} />
-        </section>
+        </Section>
 
-        <section id="setup" className="mn-section mn-section--wide" aria-labelledby="setup-h">
-          <h2 id="setup-h">Setup</h2>
+        <Section id="setup" title="Setup" wide>
           <ControlRoom />
-        </section>
+        </Section>
 
-        <section id="fit" className="mn-section" aria-labelledby="fit-h">
-          <h2 id="fit-h">Fit check</h2>
+        <Section id="fit" title="Fit check">
           <p>
             Paste a job ad or a project brief, or ask a yes-or-no question about me. Jev, a decision model from
             TypeSafe AI, reads it against my projects and answers with probabilities instead of prose.
           </p>
           <Desk />
-        </section>
+        </Section>
 
-        <section id="agents" className="mn-section" aria-labelledby="agents-h">
-          <h2 id="agents-h">For AI agents</h2>
+        <Section id="agents" title="For AI agents">
           <AgentConsole />
-        </section>
+        </Section>
 
-        <section id="contact" className="mn-section" aria-labelledby="contact-h">
-          <h2 id="contact-h">Contact</h2>
+        <Section id="contact" title="Contact">
           <p>{profile.about}</p>
           <p className="mn-quiet">
             {profile.education} {profile.languages}.
           </p>
           <Contact />
-        </section>
+        </Section>
       </main>
       <footer className="mn-foot">© 2026 {profile.name}</footer>
     </>
