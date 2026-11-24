@@ -654,9 +654,21 @@
   justify-items: start;
 }
 
-.fit label {
+/* A field stacks its label, control and error with the spacing of the form around it. */
+.mn :is(.fit, .ag-run) [data-slot="field"] {
+  display: grid;
+  gap: inherit;
   width: 100%;
+}
+
+.mn :is(.fit, .ag-run) [data-slot="field-label"] {
   font-size: 0.95rem;
+}
+
+.fit-actions {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
 }
 
 .fit-examples {
@@ -665,7 +677,7 @@
 }
 
 .fit-error {
-  color: light-dark(#b3261e, #ff8a80);
+  color: var(--error);
 }
 
 .fit-result {
@@ -687,7 +699,7 @@
   gap: 0.35rem;
 }
 
-.fit-rows li {
+.fit-row {
   display: grid;
   grid-template-columns: 11rem minmax(0, 1fr) 3rem;
   align-items: center;
@@ -696,22 +708,24 @@
   font-size: 0.95rem;
 }
 
-.fit-rows li[data-chosen] {
+.fit-row[data-chosen] {
   color: var(--ink);
 }
 
 .fit-bar {
-  display: block;
-  width: var(--w);
   height: 4px;
+}
+
+.fit-bar [data-slot="meter-indicator"] {
+  height: 100%;
   background: var(--rule-strong);
 }
 
-.fit-rows li[data-chosen] .fit-bar {
+.fit-row[data-chosen] [data-slot="meter-indicator"] {
   background: var(--ink);
 }
 
-.fit-num {
+.fit-row [data-slot="meter-value"] {
   text-align: right;
 }
 

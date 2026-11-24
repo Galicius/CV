@@ -52,6 +52,9 @@ let state: State = {
 
 const listeners = new Set<() => void>();
 
+/** The fit check in flight. A newer run or a stop aborts it and owns the desk from then on. */
+let deskRun: AbortController | null = null;
+
 function set(patch: Partial<State>) {
   state = { ...state, ...patch };
   listeners.forEach((l) => l());
@@ -76,6 +79,8 @@ export const store = {
   },
 
   async runDesk(brief: string): Promise<Desk> {
+    deskRun?.abort();
+    const run = (deskRun = new AbortController());
     set({ brief, desk: { status: "running", brief } });
     let desk: Desk;
     try {
@@ -83,6 +88,7 @@ export const store = {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ brief }),
+        signal: run.signal,
       });
       const body = (await res.json()) as JevVerdict | { error: string };
       desk =
@@ -90,11 +96,19 @@ export const store = {
           ? { status: "error", brief, message: body.error }
           : { status: "done", brief, result: body };
     } catch {
-      desk = { status: "error", brief, message: "Could not reach the server." };
+      desk = run.signal.aborted ? { status: "idle" } : { status: "error", brief, message: "Could not reach the server." };
     }
+    if (deskRun !== run) return desk;
+    deskRun = null;
     set({ desk });
     if (desk.status === "done") store.setLane(desk.result.lane.choice, "jev");
     return desk;
+  },
+
+  stopDesk() {
+    deskRun?.abort();
+    deskRun = null;
+    set({ desk: { status: "idle" } });
   },
 };
 

@@ -1,5 +1,9 @@
 "use client";
 
+import { Button } from "@ui-sdk/react/button";
+import { Field, FieldLabel } from "@ui-sdk/react/field";
+import { Meter, MeterIndicator, MeterLabel, MeterTrack, MeterValue } from "@ui-sdk/react/meter";
+import { Textarea } from "@ui-sdk/react/textarea";
 import { LANE_LABEL, workBySlug, works } from "../../data/showcase";
 import { BRIEF_MAX, FITS, FIT_LABEL, type JevVerdict } from "../../lib/jev";
 import { store, useStore } from "./store";
@@ -14,13 +18,28 @@ const EXAMPLES = [
 
 const pct = (p: number) => `${Math.round(p * 100)}%`;
 
+/** One option of a Jev answer. Without probabilities there is nothing to measure, so only the label shows. */
 function Row({ label, p, chosen }: { label: string; p: number | null; chosen: boolean }) {
+  if (p === null)
+    return (
+      <div className="fit-row" data-chosen={chosen || undefined}>
+        {label}
+      </div>
+    );
   return (
-    <li data-chosen={chosen || undefined}>
-      <span>{label}</span>
-      <span className="fit-bar" style={{ "--w": pct(p ?? 1) } as React.CSSProperties} />
-      <span className="fit-num">{p === null ? "" : pct(p)}</span>
-    </li>
+    <Meter
+      className="fit-row"
+      data-chosen={chosen || undefined}
+      value={p}
+      max={1}
+      format={{ style: "percent", maximumFractionDigits: 0 }}
+    >
+      <MeterLabel>{label}</MeterLabel>
+      <MeterTrack className="fit-bar">
+        <MeterIndicator />
+      </MeterTrack>
+      <MeterValue />
+    </Meter>
   );
 }
 
@@ -44,7 +63,7 @@ function Result({ result }: { result: JevVerdict }) {
       </p>
 
       <h3>Fit</h3>
-      <ol className="fit-rows">
+      <div className="fit-rows">
         {FITS.map((f) => (
           <Row
             key={f}
@@ -53,25 +72,24 @@ function Result({ result }: { result: JevVerdict }) {
             chosen={f === result.fit.choice}
           />
         ))}
-      </ol>
+      </div>
 
       <h3>Closest project</h3>
       {topWorks.length > 0 ? (
-        <ol className="fit-rows">
+        <div className="fit-rows">
           {topWorks.map(({ w, p }) => (
             <Row key={w.slug} label={w.title} p={p} chosen={w.slug === result.closest.choice} />
           ))}
-        </ol>
+        </div>
       ) : null}
       {closest && (
         <p>
-          <button
-            type="button"
+          <Button
             className="mn-link"
             onClick={() => invoke(toolByName.get("open_project")!, { slug: closest.slug }, "visitor")}
           >
             Open {closest.title}
-          </button>
+          </Button>
         </p>
       )}
 
@@ -87,48 +105,51 @@ export function Desk() {
   const brief = useStore((s) => s.brief);
   const desk = useStore((s) => s.desk);
   const busy = desk.status === "running";
-
-  const submit = () => {
-    if (!busy && brief.trim().length >= 3) invoke(toolByName.get("check_fit")!, { brief }, "visitor");
-  };
+  const ready = !busy && brief.trim().length >= 3;
 
   return (
     <div className="fit">
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          submit();
+          if (ready) invoke(toolByName.get("check_fit")!, { brief }, "visitor");
         }}
       >
-        <label htmlFor="fit-brief">Job ad, project brief or a yes-or-no question</label>
-        <textarea
-          id="fit-brief"
-          value={brief}
-          maxLength={BRIEF_MAX}
-          rows={5}
-          onChange={(e) => store.setBrief(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) submit();
-          }}
-        />
+        <Field>
+          <FieldLabel>Job ad, project brief or a yes-or-no question</FieldLabel>
+          <Textarea
+            value={brief}
+            maxLength={BRIEF_MAX}
+            rows={5}
+            submitShortcut="mod+enter"
+            onValueChange={(value) => store.setBrief(value)}
+          />
+        </Field>
         <p className="fit-examples">
           Try:{" "}
           {EXAMPLES.map((ex, i) => (
             <span key={ex}>
-              <button type="button" className="mn-link" onClick={() => store.setBrief(ex)}>
+              <Button className="mn-link" onClick={() => store.setBrief(ex)}>
                 {ex}
-              </button>
+              </Button>
               {i < EXAMPLES.length - 1 ? ", " : "."}
             </span>
           ))}
         </p>
-        <button className="mn-btn" type="submit" disabled={busy || brief.trim().length < 3}>
-          {busy ? "Checking" : "Check"}
-        </button>
+        <p className="fit-actions">
+          <Button className="mn-btn" type="submit" disabled={!ready} focusableWhenDisabled>
+            {busy ? "Checking…" : "Check"}
+          </Button>
+          {busy && (
+            <Button className="mn-link" onClick={() => store.stopDesk()}>
+              Stop
+            </Button>
+          )}
+        </p>
       </form>
 
       <div aria-live="polite">
-        {desk.status === "running" && <p className="mn-quiet">Jev is reading it…</p>}
+        {busy && <p className="mn-quiet">Jev is reading it…</p>}
         {desk.status === "error" && (
           <p className="fit-error" role="alert">
             {desk.message}
