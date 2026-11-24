@@ -37,6 +37,7 @@ function Row({ work, open, stage }: { work: Work; open: boolean; stage: boolean 
         aria-expanded={open}
         aria-controls={`${id}-body`}
         onClick={() => store.openWork(open ? null : work.slug)}
+        data-preview={work.slug}
       >
         <span className="ix-year">{work.year}</span>
         <span className="ix-title">{work.title}</span>
@@ -78,6 +79,38 @@ function Row({ work, open, stage }: { work: Work; open: boolean; stage: boolean 
   );
 }
 
+/** Screenshot that follows the pointer while it is over a row that has one. */
+function HoverPreview({ list }: { list: React.RefObject<HTMLOListElement | null> }) {
+  const [slug, setSlug] = useState<string | null>(null);
+  const box = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const el = list.current!;
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const move = (e: PointerEvent) => {
+      if (!fine.matches) return;
+      const row = (e.target as HTMLElement).closest<HTMLElement>("[data-preview]");
+      const next = row?.closest("[data-open]") ? null : (row?.dataset.preview ?? null);
+      setSlug(next);
+      box.current?.style.setProperty("transform", `translate(${e.clientX + 24}px, ${e.clientY - 90}px)`);
+    };
+    const leave = () => setSlug(null);
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", leave);
+    return () => {
+      el.removeEventListener("pointermove", move);
+      el.removeEventListener("pointerleave", leave);
+    };
+  }, [list]);
+
+  const work = slug ? worksFor(null).find((w) => w.slug === slug) : undefined;
+  return (
+    <div ref={box} className="ix-float" aria-hidden="true" data-on={Boolean(work?.preview) || undefined}>
+      {work?.preview && <Image src={work.preview.src} width={480} height={300} alt="" loading="eager" />}
+    </div>
+  );
+}
+
 const WIDE = "(min-width: 900px)";
 const onWideChange = (cb: () => void) => {
   const query = window.matchMedia(WIDE);
@@ -94,14 +127,15 @@ function useWide() {
   );
 }
 
-export function WorkIndex() {
+/** `particles` shows the particle stage; without it a screenshot follows the pointer over rows. */
+export function WorkIndex({ particles = false }: { particles?: boolean }) {
   const lane = useStore((s) => s.lane);
   const source = useStore((s) => s.laneSource);
   const open = useStore((s) => s.openWork);
   const shown = worksFor(lane);
   const list = useRef<HTMLOListElement>(null);
   useFlip(shown.map((w) => w.slug).join(), list);
-  const wide = useWide();
+  const wide = useWide() && particles;
   const [hovered, setHovered] = useState<string | null>(null);
   const openShown = shown.some((w) => w.slug === open) ? open : null;
   const onPointerOver = (e: React.PointerEvent) => {
@@ -120,10 +154,10 @@ export function WorkIndex() {
         {source === "jev" && lane && <span className="ix-note">Filtered by the fit check below</span>}
       </div>
       {/* Hover is tracked on the list and the stage together, so the shape holds while the pointer moves onto it. */}
-      <div className="ix-wrap" onPointerOver={onPointerOver} onPointerLeave={() => setHovered(null)}>
+      <div className="ix-wrap" data-stage={particles || undefined} onPointerOver={onPointerOver} onPointerLeave={() => setHovered(null)}>
         <ol className="ix" ref={list}>
           {shown.map((work) => (
-            <Row key={work.slug} work={work} open={open === work.slug} stage={!wide && open === work.slug} />
+            <Row key={work.slug} work={work} open={open === work.slug} stage={particles && !wide && open === work.slug} />
           ))}
         </ol>
         {wide && (
@@ -132,6 +166,7 @@ export function WorkIndex() {
           </div>
         )}
       </div>
+      {!particles && <HoverPreview list={list} />}
     </>
   );
 }
