@@ -34,6 +34,13 @@ export function Portfolio({ particles = false }: { particles?: boolean }) {
           <p className="mn-quiet">
             {profile.job.title} at {profile.job.company} · {profile.location}
           </p>
+          <div className="mn-cta">
+            <a className="mn-cta__main" href="#contact">
+              Get in touch
+            </a>
+            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+            <a href={profile.cv}>CV (PDF)</a>
+          </div>
         </section>
 
         <Section id="now" title="Now">
@@ -61,16 +68,16 @@ export function Portfolio({ particles = false }: { particles?: boolean }) {
           <AgentConsole />
         </Section>
 
+        <Section id="setup" title="Setup" wide>
+          <ControlRoom />
+        </Section>
+
         <Section id="contact" title="Contact">
           <p>{profile.about}</p>
           <p className="mn-quiet">
             {profile.education} {profile.languages}.
           </p>
           <Contact />
-        </Section>
-
-        <Section id="setup" title="Setup" wide>
-          <ControlRoom />
         </Section>
       </main>
       <footer className="mn-foot">© 2026 {profile.name}</footer>

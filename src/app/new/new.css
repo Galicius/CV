@@ -263,6 +263,37 @@
   font-size: 1.0625rem;
 }
 
+.mn-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.mn-cta a {
+  color: var(--ink);
+  text-underline-offset: 0.2em;
+}
+
+.mn-cta .mn-cta__main {
+  padding: 0.7rem 1.25rem;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  transition: opacity 150ms;
+}
+
+.mn-cta .mn-cta__main:hover {
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-cta .mn-cta__main {
+    transition: none;
+  }
+}
+
 .mn-rule {
   height: 1px;
   background: var(--rule);
