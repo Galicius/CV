@@ -576,7 +576,7 @@
   max-width: var(--measure);
 }
 
-.t3-chart ol {
+.t3-chart__cols {
   display: grid;
   align-items: end;
   gap: 0.75rem;
@@ -584,7 +584,7 @@
   border-bottom: 1px solid var(--ink);
 }
 
-.t3-chart li {
+.t3-chart__col {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -594,7 +594,7 @@
 
 .t3-chart__bar {
   display: block;
-  height: var(--h);
+  height: var(--meter-value);
   min-height: 2px;
   background: var(--ink);
 }
@@ -606,7 +606,7 @@
 
 .t3-chart__value {
   position: absolute;
-  bottom: calc(var(--h) + 0.2rem);
+  bottom: calc(max(1%, var(--meter-value)) + 0.2rem);
   left: 0;
   right: 0;
   font-size: 0.85rem;
@@ -621,8 +621,7 @@
   color: var(--grey);
 }
 
-.t3-chart li:hover .t3-chart__value,
-.t3-chart li:focus-visible .t3-chart__value {
+.t3-chart__col:is(:hover, :focus-visible) .t3-chart__value {
   color: var(--ink);
 }
 

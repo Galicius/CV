@@ -1,30 +1,29 @@
+import { Meter, MeterLabel, MeterValue } from "@ui-sdk/react/meter";
 import { t3 } from "../../data/showcase";
 
 const fmt = (n: number) => n.toLocaleString("en-GB");
 const billions = (n: number) => `${(n / 1e9).toFixed(1)} billion`;
-const short = (n: number) => (n >= 1e9 ? `${(n / 1e9).toFixed(1)}B` : `${Math.round(n / 1e6)}M`);
 
-type Bar = { label: string; value: number; text: string; partial?: boolean };
+type Bar = { label: string; value: number; partial?: boolean };
 
-function Columns({ caption, bars }: { caption: string; bars: Bar[] }) {
+/** Each column is a Meter against the busiest month; its bar and value label follow `--meter-value`. */
+function Columns({ caption, bars, format }: { caption: string; bars: Bar[]; format: Intl.NumberFormatOptions }) {
   const peak = Math.max(...bars.map((b) => b.value));
   return (
     <figure className="t3-chart">
       <figcaption>{caption}</figcaption>
-      <ol style={{ gridTemplateColumns: `repeat(${bars.length}, minmax(0, 1fr))` }}>
+      <div className="t3-chart__cols" style={{ gridTemplateColumns: `repeat(${bars.length}, minmax(0, 1fr))` }}>
         {bars.map((b) => (
-          <li
-            key={b.label}
-            tabIndex={0}
-            style={{ "--h": `${Math.max(1, (b.value / peak) * 100)}%` } as React.CSSProperties}
-            aria-label={`${b.label}: ${b.text}${b.partial ? " (partial month)" : ""}`}
-          >
-            <span className="t3-chart__value">{b.text}</span>
+          <Meter key={b.label} className="t3-chart__col" value={b.value} max={peak} format={format} locale="en" tabIndex={0}>
+            <MeterValue className="t3-chart__value" />
             <span className="t3-chart__bar" data-partial={b.partial || undefined} />
-            <span className="t3-chart__month">{b.label}</span>
-          </li>
+            <MeterLabel className="t3-chart__month">
+              {b.label}
+              {b.partial && <span className="sr-only"> (partial month)</span>}
+            </MeterLabel>
+          </Meter>
         ))}
-      </ol>
+      </div>
     </figure>
   );
 }
@@ -48,11 +47,13 @@ export function ControlRoom() {
       <div className="t3-charts">
         <Columns
           caption="Threads per month, 2026"
-          bars={t3.months.map((m) => ({ label: m.month, value: m.threads, text: String(m.threads), partial: m.partial }))}
+          bars={t3.months.map((m) => ({ label: m.month, value: m.threads, partial: m.partial }))}
+          format={{ maximumFractionDigits: 0 }}
         />
         <Columns
           caption="Tokens per month, 2026"
-          bars={tokens.months.map((m) => ({ label: m.month, value: m.tokens, text: short(m.tokens), partial: m.partial }))}
+          bars={tokens.months.map((m) => ({ label: m.month, value: m.tokens, partial: m.partial }))}
+          format={{ notation: "compact", maximumFractionDigits: 1 }}
         />
       </div>
 
