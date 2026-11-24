@@ -24,10 +24,10 @@ export type Project = {
 
 export const personal = {
   name: "Gal Guštin",
-  title: "Full-Stack Developer",
+  title: "AI Engineer",
   subtitle: {
-    en: "Full-stack developer building polished web experiences and practical mobile products.",
-    sl: "Full-stack razvijalec, ki ustvarja dovršene spletne izkušnje in praktične mobilne produkte."
+    en: "Building AI agents for businesses, and polished web and mobile products.",
+    sl: "Razvijam AI agente za podjetja ter dovršene spletne in mobilne produkte."
   },
   location: "Maribor / Celje, Slovenia",
   email: "hello@galgustin.com",
@@ -42,12 +42,11 @@ export const experiences = [
   {
     id: 4,
     role: { en: "AI Engineer", sl: "AI inženir" },
-    company: "Lancom",
-    period: { en: "2026 - Present", sl: "2026 - Trenutno" },
-    location: { en: "Slovenia", sl: "Slovenija" },
+    company: "LANCom d.o.o.",
+    period: { en: "Aug 2026 - Present", sl: "Avg 2026 - Trenutno" },
     description: {
-      en: "Building B2B AI solutions for client companies: AI agents with retrieval-augmented generation (RAG), ERP integrations, meeting assistants, Copilot integrations and local model integrations.",
-      sl: "Razvoj B2B AI rešitev za podjetja: AI agenti z RAG (retrieval-augmented generation), integracije z ERP sistemi, asistenti za sestanke, integracije s Copilotom in integracije lokalnih modelov."
+      en: "Building B2B AI solutions for client companies: AI agents with retrieval-augmented generation (RAG), ERP integrations, meeting assistants, Microsoft Copilot integrations and local model integrations.",
+      sl: "Razvoj B2B AI rešitev za podjetja: AI agenti z RAG (retrieval-augmented generation), integracije z ERP sistemi, asistenti za sestanke, integracije z Microsoft Copilotom in integracije lokalnih modelov."
     }
   },
   {

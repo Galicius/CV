@@ -17,12 +17,16 @@ export function Experience({ lang }: { lang: Language }) {
               <h3 className="entry__title">{pick(item.role, lang)}</h3>
               <p className="entry__org">
                 {item.company}
-                <span className="entry__sep" aria-hidden="true">
-                  {" "}
-                  ·{" "}
-                </span>
-                <span className="sr-only">, </span>
-                {pick(item.location, lang)}
+                {item.location && (
+                  <>
+                    <span className="entry__sep" aria-hidden="true">
+                      {" "}
+                      ·{" "}
+                    </span>
+                    <span className="sr-only">, </span>
+                    {pick(item.location, lang)}
+                  </>
+                )}
               </p>
               <p className="entry__text">{pick(item.description, lang)}</p>
             </div>

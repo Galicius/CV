@@ -5,7 +5,7 @@ import { BRIEF_MAX } from "../../lib/jev";
 import { applyTheme } from "../../lib/theme";
 import { store, type Caller } from "./store";
 
-export const SECTIONS = ["top", "work", "setup", "fit", "agents", "contact"] as const;
+export const SECTIONS = ["top", "now", "work", "setup", "fit", "agents", "contact"] as const;
 type Section = (typeof SECTIONS)[number];
 
 type Args = Record<string, unknown>;
@@ -54,7 +54,7 @@ function scrollTo(section: Section) {
 export const tools: Tool[] = [
   {
     name: "get_profile",
-    description: "Who Gal Guštin is: role, location, contact details, languages, education and a short bio.",
+    description: "Who Gal Guštin is: role, current job, location, contact details, languages, education and a short bio.",
     inputSchema: { type: "object", properties: {} },
     readOnly: true,
     example: {},

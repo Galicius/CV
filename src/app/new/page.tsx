@@ -17,7 +17,17 @@ export default function NewPortfolio() {
           <h1 id="mn-name">{profile.name}</h1>
           <p>{profile.lede}</p>
           <p className="mn-quiet">
-            {profile.role} in {profile.location}
+            {profile.job.title} at {profile.job.company} · {profile.location}
+          </p>
+        </section>
+
+        <section id="now" className="mn-section" aria-labelledby="now-h">
+          <h2 id="now-h">Now</h2>
+          <p>
+            <strong>
+              {profile.job.title} at {profile.job.company}
+            </strong>
+            , since {profile.job.since}. {profile.job.summary}
           </p>
         </section>
 

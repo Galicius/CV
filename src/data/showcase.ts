@@ -48,13 +48,20 @@ export type Work = {
 
 export const profile = {
   name: "Gal Guštin",
-  role: "Software developer",
+  role: "AI engineer",
+  job: {
+    title: "AI engineer",
+    company: "LANCom d.o.o.",
+    since: "August 2026",
+    summary:
+      "We build AI solutions for other companies: AI agents with retrieval-augmented generation (RAG), ERP integrations, meeting assistants, Microsoft Copilot integrations and local model integrations.",
+  },
   location: "Maribor, Slovenia",
   email: "hello@galgustin.com",
   github: "https://github.com/Galicius",
   cv: "/cv.pdf",
   lede:
-    "I build web and mobile products. Most of the code is written by AI coding agents that I brief, review and test, so my time goes into deciding what to build and checking that it works.",
+    "I build AI agents and integrations for businesses at LANCom, and web and mobile products of my own. Most of my code is written by AI coding agents that I brief, review and test, so my time goes into deciding what to build and checking that it works.",
   about:
     "I'm studying for a master's in Computer Science and Data Technologies at FERI in Maribor. Before that I spent four years at Samsung, helping customers choose and set up their phones, which taught me to explain technical things simply.",
   languages: "Slovenian (native), English (C1), German (B1), Russian (A2)",

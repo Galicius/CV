@@ -5,7 +5,7 @@ import "./new.css";
 const host = Host_Grotesk({ subsets: ["latin", "latin-ext"], display: "swap", variable: "--mn-font" });
 
 const description =
-  "Gal Guštin builds web and mobile products in Maribor, Slovenia, with AI coding agents doing most of the typing.";
+  "Gal Guštin is an AI engineer at LANCom in Maribor, Slovenia, and builds web and mobile products with AI coding agents doing most of the typing.";
 
 export const metadata: Metadata = {
   title: "Gal Guštin",
