@@ -40,6 +40,17 @@ export const personal = {
 
 export const experiences = [
   {
+    id: 4,
+    role: { en: "AI Engineer", sl: "AI inženir" },
+    company: "Lancom",
+    period: { en: "2026 - Present", sl: "2026 - Trenutno" },
+    location: { en: "Slovenia", sl: "Slovenija" },
+    description: {
+      en: "Building B2B AI solutions for client companies: AI agents with retrieval-augmented generation (RAG), ERP integrations, meeting assistants, Copilot integrations and local model integrations.",
+      sl: "Razvoj B2B AI rešitev za podjetja: AI agenti z RAG (retrieval-augmented generation), integracije z ERP sistemi, asistenti za sestanke, integracije s Copilotom in integracije lokalnih modelov."
+    }
+  },
+  {
     id: 1,
     role: { en: "Samsung Ambassador / Mobile Sales Specialist", sl: "Samsung Ambasador / Prodajni svetovalec za mobilno telefonijo" },
     company: "Samsung",
