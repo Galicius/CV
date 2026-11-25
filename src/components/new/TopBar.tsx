@@ -9,6 +9,7 @@ import {
 } from "@ui-sdk/react/navigation-menu";
 import { useEffect, useState } from "react";
 import { applyTheme, type Theme } from "../../lib/theme";
+import { BombDefuse } from "./BombDefuse";
 
 const NAV = [
   { href: "#work", label: "Work" },
@@ -17,8 +18,10 @@ const NAV = [
   { href: "#contact", label: "Contact" },
 ];
 
-export function TopBar() {
+/** `bomb`: switching from dark to light first asks the visitor to defuse a bomb (shown at /new/1). */
+export function TopBar({ bomb = false }: { bomb?: boolean }) {
   const [theme, setTheme] = useState<Theme | null>(null);
+  const [armed, setArmed] = useState(false);
 
   useEffect(() => {
     const read = () => setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
@@ -43,10 +46,11 @@ export function TopBar() {
             </NavigationMenuItem>
           ))}
         </NavigationMenuList>
-        <Button onClick={() => applyTheme(next)} disabled={!theme}>
+        <Button onClick={() => (bomb && next === "light" ? setArmed(true) : applyTheme(next))} disabled={!theme}>
           {next === "dark" ? "Dark" : "Light"}
         </Button>
       </NavigationMenu>
+      {armed && <BombDefuse onClose={() => setArmed(false)} />}
     </header>
   );
 }
