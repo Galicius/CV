@@ -26,7 +26,7 @@ export function Portfolio({ particles = false }: { particles?: boolean }) {
   return (
     <>
       <WebMcpBridge />
-      <TopBar />
+      <TopBar bomb={particles} />
       <main id="top" className="mn-main">
         <section className="mn-intro" aria-labelledby="mn-name">
           <h1 id="mn-name">{profile.name}</h1>

@@ -9,6 +9,7 @@ import {
 } from "@ui-sdk/react/navigation-menu";
 import { useEffect, useState } from "react";
 import { applyTheme, type Theme } from "../../lib/theme";
+import { ThemeBomb } from "./BombDefuse";
 
 const NAV = [
   { href: "#work", label: "Work" },
@@ -17,7 +18,8 @@ const NAV = [
   { href: "#contact", label: "Contact" },
 ];
 
-export function TopBar() {
+/** `bomb`: going from dark to light first means defusing a C4 charge (shown at /new/1). */
+export function TopBar({ bomb = false }: { bomb?: boolean }) {
   const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
@@ -43,9 +45,13 @@ export function TopBar() {
             </NavigationMenuItem>
           ))}
         </NavigationMenuList>
-        <Button onClick={() => applyTheme(next)} disabled={!theme}>
-          {next === "dark" ? "Dark" : "Light"}
-        </Button>
+        {bomb ? (
+          <ThemeBomb theme={theme} />
+        ) : (
+          <Button onClick={() => applyTheme(next)} disabled={!theme}>
+            {next === "dark" ? "Dark" : "Light"}
+          </Button>
+        )}
       </NavigationMenu>
     </header>
   );
