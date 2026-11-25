@@ -1,30 +1,29 @@
+import { Meter, MeterLabel, MeterValue } from "@ui-sdk/react/meter";
 import { t3 } from "../../data/showcase";
 
 const fmt = (n: number) => n.toLocaleString("en-GB");
 const billions = (n: number) => `${(n / 1e9).toFixed(1)} billion`;
-const short = (n: number) => (n >= 1e9 ? `${(n / 1e9).toFixed(1)}B` : `${Math.round(n / 1e6)}M`);
 
-type Bar = { label: string; value: number; text: string; partial?: boolean };
+type Bar = { label: string; value: number; partial?: boolean };
 
-function Columns({ caption, bars }: { caption: string; bars: Bar[] }) {
+/** Each column is a Meter against the busiest month; its bar and value label follow `--meter-value`. */
+function Columns({ caption, bars, format }: { caption: string; bars: Bar[]; format: Intl.NumberFormatOptions }) {
   const peak = Math.max(...bars.map((b) => b.value));
   return (
     <figure className="t3-chart">
       <figcaption>{caption}</figcaption>
-      <ol style={{ gridTemplateColumns: `repeat(${bars.length}, minmax(0, 1fr))` }}>
+      <div className="t3-chart__cols" style={{ gridTemplateColumns: `repeat(${bars.length}, minmax(0, 1fr))` }}>
         {bars.map((b) => (
-          <li
-            key={b.label}
-            tabIndex={0}
-            style={{ "--h": `${Math.max(1, (b.value / peak) * 100)}%` } as React.CSSProperties}
-            aria-label={`${b.label}: ${b.text}${b.partial ? " (partial month)" : ""}`}
-          >
-            <span className="t3-chart__value">{b.text}</span>
+          <Meter key={b.label} className="t3-chart__col" value={b.value} max={peak} format={format} locale="en" tabIndex={0}>
+            <MeterValue className="t3-chart__value" />
             <span className="t3-chart__bar" data-partial={b.partial || undefined} />
-            <span className="t3-chart__month">{b.label}</span>
-          </li>
+            <MeterLabel className="t3-chart__month">
+              {b.label}
+              {b.partial && <span className="sr-only"> (partial month)</span>}
+            </MeterLabel>
+          </Meter>
         ))}
-      </ol>
+      </div>
     </figure>
   );
 }
@@ -34,25 +33,27 @@ export function ControlRoom() {
   return (
     <div className="t3">
       <p>
-        I run Claude Code, Codex and OpenCode side by side in T3 Code, on my own subscriptions. Since {t3.since} that
-        has been {fmt(t3.threads)} threads. Agents started {fmt(t3.spawnedByAgents)} of them by handing work to other
-        agents, and {fmt(t3.worktrees)} ran in their own copy of the repository. By thread count the split is{" "}
-        {t3.families}.
+        I write specs, review diffs, and test the output while coding agents handle most of the implementation. I run
+        Claude Code, Codex, and OpenCode side by side in T3 Code on my own subscriptions. Since {t3.since}, that
+        covers {fmt(t3.threads)} threads: {fmt(t3.spawnedByAgents)} spawned by agents delegating subtasks and{" "}
+        {fmt(t3.worktrees)} run in separate copies of the repository ({t3.families}).
       </p>
       <p>
-        Since {tokens.since} the agents have used {billions(tokens.total)} tokens over {fmt(tokens.calls)} model calls
-        ({tokens.split}). {Math.round(tokens.cachedShare * 100)}% of those were cheap cache reads. At API list prices
-        that would have cost about ${fmt(Math.round(tokens.apiCostUsd / 10) * 10)}. I paid for subscriptions instead.
+        Since {tokens.since}, those runs used {billions(tokens.total)} tokens across {fmt(tokens.calls)} model calls (
+        {tokens.split}), with {Math.round(tokens.cachedShare * 100)}% as cache reads. At API list prices that volume
+        would cost roughly ${fmt(Math.round(tokens.apiCostUsd / 10) * 10)}; I run on subscriptions.
       </p>
 
       <div className="t3-charts">
         <Columns
           caption="Threads per month, 2026"
-          bars={t3.months.map((m) => ({ label: m.month, value: m.threads, text: String(m.threads), partial: m.partial }))}
+          bars={t3.months.map((m) => ({ label: m.month, value: m.threads, partial: m.partial }))}
+          format={{ maximumFractionDigits: 0 }}
         />
         <Columns
           caption="Tokens per month, 2026"
-          bars={tokens.months.map((m) => ({ label: m.month, value: m.tokens, text: short(m.tokens), partial: m.partial }))}
+          bars={tokens.months.map((m) => ({ label: m.month, value: m.tokens, partial: m.partial }))}
+          format={{ notation: "compact", maximumFractionDigits: 1 }}
         />
       </div>
 

@@ -40,23 +40,23 @@ const plexMono = IBM_Plex_Mono({
 });
 
 const description =
-  "CV and portfolio of Gal Guštin, a full-stack developer and Master's student in Maribor, Slovenia, building web and mobile products.";
+  "CV and portfolio of Gal Guštin, an AI engineer and Master's student in Maribor, Slovenia, building AI agents for businesses and web and mobile products.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.galgustin.com"),
-  title: "Gal Guštin | Full-Stack Developer",
+  title: "Gal Guštin | AI Engineer",
   description,
-  keywords: ["Gal Guštin", "developer portfolio", "Next.js developer", "full-stack developer", "Slovenia"],
+  keywords: ["Gal Guštin", "AI engineer", "AI agents", "developer portfolio", "full-stack developer", "Slovenia"],
   authors: [{ name: "Gal Guštin" }],
   openGraph: {
-    title: "Gal Guštin | Full-Stack Developer",
+    title: "Gal Guštin | AI Engineer",
     description: "Selected work, experience, education and contact details for Gal Guštin.",
     type: "profile",
     locale: "en_GB",
   },
   twitter: {
     card: "summary",
-    title: "Gal Guštin | Full-Stack Developer",
+    title: "Gal Guštin | AI Engineer",
     description,
   },
 };

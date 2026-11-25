@@ -1,90 +1,116 @@
 "use client";
 
+import { Button } from "@ui-sdk/react/button";
+import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from "@ui-sdk/react/collapsible";
+import { Field, FieldError, FieldLabel } from "@ui-sdk/react/field";
+import { Tabs, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
+import { Textarea } from "@ui-sdk/react/textarea";
+import { Timeline, TimelineDescription, TimelineItem, TimelineTime, TimelineTitle } from "@ui-sdk/react/timeline";
 import { useState } from "react";
-import { useStore } from "./store";
-import { invoke, tools, toolByName } from "./tools";
+import { useStore, type LogEntry } from "./store";
+import { invoke, tools, type Tool } from "./tools";
+
+const json = (v: unknown) => JSON.stringify(v, null, 2);
+
+function parse(text: string): Record<string, unknown> | undefined {
+  try {
+    return JSON.parse(text || "{}");
+  } catch {
+    return undefined;
+  }
+}
+
+function ToolRunner({ tool }: { tool: Tool }) {
+  const [args, setArgs] = useState(() => JSON.stringify(tool.example));
+  const [output, setOutput] = useState<string | null>(null);
+  const parsed = parse(args);
+
+  return (
+    <>
+      <p>{tool.description}</p>
+      <Field invalid={parsed === undefined}>
+        <FieldLabel>Arguments (JSON)</FieldLabel>
+        <Textarea rows={3} spellCheck={false} value={args} onValueChange={setArgs} />
+        <FieldError>Invalid JSON.</FieldError>
+      </Field>
+      <Button
+        className="mn-btn"
+        disabled={parsed === undefined}
+        pendingAnnouncement={`Running ${tool.name}`}
+        onClick={async () => setOutput(json(await invoke(tool, parsed!, "visitor")))}
+      >
+        Run {tool.name}
+      </Button>
+      {output && <pre>{output}</pre>}
+    </>
+  );
+}
+
+function Call({ entry }: { entry: LogEntry }) {
+  return (
+    <TimelineItem className="ag-call" data-error={entry.ok ? undefined : ""}>
+      <TimelineTitle>
+        {entry.caller === "agent" ? "Agent" : "You"} ran {entry.tool}
+        {entry.ok ? "" : " (error)"}
+      </TimelineTitle>
+      <TimelineTime dateTime={new Date(entry.at).toISOString()}>
+        {new Date(entry.at).toLocaleTimeString("en-GB")}
+      </TimelineTime>
+      <TimelineDescription render={<div />}>
+        <Collapsible>
+          <CollapsibleTrigger className="mn-link">Input and result</CollapsibleTrigger>
+          <CollapsiblePanel className="mn-panel">
+            <p>Input</p>
+            <pre>{json(entry.args)}</pre>
+            <p>Result</p>
+            <pre>{json(entry.result)}</pre>
+          </CollapsiblePanel>
+        </Collapsible>
+      </TimelineDescription>
+    </TimelineItem>
+  );
+}
 
 export function AgentConsole() {
   const webmcp = useStore((s) => s.webmcp);
   const log = useStore((s) => s.log);
-  const [selected, setSelected] = useState(tools[0].name);
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
-  const [output, setOutput] = useState<{ tool: string; text: string } | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  const tool = toolByName.get(selected)!;
-  const args = drafts[selected] ?? JSON.stringify(tool.example);
-  let valid = true;
-  try {
-    JSON.parse(args || "{}");
-  } catch {
-    valid = false;
-  }
-
-  const run = async () => {
-    setBusy(true);
-    const result = await invoke(tool, JSON.parse(args || "{}"), "visitor");
-    setOutput({ tool: tool.name, text: JSON.stringify(result, null, 2) });
-    setBusy(false);
-  };
 
   return (
     <div className="ag">
       <p>
         {webmcp === "active"
-          ? "Your browser supports WebMCP, so an AI agent can use these tools on this page right now."
-          : "Your browser doesn't support WebMCP yet. In browsers that do, an AI agent can use these tools on this page."}{" "}
-        The agent gets typed actions like &ldquo;list projects&rdquo; or &ldquo;draft a message&rdquo; instead of
-        guessing which buttons to press. It can draft a message but can&apos;t send one.
+          ? "This browser supports WebMCP; AI agents can call this page's tools directly."
+          : "This browser does not expose WebMCP. In browsers that do, AI agents can call this page's tools directly."}{" "}
+        Tools expose typed actions such as listing projects or drafting an email instead of DOM guessing. Agents can
+        draft a message but cannot send it.
       </p>
 
-      <details className="ag-try">
-        <summary>Try the tools yourself</summary>
-        <div className="ag-grid">
-          <ul aria-label="Tools">
-            {tools.map((t) => (
-              <li key={t.name}>
-                <button
-                  type="button"
-                  aria-pressed={t.name === selected}
-                  onClick={() => {
-                    setSelected(t.name);
-                    setOutput(null);
-                  }}
-                >
+      <Collapsible>
+        <CollapsibleTrigger className="mn-link">Inspect and run tools</CollapsibleTrigger>
+        <CollapsiblePanel className="mn-panel">
+          <Tabs className="ag-grid" orientation="vertical">
+            <TabsList aria-label="Tools">
+              {tools.map((t) => (
+                <TabsTab key={t.name} value={t.name}>
                   {t.name}
-                </button>
-              </li>
+                </TabsTab>
+              ))}
+            </TabsList>
+            {tools.map((t) => (
+              <TabsPanel key={t.name} value={t.name} className="ag-run" keepMounted>
+                <ToolRunner tool={t} />
+              </TabsPanel>
             ))}
-          </ul>
-          <div className="ag-run">
-            <p>{tool.description}</p>
-            <label htmlFor="ag-args">Arguments (JSON)</label>
-            <textarea
-              id="ag-args"
-              rows={3}
-              spellCheck={false}
-              value={args}
-              aria-invalid={!valid}
-              onChange={(e) => setDrafts({ ...drafts, [selected]: e.target.value })}
-            />
-            <button type="button" className="mn-btn" onClick={run} disabled={busy || !valid}>
-              Run {tool.name}
-            </button>
-            {output?.tool === selected && <pre>{output.text}</pre>}
-          </div>
-        </div>
-        {log.length > 0 && (
-          <ol className="ag-log" aria-label="Recent calls">
-            {log.map((e) => (
-              <li key={e.id}>
-                {e.caller === "agent" ? "Agent" : "You"} ran {e.tool}
-                {e.ok ? "" : " (error)"}
-              </li>
-            ))}
-          </ol>
-        )}
-      </details>
+          </Tabs>
+          {log.length > 0 && (
+            <Timeline aria-label="Recent calls" className="ag-log">
+              {log.map((e) => (
+                <Call key={e.id} entry={e} />
+              ))}
+            </Timeline>
+          )}
+        </CollapsiblePanel>
+      </Collapsible>
     </div>
   );
 }

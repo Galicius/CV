@@ -1,5 +1,9 @@
 "use client";
 
+import { Button } from "@ui-sdk/react/button";
+import { Field, FieldError, FieldLabel } from "@ui-sdk/react/field";
+import { Input } from "@ui-sdk/react/input";
+import { Textarea } from "@ui-sdk/react/textarea";
 import Link from "next/link";
 import { profile } from "../../data/showcase";
 import { store, useStore } from "./store";
@@ -24,28 +28,38 @@ export function Contact() {
         <Link href="/">Classic CV</Link>
       </p>
 
-      <form className="ct-form" onSubmit={(e) => e.preventDefault()} aria-label="Write a message">
-        <label>
-          Name
-          <input value={draft.name} autoComplete="name" onChange={(e) => store.setDraft({ name: e.target.value })} />
-        </label>
-        <label>
-          Email
-          <input
+      {/* Nothing is sent from here: a valid draft opens in the visitor's email app. */}
+      <form
+        className="ct-form"
+        aria-label="Write a message"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (ready) window.location.href = mailto(draft);
+        }}
+      >
+        <Field>
+          <FieldLabel>Name</FieldLabel>
+          <Input value={draft.name} autoComplete="name" onValueChange={(name) => store.setDraft({ name })} />
+        </Field>
+        <Field>
+          <FieldLabel>Email</FieldLabel>
+          <Input
             type="email"
             value={draft.email}
             autoComplete="email"
-            onChange={(e) => store.setDraft({ email: e.target.value })}
+            onValueChange={(email) => store.setDraft({ email })}
           />
-        </label>
-        <label className="ct-form__wide">
-          Message
-          <textarea rows={4} value={draft.message} onChange={(e) => store.setDraft({ message: e.target.value })} />
-        </label>
+          <FieldError />
+        </Field>
+        <Field className="ct-form__wide">
+          <FieldLabel>Message</FieldLabel>
+          <Textarea rows={4} required value={draft.message} onValueChange={(message) => store.setDraft({ message })} />
+          <FieldError />
+        </Field>
         <p className="ct-form__wide">
-          <a className="mn-btn" href={ready ? mailto(draft) : undefined} aria-disabled={!ready}>
-            Open in your email app
-          </a>
+          <Button className="mn-btn" type="submit" disabled={!ready} focusableWhenDisabled>
+            Open in email app
+          </Button>
         </p>
       </form>
     </div>

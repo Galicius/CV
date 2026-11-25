@@ -16,6 +16,7 @@
   --rule: light-dark(#e8e8e8, #222222);
   --rule-strong: light-dark(#c8c8c8, #444444);
   --link: light-dark(#0033e6, #8fa6ff);
+  --error: light-dark(#b3261e, #ff8a80);
   --accent: var(--link);
   --font-display: var(--mn-font), system-ui, sans-serif;
   --gutter: 1.25rem;
@@ -107,6 +108,11 @@
   pointer-events: none;
 }
 
+.mn-btn[data-pending] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 .mn textarea,
 .mn input {
   display: block;
@@ -132,6 +138,53 @@
   border-color: var(--link);
 }
 
+.mn :is(textarea, input)[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+.mn [data-slot="field-error"] {
+  margin-top: 0.35rem;
+  color: var(--error);
+  font-size: 0.9rem;
+}
+
+/* Accordion and collapsible panels grow from zero height and fade in. Side padding keeps focus rings inside the clip. */
+.mn-panel {
+  margin-inline: -0.25rem;
+  padding-inline: 0.25rem;
+  overflow: hidden;
+  transition:
+    height 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.25s ease-out;
+}
+
+.mn-panel[data-slot="accordion-panel"] {
+  height: var(--accordion-panel-height);
+}
+
+.mn-panel[data-slot="collapsible-panel"] {
+  height: var(--collapsible-panel-height);
+}
+
+.mn-panel:is([data-starting-style], [data-ending-style]) {
+  height: 0;
+  opacity: 0;
+}
+
+/* Disclosure triangle that turns down while its panel is open. Inline-block keeps the link underline off it. */
+.mn [data-slot="collapsible-trigger"]::before {
+  content: "";
+  display: inline-block;
+  margin-inline-end: 0.45em;
+  border-block: 0.3em solid transparent;
+  border-inline-start: 0.5em solid;
+  transition: rotate 0.2s ease-out;
+}
+
+.mn [data-slot="collapsible-trigger"][data-open]::before {
+  rotate: 90deg;
+}
+
 /* ------------------------------------------------------------- layout -- */
 
 .mn-bar {
@@ -153,23 +206,23 @@
   text-decoration: none;
 }
 
-.mn-bar nav {
+.mn-bar :is([data-slot="navigation-menu"], [data-slot="navigation-menu-list"]) {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem 1.25rem;
 }
 
-:where(.mn) .mn-bar nav a,
-.mn-bar button {
+:where(.mn) .mn-bar [data-slot="navigation-menu-link"],
+.mn-bar [data-slot="button"] {
   color: var(--grey);
 }
 
-:where(.mn) .mn-bar nav a:hover,
-.mn-bar button:hover {
+:where(.mn) .mn-bar [data-slot="navigation-menu-link"]:hover,
+.mn-bar [data-slot="button"]:hover {
   color: var(--ink);
 }
 
-.mn-bar button {
+.mn-bar [data-slot="button"] {
   padding: 0;
   border: 0;
   background: none;
@@ -210,9 +263,44 @@
   font-size: 1.0625rem;
 }
 
+.mn-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.mn-cta a {
+  color: var(--ink);
+  text-underline-offset: 0.2em;
+}
+
+.mn-cta .mn-cta__main {
+  padding: 0.7rem 1.25rem;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  transition: opacity 150ms;
+}
+
+.mn-cta .mn-cta__main:hover {
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-cta .mn-cta__main {
+    transition: none;
+  }
+}
+
+.mn-rule {
+  height: 1px;
+  background: var(--rule);
+}
+
 .mn-section {
   padding: 4rem 0;
-  border-top: 1px solid var(--rule);
 }
 
 .mn-section > h2 {
@@ -245,7 +333,14 @@
   font-size: 0.95rem;
 }
 
-.ix-filter button {
+.ix-filter [data-slot="segmented-control"] {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: inherit;
+}
+
+.ix-filter [data-slot="segmented-control-item"] {
   padding: 0;
   border: 0;
   background: none;
@@ -254,15 +349,25 @@
   cursor: pointer;
 }
 
-.ix-filter button:hover {
+.ix-filter [data-slot="segmented-control-item"]:is(:hover, [data-checked]) {
   color: var(--ink);
 }
 
-.ix-filter button[aria-pressed="true"] {
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.3em;
+/* The underline under the chosen lane slides to the next one. */
+.ix-filter [data-slot="segmented-control-indicator"] {
+  position: absolute;
+  top: calc(var(--segmented-control-indicator-top) + var(--segmented-control-indicator-height) - 2px);
+  left: var(--segmented-control-indicator-left);
+  width: var(--segmented-control-indicator-width);
+  height: 1px;
+  background: var(--ink);
+  transition-property: top, left, width;
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ix-filter [data-slot="segmented-control-indicator"][data-activation-direction="none"] {
+  transition: none;
 }
 
 .ix-note {
@@ -270,13 +375,53 @@
   font-size: 0.85rem;
 }
 
+/* Rows switch layout on the list's own width, which shrinks when the stage sits beside it. */
 .ix {
   border-bottom: 1px solid var(--rule);
+  container-type: inline-size;
+}
+
+@media (min-width: 900px) {
+  .ix-wrap[data-stage] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    align-items: start;
+    gap: 2.5rem;
+  }
+}
+
+.ix-aside {
+  position: sticky;
+  top: 4.5rem;
+}
+
+/* The stage reads its dot colours from color and accent-color. */
+.ix-stage {
+  aspect-ratio: 1;
+  color: var(--ink);
+  accent-color: var(--link);
+}
+
+.ix-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ix-body > .ix-stage {
+  width: min(100%, 20rem);
 }
 
 .ix-row {
   border-top: 1px solid var(--rule);
   background: var(--paper);
+}
+
+.ix [data-slot="accordion-header"] {
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-wrap: inherit;
 }
 
 .ix-row__head {
@@ -324,7 +469,7 @@
   text-underline-offset: 0.2em;
 }
 
-@media (min-width: 800px) {
+@container (min-width: 44rem) {
   .ix-row__head {
     grid-template-columns: 4rem 13rem 1fr 7rem;
     grid-template-areas: "year title kicker status";
@@ -344,10 +489,6 @@
   display: grid;
   gap: 1.5rem;
   padding: 0.25rem 0 2rem;
-}
-
-.ix-body[hidden] {
-  display: none;
 }
 
 .ix-body__text {
@@ -379,44 +520,37 @@
   border-radius: 4px;
 }
 
-@media (min-width: 800px) {
+@container (min-width: 44rem) {
   .ix-body {
     grid-template-columns: 4rem minmax(0, 1fr) 20rem;
+    align-items: start;
     column-gap: 1rem;
   }
 
   .ix-body__text {
     grid-column: 2;
+    grid-row: 1 / span 2;
   }
 
+  .ix-body > .ix-stage,
   .ix-body__shot {
     grid-column: 3;
   }
 }
 
-.ix-row[data-open] .ix-body:not([hidden]) {
-  animation: ix-open 0.25s ease-out;
-}
-
-@keyframes ix-open {
-  from {
-    opacity: 0;
-  }
-}
-
 .ix-float {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 20;
   width: 20rem;
+  overflow: visible;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s;
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity 0.15s,
+    scale 0.15s;
 }
 
-.ix-float[data-on] {
-  opacity: 1;
+.ix-float:is([data-starting-style], [data-ending-style]) {
+  opacity: 0;
+  scale: 0.96;
 }
 
 .ix-float img {
@@ -473,7 +607,7 @@
   max-width: var(--measure);
 }
 
-.t3-chart ol {
+.t3-chart__cols {
   display: grid;
   align-items: end;
   gap: 0.75rem;
@@ -481,7 +615,7 @@
   border-bottom: 1px solid var(--ink);
 }
 
-.t3-chart li {
+.t3-chart__col {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -491,7 +625,7 @@
 
 .t3-chart__bar {
   display: block;
-  height: var(--h);
+  height: var(--meter-value);
   min-height: 2px;
   background: var(--ink);
 }
@@ -503,7 +637,7 @@
 
 .t3-chart__value {
   position: absolute;
-  bottom: calc(var(--h) + 0.2rem);
+  bottom: calc(max(1%, var(--meter-value)) + 0.2rem);
   left: 0;
   right: 0;
   font-size: 0.85rem;
@@ -518,8 +652,7 @@
   color: var(--grey);
 }
 
-.t3-chart li:hover .t3-chart__value,
-.t3-chart li:focus-visible .t3-chart__value {
+.t3-chart__col:is(:hover, :focus-visible) .t3-chart__value {
   color: var(--ink);
 }
 
@@ -552,9 +685,21 @@
   justify-items: start;
 }
 
-.fit label {
+/* A field stacks its label, control and error with the spacing of the form around it. */
+.mn :is(.fit, .ag-run) [data-slot="field"] {
+  display: grid;
+  gap: inherit;
   width: 100%;
+}
+
+.mn :is(.fit, .ag-run) [data-slot="field-label"] {
   font-size: 0.95rem;
+}
+
+.fit-actions {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
 }
 
 .fit-examples {
@@ -563,7 +708,7 @@
 }
 
 .fit-error {
-  color: light-dark(#b3261e, #ff8a80);
+  color: var(--error);
 }
 
 .fit-result {
@@ -585,7 +730,7 @@
   gap: 0.35rem;
 }
 
-.fit-rows li {
+.fit-row {
   display: grid;
   grid-template-columns: 11rem minmax(0, 1fr) 3rem;
   align-items: center;
@@ -594,22 +739,24 @@
   font-size: 0.95rem;
 }
 
-.fit-rows li[data-chosen] {
+.fit-row[data-chosen] {
   color: var(--ink);
 }
 
 .fit-bar {
-  display: block;
-  width: var(--w);
   height: 4px;
+}
+
+.fit-bar [data-slot="meter-indicator"] {
+  height: 100%;
   background: var(--rule-strong);
 }
 
-.fit-rows li[data-chosen] .fit-bar {
+.fit-row[data-chosen] [data-slot="meter-indicator"] {
   background: var(--ink);
 }
 
-.fit-num {
+.fit-row [data-slot="meter-value"] {
   text-align: right;
 }
 
@@ -618,14 +765,6 @@
 .ag {
   display: grid;
   gap: 1.25rem;
-}
-
-.ag-try summary {
-  color: var(--link);
-  cursor: pointer;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
 }
 
 .ag-grid {
@@ -640,28 +779,29 @@
   }
 }
 
-.ag-grid ul {
+.ag-grid [data-slot="tabs-list"] {
   display: grid;
   align-content: start;
+  justify-items: start;
   gap: 0.2rem;
 }
 
-.ag-grid ul button {
+.ag-grid [data-slot="tabs-tab"] {
   padding: 0;
   border: 0;
   background: none;
   color: var(--grey);
   font: inherit;
   font-size: 0.95rem;
+  line-height: 1.7rem;
   cursor: pointer;
 }
 
-.ag-grid ul button:hover,
-.ag-grid ul button[aria-pressed="true"] {
+.ag-grid [data-slot="tabs-tab"]:is(:hover, [data-selected]) {
   color: var(--ink);
 }
 
-.ag-grid ul button[aria-pressed="true"] {
+.ag-grid [data-slot="tabs-tab"][data-selected] {
   text-decoration: underline;
   text-underline-offset: 0.3em;
 }
@@ -673,20 +813,11 @@
   min-width: 0;
 }
 
-.ag-run label {
-  width: 100%;
-  font-size: 0.95rem;
-}
-
 .ag-run textarea {
   font-size: 0.9rem;
 }
 
-.ag-run textarea[aria-invalid="true"] {
-  border-color: light-dark(#b3261e, #ff8a80);
-}
-
-.ag-run pre {
+.ag pre {
   width: 100%;
   max-height: 16rem;
   overflow: auto;
@@ -700,10 +831,30 @@
 
 .ag-log {
   display: grid;
-  gap: 0.2rem;
+  gap: 0.5rem;
   margin-top: 1.25rem;
   color: var(--grey);
   font-size: 0.9rem;
+}
+
+.ag-call {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+}
+
+.ag-call[data-error] [data-slot="timeline-title"] {
+  color: var(--error);
+}
+
+.ag-call [data-slot="timeline-description"] {
+  grid-column: 1 / -1;
+}
+
+.ag-call .mn-panel {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
 }
 
 /* ------------------------------------------------------------ contact -- */

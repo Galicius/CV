@@ -6,6 +6,7 @@ import { BRIEF_MAX, FITS, type Fit, type JevVerdict } from "../../../lib/jev";
 const record = {
   name: profile.name,
   role: profile.role,
+  job: profile.job,
   location: profile.location,
   about: profile.about,
   languages: profile.languages,
@@ -117,7 +118,7 @@ function demoVerdict(brief: string): JevVerdict {
   const hit = (terms: string[]) => terms.filter((t) => words.has(t) || text.includes(t)).length;
 
   const laneTerms: Record<Lane, string[]> = {
-    agents: ["agent", "agents", "llm", "mcp", "ai", "rag", "model", "automation", "claude", "codex"],
+    agents: ["agent", "agents", "llm", "mcp", "ai", "rag", "model", "automation", "claude", "codex", "copilot", "erp"],
     products: ["next.js", "react", "full-stack", "fullstack", "backend", "web", "saas", "api", "typescript"],
     mobile: ["mobile", "expo", "react native", "android", "ios", "app"],
     games: ["game", "unreal", "unity", "vr", "xr", "3d", "blender"],
