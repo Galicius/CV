@@ -2,7 +2,8 @@
 <html lang="sl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070707">
 <title>AI sistemi | LANCom</title>
 <meta name="description" content="AI-rešitve, prilagojene vašim podatkom, poslovnim procesom in varnostnim zahtevam.">
 <link rel="icon" href="https://lancom.si/themes/lancom/assets/images/favicon.png">
@@ -180,7 +181,7 @@ h3{font-size:clamp(20px,1.6vw,24px);letter-spacing:-.02em;line-height:1.2}
 .ml-head .dots{display:flex;gap:6px}.ml-head .dots i{width:9px;height:9px;border-radius:50%;background:var(--dot);display:block}
 .ml-head .dots i:first-child{background:var(--accent)}
 #ml{width:100%;height:380px;display:block;border-radius:14px;background:var(--canvas-bg);touch-action:manipulation}
-.ml-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.ml-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
 .stat{padding:14px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
 .stat small{font:500 10px var(--mono);letter-spacing:.15em;color:var(--dim);display:block;margin-bottom:6px}
 .stat b{font:700 22px var(--font);font-variant-numeric:tabular-nums}
@@ -270,6 +271,65 @@ footer{padding:90px var(--gutter) 30px;border-top:1px solid var(--line);backgrou
 @media (max-width:520px){.foot-grid{grid-template-columns:1fr}}
 
 @media (prefers-reduced-motion:reduce){.grain{animation:none}}
+
+/* ---------- mobile menu ---------- */
+.mnav{position:fixed;inset:0;z-index:45;background:var(--bg);padding:calc(96px + env(safe-area-inset-top)) var(--gutter) calc(32px + env(safe-area-inset-bottom));display:flex;flex-direction:column;justify-content:space-between;gap:32px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-12px);transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s .45s}
+.mnav.open{opacity:1;visibility:visible;transform:none;transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}
+.mnav ul{list-style:none;display:grid}
+.mnav li a{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-size:clamp(26px,8vw,40px);font-weight:800;letter-spacing:-.03em}
+.mnav li a.active{color:var(--accent-text)}
+.mnav .btn{align-self:flex-start}
+.burger{font-size:18px;line-height:1}
+html.menu-open,html.menu-open body{overflow:hidden}
+@media (min-width:1061px){.mnav{display:none}}
+
+/* ---------- phones & tablets ---------- */
+main{overflow-x:clip}
+.agents-grid>*,.ml-grid>*,.cta-grid>*{min-width:0}
+header.nav{padding-top:calc(18px + env(safe-area-inset-top))}
+@media (max-width:900px){
+  .scroll-hint{display:none}
+  .hero{padding-top:120px;padding-bottom:70px}
+  .hero-meta{margin-top:44px}
+  .hero-meta b{font-size:24px}
+  .orbit-stage{height:380px}
+  .ocard{width:156px;margin-left:-78px;margin-top:-50px;padding:14px;border-radius:14px}
+  .ocard h4{font-size:14px;overflow-wrap:anywhere;hyphens:auto}
+  .core{width:110px;height:110px;margin:-55px 0 0 -55px}
+  .core .ball{inset:22px;font-size:13px}
+  /* use cases: native swipe instead of pinned scroll */
+  .hs{height:auto;overflow:visible;padding:clamp(90px,14vh,160px) 0}
+  .hs-track{width:auto;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 var(--gutter);-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:16px;padding-bottom:8px;overscroll-behavior-x:contain}
+  .hs-track::-webkit-scrollbar{display:none}
+  .hs-track::after{content:"";flex:0 0 1px}
+  .ucard{scroll-snap-align:start;height:auto;min-height:340px;width:min(340px,82vw);padding:26px;gap:28px}
+  .ucard .num{font-size:72px}
+  .ucard .ico{width:52px;height:52px;right:22px;top:22px}
+  .ben-head{margin-bottom:36px}
+  .partners{padding:70px 0}
+  .marquee span{padding:0 22px;gap:44px}
+  .cta h2{margin-bottom:28px}
+  .cta-grid{gap:36px}
+  footer{padding-top:64px;padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+  .foot-grid{gap:32px;margin-bottom:48px}
+}
+@media (max-width:520px){
+  header.nav{gap:12px}
+  .nav-right{gap:8px}
+  .logo img{height:30px}
+  .theme-toggle,.burger{width:40px;height:40px}
+  .hero h1{font-size:clamp(56px,19vw,96px)}
+  .hero-ctas .btn{width:100%;justify-content:center}
+  .ml-panel{padding:12px;border-radius:18px}
+  .ml-stats{gap:6px}
+  .stat{padding:10px}
+  .stat small{font-size:9px;letter-spacing:.08em}
+  .stat b{font-size:18px}
+  .agents-list li{grid-template-columns:44px 1fr;padding:18px 0}
+  .bcard{padding:24px 22px 26px}
+  .advisor{padding:22px}
+  .foot-bottom{flex-direction:column;align-items:flex-start}
+}
 </style>
 </head>
 <body>
@@ -306,9 +366,22 @@ footer{padding:90px var(--gutter) 30px;border-top:1px solid var(--line);backgrou
       <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M1.5 12H4M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
     </button>
     <a class="btn sm magnetic" href="#kontakt">Kontaktirajte nas <span class="arr">→</span></a>
-    <button class="burger" aria-label="Meni">☰</button>
+    <button class="burger" id="burger" aria-label="Meni" aria-expanded="false" aria-controls="mnav">☰</button>
   </div>
 </header>
+
+<nav class="mnav" id="mnav" aria-label="Mobilni meni">
+  <ul>
+    <li><a href="https://lancom.si/">Domov <span>↗</span></a></li>
+    <li><a href="https://lancom.si/o-nas">O nas <span>↗</span></a></li>
+    <li><a class="active" href="#top">Storitve <span>→</span></a></li>
+    <li><a href="https://lancom.si/blog">Blog <span>↗</span></a></li>
+    <li><a href="https://lancom.si/kariera">Kariera <span>↗</span></a></li>
+    <li><a href="https://lancom.si/kontakt">Kontakt <span>↗</span></a></li>
+    <li><a href="https://lancom.si/podpora">Podpora <span>↗</span></a></li>
+  </ul>
+  <a class="btn" href="#kontakt">Kontaktirajte nas <span class="arr">→</span></a>
+</nav>
 
 <main>
   <!-- HERO -->
@@ -388,7 +461,7 @@ footer{padding:90px var(--gutter) 30px;border-top:1px solid var(--line);backgrou
           <li>Visoka točnost napovedi na specifičnem področju</li>
           <li>Omogoča višjo učinkovitost, pripravljenost, nižje stroške procesov kot del sistema Decision Support System - DSS</li>
         </ul>
-        <p class="muted" style="margin-top:26px;font:500 12px var(--mono);letter-spacing:.08em">↖ KLIKNITE NA GRAF ZA DODAJANJE PODATKOV</p>
+        <p class="muted" id="mlHint" style="margin-top:26px;font:500 12px var(--mono);letter-spacing:.08em">↖ KLIKNITE NA GRAF ZA DODAJANJE PODATKOV</p>
       </div>
     </div>
   </section>
@@ -497,6 +570,26 @@ addEventListener('pointermove', e => {
   mouse.nx = e.clientX / innerWidth * 2 - 1; mouse.ny = -(e.clientY / innerHeight) * 2 + 1;
 }, { passive: true });
 document.addEventListener('pointerleave', () => mouse.active = false);
+const touchEnd = e => { if (e.pointerType !== 'mouse') mouse.active = false; };
+addEventListener('pointerup', touchEnd, { passive: true });
+addEventListener('pointercancel', touchEnd, { passive: true });
+ScrollTrigger.config({ ignoreMobileResize: true });
+
+/* ============ mobile menu ============ */
+const burger = $('#burger'), mnav = $('#mnav');
+let menuOpen = false;
+function setMenu(open) {
+  menuOpen = open;
+  mnav.classList.toggle('open', open);
+  document.documentElement.classList.toggle('menu-open', open);
+  burger.setAttribute('aria-expanded', open); burger.textContent = open ? '✕' : '☰';
+  $('#nav').classList.remove('hidden');
+  open ? lenis.stop() : lenis.start();
+}
+function closeMenu() { if (menuOpen) setMenu(false); }
+burger.addEventListener('click', () => setMenu(!menuOpen));
+addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+matchMedia('(min-width:1061px)').addEventListener('change', e => { if (e.matches) closeMenu(); });
 
 /* ============ smooth scroll ============ */
 const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
@@ -505,7 +598,7 @@ gsap.ticker.add(t => lenis.raf(t * 1000));
 gsap.ticker.lagSmoothing(0);
 $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
   const id = a.getAttribute('href'); if (id.length < 2) return;
-  const t = $(id); if (!t) return; e.preventDefault(); lenis.scrollTo(t, { duration: 1.6 });
+  const t = $(id); if (!t) return; e.preventDefault(); closeMenu(); lenis.scrollTo(t, { duration: 1.6 });
 }));
 
 /* ============ text splitting ============ */
@@ -624,7 +717,7 @@ document.addEventListener('pointerover', e => {
 });
 
 /* ============ magnetic ============ */
-$$('.magnetic').forEach(el => {
+if (fine) $$('.magnetic').forEach(el => {
   const xTo = gsap.quickTo(el, 'x', { duration: .6, ease: 'elastic.out(1,.4)' });
   const yTo = gsap.quickTo(el, 'y', { duration: .6, ease: 'elastic.out(1,.4)' });
   el.addEventListener('pointermove', e => {
@@ -635,7 +728,7 @@ $$('.magnetic').forEach(el => {
 });
 
 /* ============ 3D tilt ============ */
-$$('.tilt').forEach(el => {
+if (fine) $$('.tilt').forEach(el => {
   const max = +el.dataset.tilt || 10;
   const rX = gsap.quickTo(el, 'rotationX', { duration: .5, ease: 'power3' });
   const rY = gsap.quickTo(el, 'rotationY', { duration: .5, ease: 'power3' });
@@ -660,7 +753,7 @@ let lastY = 0;
 lenis.on('scroll', ({ scroll, limit, velocity }) => {
   prog.style.transform = `scaleX(${scroll / limit})`;
   nav.classList.toggle('scrolled', scroll > 40);
-  nav.classList.toggle('hidden', scroll > 300 && scroll > lastY);
+  nav.classList.toggle('hidden', !menuOpen && scroll > 300 && scroll > lastY);
   lastY = scroll;
 });
 
@@ -678,12 +771,21 @@ gsap.from('.advisor', { y: 80, opacity: 0, duration: 1.2, ease: 'expo.out', scro
 gsap.from('.mega .w', { yPercent: 100, opacity: 0, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: '.mega', start: 'top 95%' } });
 
 /* ============ horizontal use cases ============ */
-const track = $('#hsTrack');
+const track = $('#hsTrack'), hsBar = $('#hsBar');
 const hsDist = () => Math.max(0, track.scrollWidth - innerWidth);
-gsap.to(track, {
-  x: () => -hsDist(), ease: 'none',
-  scrollTrigger: { trigger: '#primeri', pin: true, scrub: 1, end: () => '+=' + hsDist(), invalidateOnRefresh: true,
-    onUpdate: st => $('#hsBar').style.transform = `scaleX(${st.progress})` }
+gsap.matchMedia().add({ wide: '(min-width:901px)', narrow: '(max-width:900px)' }, ctx => {
+  if (ctx.conditions.wide) {
+    gsap.to(track, {
+      x: () => -hsDist(), ease: 'none',
+      scrollTrigger: { trigger: '#primeri', pin: true, scrub: 1, end: () => '+=' + hsDist(), invalidateOnRefresh: true,
+        onUpdate: st => hsBar.style.transform = `scaleX(${st.progress})` }
+    });
+    return;
+  }
+  // phones: native horizontal swipe, progress bar follows the swipe
+  const onSwipe = () => { const m = track.scrollWidth - track.clientWidth; hsBar.style.transform = `scaleX(${m > 0 ? track.scrollLeft / m : 0})`; };
+  track.addEventListener('scroll', onSwipe, { passive: true }); onSwipe();
+  return () => { track.removeEventListener('scroll', onSwipe); track.scrollLeft = 0; };
 });
 
 /* ============ marquee ============ */
@@ -713,11 +815,13 @@ let oAng = 0, oVel = 0.004, dragging = false, dragX = 0, hoverCard = -1, focusAn
 orbit.addEventListener('pointerdown', e => { dragging = true; dragX = e.clientX; orbit.setPointerCapture(e.pointerId); focusAng = null; });
 orbit.addEventListener('pointermove', e => { if (!dragging) return; const dx = e.clientX - dragX; dragX = e.clientX; oVel = dx * 0.0025; oAng += dx * 0.006; });
 orbit.addEventListener('pointerup', () => dragging = false);
+orbit.addEventListener('pointercancel', () => dragging = false);
 ocards.forEach((c, i) => { c.addEventListener('pointerenter', () => setHover(i)); c.addEventListener('pointerleave', () => setHover(-1)); });
 $$('#agentsList li').forEach(li => {
   const i = +li.dataset.i;
   li.addEventListener('pointerenter', () => { setHover(i); focusAng = -i * Math.PI / 2; });
   li.addEventListener('pointerleave', () => { setHover(-1); focusAng = null; });
+  if (!fine) li.addEventListener('click', () => { const on = hoverCard !== i; setHover(on ? i : -1); focusAng = on ? -i * Math.PI / 2 : null; });
 });
 function setHover(i) {
   hoverCard = i;
@@ -726,7 +830,7 @@ function setHover(i) {
 }
 function stepOrbit(t) {
   if (!orbit._vis) return;
-  const W = orbit.clientWidth, H = orbit.clientHeight, R = Math.min(W * 0.36, 250);
+  const W = orbit.clientWidth, H = orbit.clientHeight, R = Math.min(W * 0.36, 250, W / 2 - ocards[0].offsetWidth * 0.56);
   if (focusAng !== null) {
     let d = focusAng - oAng; d = Math.atan2(Math.sin(d), Math.cos(d)); oAng += d * 0.08; oVel = 0;
   } else if (!dragging) { oVel = lerp(oVel, hoverCard >= 0 ? 0 : 0.004, 0.03); oAng += oVel; }
@@ -831,11 +935,13 @@ function stepML(t) {
   $('#mlPred').textContent = (poly(coef, 1) * 100).toFixed(1);
 }
 genData();
+if (!fine) $('#mlHint').textContent = '↑ TAPNITE GRAF ZA DODAJANJE PODATKOV';
 
 /* ============ THREE.js particle morph world ============ */
 const canvas = $('#gl');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const small = innerWidth < 700 || !fine;
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: !small, alpha: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 2));
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
 camera.position.set(0, 0, 9);
@@ -971,7 +1077,12 @@ function resize() {
   camera.aspect = innerWidth / innerHeight; camera.position.z = innerWidth < 700 ? 13 : 9; camera.updateProjectionMatrix();
   sizeML(); measureMarquees();
 }
-addEventListener('resize', () => { resize(); ScrollTrigger.refresh(); });
+// on touch devices the address bar changes only the height: resize the canvas, skip the full relayout
+let lastW = innerWidth;
+addEventListener('resize', () => {
+  if (!fine && innerWidth === lastW) { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); return; }
+  lastW = innerWidth; resize(); ScrollTrigger.refresh();
+});
 resize();
 
 const clock = new THREE.Clock();
@@ -998,7 +1109,7 @@ function render(t) {
   camera.position.x = lerp(camera.position.x, mouse.nx * .5, .03); camera.position.y = lerp(camera.position.y, mouse.ny * .3, .03); camera.lookAt(0, 0, 0);
   renderer.render(scene, camera);
 
-  stepRepel(); stepCursor(); stepMarquee(); stepOrbit(t); stepML(t);
+  stepRepel(); if (fine) stepCursor(); stepMarquee(); stepOrbit(t); stepML(t);
 }
 
 /* ============ theme toggle ============ */
