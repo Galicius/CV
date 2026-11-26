@@ -1,0 +1,1040 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI sistemi | LANCom</title>
+<meta name="description" content="AI-rešitve, prilagojene vašim podatkom, poslovnim procesom in varnostnim zahtevam.">
+<link rel="icon" href="https://lancom.si/themes/lancom/assets/images/favicon.png">
+<script>
+(function(){var t;try{t=localStorage.getItem('lc-theme')}catch(e){}
+if(t!=='dark')t='light';
+document.documentElement.dataset.theme=t;})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070707; --bg2:#0f0f0e; --panel:rgba(255,255,255,.035); --line:rgba(255,255,255,.09);
+  --ink:#f5f5f3; --muted:#a3a3a3; --dim:#6b6b6b; --accent:#FAB31E; --accent2:#ffd76e;
+  --font:'Montserrat',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  --gutter:clamp(16px,4vw,64px);
+  --ink2:#d6d6d4; --line2:rgba(255,255,255,.2); --stroke-faint:rgba(255,255,255,.06); --stroke-mid:rgba(255,255,255,.3);
+  --card:rgba(18,18,17,.72); --card-on:rgba(30,24,10,.85); --navbg:rgba(7,7,7,.55); --vig:rgba(0,0,0,.7);
+  --canvas-bg:rgba(0,0,0,.35); --ucard:linear-gradient(155deg,#171716,#0c0c0b); --accent-text:#FAB31E; --grain:.06; --dot:#333;
+}
+:root[data-theme="light"]{
+  --bg:#f5f4ef; --bg2:#ecebe4; --panel:rgba(0,0,0,.035); --line:rgba(0,0,0,.1);
+  --ink:#121211; --ink2:#2e2e2c; --muted:#5f5f5b; --dim:#8a8a85; --line2:rgba(0,0,0,.18);
+  --stroke-faint:rgba(0,0,0,.07); --stroke-mid:rgba(0,0,0,.28);
+  --card:rgba(255,255,255,.78); --card-on:rgba(255,246,224,.95); --navbg:rgba(245,244,239,.7); --vig:rgba(120,100,40,.12);
+  --canvas-bg:rgba(255,255,255,.6); --ucard:linear-gradient(155deg,#ffffff,#eeede6); --accent-text:#b87a00; --grain:.035; --dot:#ccc;
+}
+:root[data-theme="light"] :is(.eyebrow,.accent,.nav-links a.active,.agents-list .tag,.ocard .k,.advisor small,.crumbs a:hover){color:var(--accent-text)}
+:root[data-theme="light"] .logo img,:root[data-theme="light"] footer img{filter:invert(1)}
+:root[data-theme="light"] .btn::before{background:#121211}
+:root[data-theme="light"] .btn:hover{color:#fff}
+:root[data-theme="light"] .cur-ring{border-color:rgba(184,122,0,.7)}
+:root[data-theme="light"] .ucard .num{-webkit-text-stroke-color:rgba(184,122,0,.7)}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+/* theme toggle */
+.theme-toggle{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);display:grid;place-items:center;position:relative;overflow:hidden}
+.theme-toggle svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;position:absolute;transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.theme-toggle .moon{transform:translateY(0) rotate(0)}
+.theme-toggle .sun{transform:translateY(140%) rotate(-90deg);opacity:0}
+:root[data-theme="light"] .theme-toggle .moon{transform:translateY(-140%) rotate(90deg);opacity:0}
+:root[data-theme="light"] .theme-toggle .sun{transform:none;opacity:1}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent-text)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#000}
+@media (hover:hover) and (pointer:fine){body,a,button{cursor:none}}
+
+/* ---------- WebGL + overlays ---------- */
+#gl{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
+.grain{position:fixed;inset:-50%;z-index:1;pointer-events:none;opacity:var(--grain);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 1s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-4%)}60%{transform:translate(-4%,1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at center,transparent 40%,var(--vig) 100%)}
+main,header,footer{position:relative;z-index:2}
+
+/* ---------- cursor ---------- */
+.cur-dot,.cur-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;will-change:transform}
+.cur-dot{width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--accent)}
+.cur-ring{width:44px;height:44px;margin:-22px 0 0 -22px;border:1px solid rgba(250,179,30,.6);transition:width .35s,height .35s,margin .35s,background .35s,border-color .35s;display:grid;place-items:center;font:600 10px var(--mono);letter-spacing:.1em;color:#000}
+.cur-ring.big{width:96px;height:96px;margin:-48px 0 0 -48px;background:var(--accent);border-color:var(--accent);mix-blend-mode:normal}
+.cur-ring.hover{width:70px;height:70px;margin:-35px 0 0 -35px;background:rgba(250,179,30,.12)}
+@media not ((hover:hover) and (pointer:fine)){.cur-dot,.cur-ring{display:none}}
+
+/* ---------- loader ---------- */
+.loader{position:fixed;inset:0;z-index:10000;background:#000;display:grid;place-items:center}
+.loader-inner{display:flex;flex-direction:column;align-items:center;gap:24px}
+.loader svg path{fill:var(--accent);transform-origin:center;transform-box:fill-box;animation:dia 1s ease-in-out infinite alternate}
+.loader svg path:nth-child(2){animation-delay:.15s}.loader svg path:nth-child(3){animation-delay:.3s}
+@keyframes dia{from{transform:scale(.6) rotate(0);opacity:.4}to{transform:scale(1.1) rotate(90deg);opacity:1}}
+.loader-count{font:600 12px var(--mono);letter-spacing:.3em;color:var(--muted)}
+
+/* ---------- nav ---------- */
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:60}
+header.nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:18px var(--gutter);display:flex;align-items:center;justify-content:space-between;gap:24px;transition:transform .5s cubic-bezier(.2,.8,.2,1),background .4s,backdrop-filter .4s}
+header.nav.scrolled{background:var(--navbg);backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+header.nav.hidden{transform:translateY(-110%)}
+.logo img{height:38px;width:auto}
+.nav-links{display:flex;gap:4px;list-style:none;font-size:14px;font-weight:500}
+.nav-links a{display:block;padding:8px 14px;border-radius:999px;position:relative;overflow:hidden}
+.nav-links a span{display:block;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.nav-links a span::after{content:attr(data-t);position:absolute;left:0;top:100%;color:var(--accent)}
+.nav-links a:hover span{transform:translateY(-100%)}
+.nav-links a.active{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:14px;font-size:13px}
+.lang{display:flex;gap:6px;color:var(--muted);font-weight:600}
+.lang a.on{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;font:600 14px var(--font);border:0;background:var(--accent);color:#000;position:relative;overflow:hidden;isolation:isolate;will-change:transform}
+.btn::before{content:"";position:absolute;inset:0;background:#fff;border-radius:inherit;transform:scale(0);transition:transform .5s cubic-bezier(.2,.8,.2,1);z-index:-1}
+.btn:hover::before{transform:scale(1)}
+.btn .arr{display:inline-block;transition:transform .4s}
+.btn:hover .arr{transform:translateX(4px) rotate(-45deg)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost::before{background:var(--accent)}
+.btn.ghost:hover{color:#000}
+.btn.sm{padding:10px 18px;font-size:13px}
+.burger{display:none;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;width:44px;height:44px}
+@media (max-width:1060px){.nav-links{display:none}.burger{display:grid;place-items:center}.nav-right .btn{display:none}}
+
+/* ---------- common ---------- */
+section{position:relative;padding:clamp(90px,14vh,160px) var(--gutter)}
+.wrap{max-width:1320px;margin:0 auto;position:relative}
+.eyebrow{font:600 12px var(--mono);letter-spacing:.25em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:12px;margin-bottom:28px}
+.eyebrow::before{content:"";width:28px;height:1px;background:currentColor}
+h1,h2,h3{font-weight:800;line-height:1.02;letter-spacing:-.035em}
+h2{font-size:clamp(40px,6.4vw,96px)}
+h3{font-size:clamp(20px,1.6vw,24px);letter-spacing:-.02em;line-height:1.2}
+.lead{font-size:clamp(17px,1.4vw,21px);color:var(--ink2);max-width:640px;font-weight:400}
+.muted{color:var(--muted)}
+/* split text */
+.w{display:inline-block;white-space:nowrap}
+.c,.ww{display:inline-block;will-change:transform;color:color-mix(in srgb,var(--accent) calc(var(--f,0)*100%),currentColor)}
+.ww{transition:color .2s}
+.outline{-webkit-text-stroke:1.5px var(--ink);color:transparent}
+.outline .c{color:color-mix(in srgb,var(--accent) calc(var(--f,0)*100%),transparent);-webkit-text-stroke:1.5px color-mix(in srgb,var(--accent) calc(var(--f,0)*100%),var(--ink))}
+.accent{color:var(--accent)}
+
+/* floating background words (parallax) */
+.float-word{position:absolute;font-weight:900;font-size:clamp(120px,22vw,360px);line-height:.8;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px var(--stroke-faint);pointer-events:none;user-select:none;z-index:-1;white-space:nowrap}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;align-items:center;padding-top:140px}
+.crumbs{display:flex;gap:10px;font:500 12px var(--mono);color:var(--dim);margin-bottom:30px;flex-wrap:wrap;letter-spacing:.05em}
+.crumbs a:hover{color:var(--accent)}
+.hero h1{font-size:clamp(64px,13vw,220px);margin-bottom:34px}
+.hero h1 .line{display:block}
+.hero .lead{font-size:clamp(18px,1.7vw,24px);margin-bottom:44px;max-width:620px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero-meta{position:absolute;right:0;bottom:-6vh;display:flex;gap:36px;font:500 11px var(--mono);color:var(--dim);letter-spacing:.15em;text-transform:uppercase}
+.hero-meta b{display:block;font:700 30px var(--font);color:var(--ink);letter-spacing:-.02em;margin-bottom:4px}
+.scroll-hint{position:absolute;left:var(--gutter);bottom:28px;display:flex;align-items:center;gap:14px;font:500 11px var(--mono);letter-spacing:.3em;color:var(--dim)}
+.scroll-hint i{width:1px;height:56px;background:linear-gradient(var(--accent),transparent);display:block;animation:drip 2s ease-in-out infinite;transform-origin:top}
+@keyframes drip{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+.hint-chip{position:absolute;right:var(--gutter);bottom:28px;font:500 11px var(--mono);letter-spacing:.15em;color:var(--dim);border:1px solid var(--line);padding:8px 14px;border-radius:999px;backdrop-filter:blur(6px)}
+@media (max-width:800px){.hero-meta{position:static;margin-top:60px;gap:24px;flex-wrap:wrap}.hint-chip{display:none}}
+
+/* ---------- agents ---------- */
+.agents-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(30px,5vw,80px);align-items:center}
+.agents-list{list-style:none;margin-top:40px;border-top:1px solid var(--line)}
+.agents-list li{display:grid;grid-template-columns:52px 1fr;gap:14px;padding:22px 0;border-bottom:1px solid var(--line);color:var(--ink2);transition:padding .4s,color .3s;position:relative}
+.agents-list li::before{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:0;background:var(--accent);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.agents-list li:hover,.agents-list li.on{padding-left:12px;color:var(--ink)}
+.agents-list li:hover::before,.agents-list li.on::before{width:100%}
+.agents-list .tag{font:600 11px var(--mono);color:var(--accent);padding-top:4px}
+.orbit-stage{position:relative;height:min(640px,80vw);perspective:1200px;touch-action:pan-y;user-select:none}
+.orbit-stage svg.links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.core{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;transform-style:preserve-3d;z-index:500}
+.core .ring{position:absolute;inset:0;border:1px solid rgba(250,179,30,.5);border-radius:50%;transform-style:preserve-3d}
+.core .ring:nth-child(1){animation:spinA 8s linear infinite}
+.core .ring:nth-child(2){animation:spinB 11s linear infinite;inset:-18px;border-color:var(--line2)}
+.core .ring:nth-child(3){animation:spinC 14s linear infinite;inset:-36px;border-style:dashed;border-color:rgba(250,179,30,.25)}
+@keyframes spinA{to{transform:rotateX(70deg) rotateZ(360deg)}}
+@keyframes spinB{from{transform:rotateY(60deg) rotateZ(0)}to{transform:rotateY(60deg) rotateZ(-360deg)}}
+@keyframes spinC{from{transform:rotateX(-50deg) rotateY(30deg) rotateZ(0)}to{transform:rotateX(-50deg) rotateY(30deg) rotateZ(360deg)}}
+.core .ball{position:absolute;inset:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c9,var(--accent) 35%,#7a4f00 80%);box-shadow:0 0 60px rgba(250,179,30,.55),0 0 140px rgba(250,179,30,.25);display:grid;place-items:center;font:800 15px var(--font);color:#000;letter-spacing:-.02em;animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 90px rgba(250,179,30,.75),0 0 200px rgba(250,179,30,.35)}}
+.ocard{position:absolute;left:50%;top:50%;width:230px;margin-left:-115px;margin-top:-80px;padding:22px;border-radius:18px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(10px);will-change:transform,opacity;transition:border-color .3s,background .3s}
+.ocard:hover,.ocard.on{border-color:var(--accent);background:var(--card-on)}
+.ocard .k{font:700 11px var(--mono);color:var(--accent);letter-spacing:.15em;margin-bottom:10px;display:flex;justify-content:space-between}
+.ocard h4{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;line-height:1.2}
+.ocard p{font-size:12.5px;color:var(--muted);line-height:1.5}
+.orbit-help{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font:500 11px var(--mono);color:var(--dim);letter-spacing:.15em;white-space:nowrap}
+@media (max-width:900px){.agents-grid{grid-template-columns:1fr}.orbit-stage{height:540px}.ocard{width:190px;margin-left:-95px;padding:16px}.ocard p{display:none}}
+
+/* ---------- ML ---------- */
+.ml-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(30px,5vw,80px);align-items:center}
+.ml-panel{position:relative;border-radius:24px;border:1px solid var(--line);background:var(--panel);padding:18px;transform-style:preserve-3d}
+.ml-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 8px 14px;font:500 11px var(--mono);color:var(--muted);letter-spacing:.1em;flex-wrap:wrap}
+.ml-head .dots{display:flex;gap:6px}.ml-head .dots i{width:9px;height:9px;border-radius:50%;background:var(--dot);display:block}
+.ml-head .dots i:first-child{background:var(--accent)}
+#ml{width:100%;height:380px;display:block;border-radius:14px;background:var(--canvas-bg);touch-action:manipulation}
+.ml-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat{padding:14px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
+.stat small{font:500 10px var(--mono);letter-spacing:.15em;color:var(--dim);display:block;margin-bottom:6px}
+.stat b{font:700 22px var(--font);font-variant-numeric:tabular-nums}
+.ml-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.chk{list-style:none;margin-top:36px;display:grid;gap:14px}
+.chk li{display:flex;gap:16px;align-items:flex-start;color:var(--ink2)}
+.chk li::before{content:"";flex:none;width:22px;height:22px;margin-top:2px;border-radius:7px;background:var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/14px no-repeat}
+@media (max-width:900px){.ml-grid{grid-template-columns:1fr}#ml{height:300px}}
+
+/* ---------- use cases (horizontal) ---------- */
+.hs{padding:0;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.hs-head{padding:0 var(--gutter);display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:5vh;flex-wrap:wrap}
+.hs-head .lead{max-width:520px}
+.hs-track{display:flex;gap:28px;padding:0 var(--gutter);width:max-content;will-change:transform}
+.ucard{width:min(420px,78vw);height:min(440px,52vh);flex:none;border-radius:26px;padding:32px;position:relative;background:var(--ucard);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;transform-style:preserve-3d;overflow:hidden}
+.ucard .num{font:800 96px var(--font);letter-spacing:-.06em;line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(250,179,30,.6);transform:translateZ(50px)}
+.ucard h3{transform:translateZ(40px);margin-bottom:12px}
+.ucard p{transform:translateZ(25px);color:var(--muted);font-size:15px}
+.ucard .ico{position:absolute;right:28px;top:28px;width:64px;height:64px;border-radius:18px;background:rgba(250,179,30,.1);display:grid;place-items:center;transform:translateZ(70px);border:1px solid rgba(250,179,30,.25)}
+.ucard .ico svg{width:30px;height:30px;stroke:var(--accent);fill:none;stroke-width:1.6}
+.ucard.end{background:var(--accent);color:#000;justify-content:center;align-items:flex-start;gap:24px}
+.ucard.end h3{font-size:clamp(30px,3vw,44px);letter-spacing:-.04em}
+.ucard.end .btn{background:#000;color:#fff}
+.ucard.end .btn::before{background:#fff}.ucard.end .btn:hover{color:#000}
+.hs-progress{margin:5vh var(--gutter) 0;height:2px;background:var(--line);position:relative;max-width:400px}
+.hs-progress i{position:absolute;inset:0;background:var(--accent);transform-origin:0;transform:scaleX(0)}
+
+/* glare + tilt */
+.tilt{transform-style:preserve-3d;will-change:transform}
+.glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.16),transparent 45%);opacity:0;transition:opacity .4s;mix-blend-mode:overlay}
+.tilt:hover .glare{opacity:1}
+
+/* ---------- benefits ---------- */
+.ben-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:60px;flex-wrap:wrap}
+.ben-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;perspective:1400px}
+.bcard{position:relative;border-radius:22px;padding:30px 26px 34px;min-height:340px;background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;isolation:isolate}
+.bcard::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(500px circle at var(--mx,-100px) var(--my,-100px),rgba(250,179,30,.14),transparent 40%)}
+.bcard::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:radial-gradient(300px circle at var(--mx,-100px) var(--my,-100px),var(--accent),transparent 50%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.bcard .bi{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:rgba(250,179,30,.12);transform:translateZ(60px)}
+.bcard .bi svg{width:26px;height:26px;stroke:var(--accent);fill:none;stroke-width:1.7}
+.bcard .big{font:800 64px var(--font);letter-spacing:-.05em;color:var(--stroke-faint);position:absolute;right:18px;top:8px;transform:translateZ(20px)}
+.bcard h3{margin:80px 0 14px;transform:translateZ(45px)}
+.bcard p{color:var(--muted);font-size:15px;transform:translateZ(25px)}
+@media (max-width:1100px){.ben-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.ben-grid{grid-template-columns:1fr}.bcard{min-height:0}.bcard h3{margin-top:40px}}
+
+/* ---------- partners ---------- */
+.partners{padding:100px 0;overflow:hidden}
+.partners .eyebrow{margin-left:var(--gutter)}
+.marquee{display:flex;width:max-content;will-change:transform}
+.marquee+.marquee{margin-top:18px}
+.marquee span{font:800 clamp(40px,6vw,86px) var(--font);letter-spacing:-.04em;padding:0 34px;color:transparent;-webkit-text-stroke:1px var(--stroke-mid);transition:color .3s,-webkit-text-stroke-color .3s;white-space:nowrap;display:flex;align-items:center;gap:68px}
+.marquee span::after{content:"";width:16px;height:16px;background:var(--accent);transform:rotate(45deg);flex:none}
+.marquee span:hover{color:var(--accent);-webkit-text-stroke-color:var(--accent)}
+.marquee.solid span{color:var(--ink2);-webkit-text-stroke:0}
+.marquee.solid span:hover{color:var(--accent)}
+
+/* ---------- CTA ---------- */
+.cta h2{font-size:clamp(48px,9vw,150px);margin-bottom:40px}
+.cta-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:end}
+.advisor{border-radius:24px;padding:28px;background:var(--panel);border:1px solid var(--line);position:relative;overflow:hidden}
+.advisor small{font:600 11px var(--mono);letter-spacing:.2em;color:var(--accent);display:block;margin-bottom:22px}
+.adv-row{display:flex;gap:18px;align-items:center;margin-bottom:24px}
+.avatar{width:72px;height:72px;border-radius:50%;background:conic-gradient(from 0deg,var(--accent),#fff3c9,var(--accent));display:grid;place-items:center;font:800 22px var(--font);color:#000;flex:none;animation:spin 8s linear infinite}
+.avatar span{animation:spin 8s linear infinite reverse;display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.adv-row b{font-size:20px;display:block}
+.adv-row em{font-style:normal;color:var(--muted);font-size:14px}
+.advisor a.mail{font:500 14px var(--mono);color:var(--ink);border-bottom:1px solid var(--accent)}
+.big-btn{width:220px;height:220px;border-radius:50%;padding:0;justify-content:center;font-size:17px;flex-direction:column;gap:6px}
+.big-btn .arr{font-size:28px}
+@media (max-width:900px){.cta-grid{grid-template-columns:1fr}.big-btn{width:170px;height:170px}}
+
+/* ---------- footer ---------- */
+footer{padding:90px var(--gutter) 30px;border-top:1px solid var(--line);background:linear-gradient(transparent,rgba(250,179,30,.04))}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:70px}
+.foot-grid h5{font:600 11px var(--mono);letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:18px}
+.foot-grid ul{list-style:none;display:grid;gap:10px;font-size:15px}
+.foot-grid ul a:hover{color:var(--accent)}
+.foot-grid p{color:var(--muted);max-width:320px;margin-top:18px}
+.mega{font-weight:900;font-size:clamp(70px,19vw,330px);letter-spacing:-.07em;line-height:.8;text-align:center;margin:20px 0 40px;user-select:none}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--dim)}
+.foot-bottom nav{display:flex;gap:22px}
+.foot-bottom a:hover{color:var(--ink)}
+.iso{font:600 11px var(--mono);border:1px solid var(--line);padding:6px 12px;border-radius:999px;letter-spacing:.1em}
+@media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.foot-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){.grain{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="loader" id="loader">
+  <div class="loader-inner">
+    <svg width="120" height="40" viewBox="22 2 62 20"><path d="M33 19L26.5 12.5L40.5 12L33 19Z"/><path d="M53.5 19L45 11L53.5 3L63 11L53.5 19Z"/><path d="M74.5 19L68 12.5L82 12L74.5 19Z"/></svg>
+    <div class="loader-count"><span id="lc">000</span> / INICIALIZACIJA MODELA</div>
+  </div>
+</div>
+
+<canvas id="gl"></canvas>
+<div class="vignette"></div>
+<div class="grain"></div>
+<div class="cur-ring" id="curRing"></div>
+<div class="cur-dot" id="curDot"></div>
+<div class="progress" id="progress"></div>
+
+<header class="nav" id="nav">
+  <a class="logo magnetic" href="https://lancom.si/" aria-label="LANCom"><img src="/lancom/assets/logo-white.svg" alt="LANCom"></a>
+  <ul class="nav-links">
+    <li><a href="https://lancom.si/"><span data-t="Domov">Domov</span></a></li>
+    <li><a href="https://lancom.si/o-nas"><span data-t="O nas">O nas</span></a></li>
+    <li><a class="active" href="#"><span data-t="Storitve">Storitve</span></a></li>
+    <li><a href="https://lancom.si/blog"><span data-t="Blog">Blog</span></a></li>
+    <li><a href="https://lancom.si/kariera"><span data-t="Kariera">Kariera</span></a></li>
+    <li><a href="https://lancom.si/kontakt"><span data-t="Kontakt">Kontakt</span></a></li>
+    <li><a href="https://lancom.si/podpora"><span data-t="Podpora">Podpora</span></a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang"><a class="on" href="#">SL</a><span>/</span><a href="#">EN</a></div>
+    <button class="theme-toggle magnetic" id="themeToggle" aria-label="Preklopi svetli / temni način" title="Svetli / temni način">
+      <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M1.5 12H4M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+    </button>
+    <a class="btn sm magnetic" href="#kontakt">Kontaktirajte nas <span class="arr">→</span></a>
+    <button class="burger" aria-label="Meni">☰</button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" data-morph="0" data-x="1.9" id="top">
+    <span class="float-word" style="top:8%;right:-4%" data-speed="-0.4">AI</span>
+    <div class="wrap" style="width:100%">
+      <div class="crumbs" data-reveal><a href="https://lancom.si/">Domov</a>/<span>Storitve</span>/<span>Informacijske rešitve</span>/<span class="accent">AI sistemi</span></div>
+      <div class="eyebrow scramble">AI rešitve za poslovanje</div>
+      <h1 class="repel" data-strength="1.3"><span class="line">AI</span><span class="line">sistemi<span class="accent">.</span></span></h1>
+      <p class="lead words">AI-rešitve, prilagojene vašim podatkom, poslovnim procesom in varnostnim zahtevam.</p>
+      <div class="hero-ctas" data-reveal>
+        <a class="btn magnetic" href="#agenti">Odkrijte možnosti uporabe AI <span class="arr">→</span></a>
+        <a class="btn ghost magnetic" href="#kontakt">Kontaktirajte nas</a>
+      </div>
+      <div class="hero-meta" data-reveal>
+        <div><b>RAG</b>Lastni podatki</div>
+        <div><b>MCP</b>Integracije</div>
+        <div><b>DSS</b>Podpora odločanju</div>
+      </div>
+    </div>
+    <div class="scroll-hint"><i></i>SCROLL</div>
+    <div class="hint-chip">Premikajte miško · kliknite kjerkoli</div>
+  </section>
+
+  <!-- AGENTS -->
+  <section id="agenti" data-morph="1" data-x="-2.4">
+    <span class="float-word" style="top:4%;left:-3%" data-speed="0.35">AGENT</span>
+    <div class="wrap agents-grid">
+      <div>
+        <div class="eyebrow scramble">01 — Agentni sistemi</div>
+        <h2 class="repel">AI agenti</h2>
+        <p class="lead words" style="margin-top:28px">AI-agenti razumejo vaše poslovno okolje, povezujejo različne sisteme in samostojno izvajajo določena opravila.</p>
+        <ul class="agents-list" id="agentsList">
+          <li data-i="0"><span class="tag">AUTO</span><span>Agenti umetne inteligence, ki določena dela avtonomno naredijo namesto vas, brez vašega posredovanja</span></li>
+          <li data-i="1"><span class="tag">MCP</span><span>Avtomatizirana uporaba drugih informacijskih sistemov s pomočjo Model Context Protocol - MCP</span></li>
+          <li data-i="2"><span class="tag">SKILLS</span><span>Ekspert na določenih področjih znotraj vašega podjetja na podlagi izkušenj - Skills</span></li>
+          <li data-i="3"><span class="tag">RAG</span><span>Razume prav vaše podjetje na osnovi internih in eksternih dokumentov s tehnologijo Retrieval-Augmented Generation - RAG</span></li>
+        </ul>
+      </div>
+      <div class="orbit-stage" id="orbit">
+        <svg class="links" id="orbitLinks"></svg>
+        <div class="core"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ball">AI agent</div></div>
+        <div class="ocard" data-i="0"><div class="k"><span>01</span><span>AUTO</span></div><h4>Avtonomni agent</h4><p>Opravi dela namesto vas, brez posredovanja.</p></div>
+        <div class="ocard" data-i="1"><div class="k"><span>02</span><span>MCP</span></div><h4>Model Context Protocol</h4><p>Samodejno uporablja vaše informacijske sisteme.</p></div>
+        <div class="ocard" data-i="2"><div class="k"><span>03</span><span>SKILLS</span></div><h4>Domenski ekspert</h4><p>Znanje in izkušnje vašega podjetja.</p></div>
+        <div class="ocard" data-i="3"><div class="k"><span>04</span><span>RAG</span></div><h4>Retrieval-Augmented Generation</h4><p>Razume interne in eksterne dokumente.</p></div>
+        <div class="orbit-help">↔ POVLECITE ZA VRTENJE</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ML -->
+  <section id="strojno-ucenje" data-morph="2" data-x="2.4">
+    <span class="float-word" style="bottom:0;right:-6%" data-speed="-0.3">ML</span>
+    <div class="wrap ml-grid">
+      <div class="ml-panel tilt" data-tilt="6">
+        <div class="ml-head"><div class="dots"><i></i><i></i><i></i></div><span>PREDICTIVE_MODEL.train()</span><span id="mlEpoch">EPOHA 0</span></div>
+        <canvas id="ml"></canvas>
+        <div class="ml-stats">
+          <div class="stat"><small>TOČNOST R²</small><b id="mlR2">0.00</b></div>
+          <div class="stat"><small>VZORCI</small><b id="mlN">0</b></div>
+          <div class="stat"><small>NAPOVED +1</small><b id="mlPred">—</b></div>
+        </div>
+        <div class="ml-actions">
+          <button class="btn sm magnetic" id="mlRetrain">Ponovno nauči ↻</button>
+          <button class="btn sm ghost magnetic" id="mlReset">Novi podatki</button>
+        </div>
+        <div class="glare"></div>
+      </div>
+      <div>
+        <div class="eyebrow scramble">02 — Napovedni modeli</div>
+        <h2 class="repel">Strojno učenje</h2>
+        <p class="lead words" style="margin-top:28px">Iz podatkov vašega podjetja razvijemo modele, ki prepoznavajo vzorce, napovedujejo prihodnje rezultate in podpirajo poslovne odločitve.</p>
+        <ul class="chk words">
+          <li>Izdelava, učenje in evalvacija modelov strojnega učenja</li>
+          <li>Model po meri naučen iz vaših podatkov, zlasti kvantitativnih</li>
+          <li>Visoka točnost napovedi na specifičnem področju</li>
+          <li>Omogoča višjo učinkovitost, pripravljenost, nižje stroške procesov kot del sistema Decision Support System - DSS</li>
+        </ul>
+        <p class="muted" style="margin-top:26px;font:500 12px var(--mono);letter-spacing:.08em">↖ KLIKNITE NA GRAF ZA DODAJANJE PODATKOV</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="hs" id="primeri" data-morph="3" data-x="0">
+    <div class="hs-head">
+      <div>
+        <div class="eyebrow scramble">03 — Primeri uporabe</div>
+        <h2 class="repel">Primeri uporabe</h2>
+      </div>
+      <p class="lead words">AI prilagodimo konkretnim procesom in izzivom vašega podjetja – od dela z dokumenti in podatki do avtomatizacije opravil ter podpore zaposlenim.</p>
+    </div>
+    <div class="hs-track" id="hsTrack">
+      <article class="ucard tilt" data-tilt="10"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/><path d="M18 3l2 2-2 2"/></svg></div><div class="num">01</div><div><h3>Uvajanje novih zaposlenih</h3><p>Aplikacija za samostojno pomoč pri vpeljevanju novih zaposlenih</p></div><div class="glare"></div></article>
+      <article class="ucard tilt" data-tilt="10"><div class="ico"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7M9 7h4"/></svg></div><div class="num">02</div><div><h3>Obdelava naročil</h3><p>Iz naročila stranke AI izlušči ključne podatke in jih strukturirano predstavi</p></div><div class="glare"></div></article>
+      <article class="ucard tilt" data-tilt="10"><div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div><div class="num">03</div><div><h3>Avtonomna opravila</h3><p>Avtonomno izpolnjevanje obrazcev, pošiljanje e-pošte, uporaba internih programov</p></div><div class="glare"></div></article>
+      <article class="ucard tilt" data-tilt="10"><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg></div><div class="num">04</div><div><h3>AI dvojnik podjetja</h3><p>Pridobitev podatkov o podjetju preko pogovora. Referenciranje virov</p></div><div class="glare"></div></article>
+      <article class="ucard tilt" data-tilt="10"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M6 16V10M11 16V6M16 16v-4M20 4l-6 6-4-3-6 6"/></svg></div><div class="num">05</div><div><h3>Prediktivna analitika</h3><p>Prediktivna analitika integrirana v vaš obstoječ Business Inteligence (BI) sistem</p></div><div class="glare"></div></article>
+      <article class="ucard end tilt" data-tilt="8"><h3>Vaš proces je lahko naslednji primer.</h3><a class="btn magnetic" href="#kontakt">Predstavite nam idejo <span class="arr">→</span></a></article>
+    </div>
+    <div class="hs-progress"><i id="hsBar"></i></div>
+  </section>
+
+  <!-- BENEFITS -->
+  <section id="rezultati" data-morph="4" data-x="0">
+    <span class="float-word" style="top:0;left:10%" data-speed="0.25">VREDNOST</span>
+    <div class="wrap">
+      <div class="ben-head">
+        <div>
+          <div class="eyebrow scramble">Rezultati</div>
+          <h2 class="repel">Kaj pridobite</h2>
+        </div>
+      </div>
+      <div class="ben-grid">
+        <div class="bcard tilt" data-tilt="12"><span class="big">01</span><div class="bi"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-4 10.5V17h8v-3.5A6 6 0 0 0 12 3z"/><path d="M9 21h6"/></svg></div><div><h3>Več vrednosti iz znanja zaposlenih</h3><p>Zaposleni se lahko osredotočijo na zahtevnejše naloge z višjo dodano vrednostjo.</p></div><div class="glare"></div></div>
+        <div class="bcard tilt" data-tilt="12"><span class="big">02</span><div class="bi"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div><div><h3>Hitrejši in učinkovitejši procesi</h3><p>AI avtomatizira ponavljajoča se opravila ter skrajša čas njihove izvedbe.</p></div><div class="glare"></div></div>
+        <div class="bcard tilt" data-tilt="12"><span class="big">03</span><div class="bi"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/></svg></div><div><h3>Boljše odločitve na podlagi podatkov</h3><p>Modeli prepoznavajo vzorce, priložnosti in tveganja ter podpirajo odločanje.</p></div><div class="glare"></div></div>
+        <div class="bcard tilt" data-tilt="12"><span class="big">04</span><div class="bi"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><div><h3>Več nadzora nad podatki in uporabo AI</h3><p>Rešitve prilagodimo vašim pravilom, dostopom in zahtevam glede varovanja podatkov.</p></div><div class="glare"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section class="partners" data-morph="4" data-x="0">
+    <div class="eyebrow scramble">Naši partnerji</div>
+    <div class="marquee" data-dir="-1"></div>
+    <div class="marquee solid" data-dir="1"></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="kontakt" data-morph="5" data-x="0">
+    <div class="wrap">
+      <div class="eyebrow scramble">Kontaktirajte nas</div>
+      <h2 class="repel" data-strength="1.2">Imate idejo rešitve za <span class="outline">vaše podjetje?</span></h2>
+      <div class="cta-grid">
+        <div>
+          <p class="lead words" style="margin-bottom:40px">Predstavite nam proces ali opravilo, ki vam jemlje preveč časa. Skupaj bomo preverili, kako ga lahko izboljšamo z umetno inteligenco.</p>
+          <a class="btn big-btn magnetic" data-cursor="POŠLJI" href="mailto:gal.gustin@lancom.si"><span class="arr">↗</span>Kontaktirajte nas</a>
+        </div>
+        <div class="advisor tilt" data-tilt="8">
+          <small>NAŠI SVETOVALCI SO VAM NA VOLJO</small>
+          <div class="adv-row"><div class="avatar"><span>GG</span></div><div><b>Gal Guštin</b><em>Svetovalec za AI rešitve</em></div></div>
+          <a class="mail" href="mailto:gal.gustin@lancom.si">gal.gustin@lancom.si</a>
+          <div class="glare"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-grid">
+    <div><img src="/lancom/assets/logo-white.svg" alt="LANCom" style="height:44px"><p>Podjetniške IT rešitve, ki prinašajo poslovne rezultate.</p></div>
+    <div><h5>Navigacija</h5><ul><li><a href="https://lancom.si/blog">Novice</a></li><li><a href="#">Storitve</a></li><li><a href="https://lancom.si/o-nas">O nas</a></li><li><a href="https://lancom.si/kontakt">Kontakt</a></li></ul></div>
+    <div><h5>Storitve</h5><ul><li><a href="#">IT infrastruktura</a></li><li><a href="#">Kibernetska varnost</a></li><li><a href="#">Oblačne rešitve</a></li><li><a href="#">Servis in podpora</a></li></ul></div>
+    <div><h5>Kontakt</h5><ul><li><a href="mailto:info@lancom.si">info@lancom.si</a></li><li><a href="tel:+38623300100">+386 2 33 00 100</a></li><li>Maribor • Ljubljana</li></ul></div>
+  </div>
+  <div class="mega repel" data-strength="1.6">LANCom</div>
+  <div class="foot-bottom">
+    <span>© 2024 LANCom. Vse pravice pridržane.</span>
+    <span class="iso">ISO 9001 / ISO 27001</span>
+    <nav><a href="#">Politika zasebnosti</a><a href="#">Splošni pogoji uporabe</a></nav>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+gsap.registerPlugin(ScrollTrigger);
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const lerp = (a, b, t) => a + (b - a) * t;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isLight = () => document.documentElement.dataset.theme === 'light';
+
+/* ============ pointer state ============ */
+const mouse = { x: innerWidth / 2, y: innerHeight / 2, nx: 0, ny: 0, sx: innerWidth / 2, sy: innerHeight / 2, active: false };
+addEventListener('pointermove', e => {
+  mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
+  mouse.nx = e.clientX / innerWidth * 2 - 1; mouse.ny = -(e.clientY / innerHeight) * 2 + 1;
+}, { passive: true });
+document.addEventListener('pointerleave', () => mouse.active = false);
+
+/* ============ smooth scroll ============ */
+const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+$$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+  const id = a.getAttribute('href'); if (id.length < 2) return;
+  const t = $(id); if (!t) return; e.preventDefault(); lenis.scrollTo(t, { duration: 1.6 });
+}));
+
+/* ============ text splitting ============ */
+function splitNode(node, mode, out) {
+  [...node.childNodes].forEach(n => {
+    if (n.nodeType === 3) {
+      const frag = document.createDocumentFragment();
+      n.textContent.split(/(\s+)/).forEach(tok => {
+        if (!tok) return;
+        if (/^\s+$/.test(tok)) { frag.append(' '); return; }
+        if (mode === 'words') {
+          const s = document.createElement('span'); s.className = 'ww'; s.textContent = tok; frag.append(s); out.push(s);
+        } else {
+          const w = document.createElement('span'); w.className = 'w';
+          [...tok].forEach(ch => { const c = document.createElement('span'); c.className = 'c'; c.textContent = ch; w.append(c); out.push(c); });
+          frag.append(w);
+        }
+      });
+      n.replaceWith(frag);
+    } else if (n.nodeType === 1) splitNode(n, mode, out);
+  });
+}
+
+/* ============ spring repel engine ============ */
+const groups = [];
+function addGroup(el, mode, radius, strength) {
+  const items = []; splitNode(el, mode, items);
+  const g = { el, chars: mode === 'chars', items: items.map(e => ({ e, x: 0, y: 0, vx: 0, vy: 0, r: 0, vr: 0, f: 0, lastF: -1 })), radius, strength, visible: false };
+  groups.push(g); return g;
+}
+$$('.repel').forEach(el => addGroup(el, 'chars', 170, 60 * (+el.dataset.strength || 1)));
+$$('.words').forEach(el => addGroup(el, 'words', 110, 16));
+const io = new IntersectionObserver(es => es.forEach(en => { const g = groups.find(g => g.el === en.target); if (g) g.visible = en.isIntersecting; }), { rootMargin: '100px' });
+groups.forEach(g => io.observe(g.el));
+
+const shocks = []; // {x,y,t}
+addEventListener('pointerdown', e => {
+  if (e.target.closest('a,button,#ml,#orbit')) return;
+  shocks.push({ x: e.clientX, y: e.clientY, t: performance.now() });
+  glShock(e.clientX, e.clientY);
+});
+
+function stepRepel() {
+  const now = performance.now();
+  for (let i = shocks.length - 1; i >= 0; i--) if (now - shocks[i].t > 60) shocks.splice(i, 1);
+  const live = groups.filter(g => g.visible);
+  for (const g of live) for (const it of g.items) { const r = it.e.getBoundingClientRect(); it.cx = r.left + r.width / 2 - it.x; it.cy = r.top + r.height / 2 - it.y; }
+  for (const g of live) {
+    for (const it of g.items) {
+      let tx = 0, ty = 0, tr = 0, f = 0;
+      const cx = it.cx, cy = it.cy;
+      if (mouse.active) {
+        const dx = cx - mouse.x, dy = cy - mouse.y, d = Math.hypot(dx, dy) || 1;
+        if (d < g.radius) {
+          f = 1 - d / g.radius; const p = f * f * g.strength;
+          tx = dx / d * p; ty = dy / d * p - f * g.strength * 0.15; tr = (dx / d) * f * 25;
+        }
+      }
+      for (const s of shocks) {
+        const dx = cx - s.x, dy = cy - s.y, d = Math.hypot(dx, dy) || 1;
+        if (d < 600) { const k = (1 - d / 600) * 9; it.vx += dx / d * k; it.vy += dy / d * k; it.vr += (Math.random() - .5) * k * 3; }
+      }
+      // spring
+      it.vx = (it.vx + (tx - it.x) * 0.08) * 0.82;
+      it.vy = (it.vy + (ty - it.y) * 0.08) * 0.82;
+      it.vr = (it.vr + (tr - it.r) * 0.08) * 0.82;
+      it.x += it.vx; it.y += it.vy; it.r += it.vr; it.f = lerp(it.f, f, 0.2);
+      const sc = 1 + it.f * (g.chars ? 0.25 : 0.08);
+      if (Math.abs(it.x) + Math.abs(it.y) + Math.abs(it.r) > 0.02 || it.f > 0.01)
+        it.e.style.transform = `translate3d(${it.x.toFixed(2)}px,${it.y.toFixed(2)}px,0) rotate(${it.r.toFixed(2)}deg) scale(${sc.toFixed(3)})`;
+      else if (it.e.style.transform) it.e.style.transform = '';
+      const fr = Math.round(it.f * 50) / 50;
+      if (fr !== it.lastF) { it.e.style.setProperty('--f', fr); it.lastF = fr; }
+    }
+  }
+}
+
+/* ============ scramble ============ */
+const glyphs = '!<>-_\\/[]{}—=+*^?#01ABCDEFGHIJKLMNOPRSTUVZ';
+function scramble(el) {
+  const final = el.dataset.final || (el.dataset.final = el.textContent);
+  let frame = 0; const len = final.length;
+  cancelAnimationFrame(el._raf);
+  const run = () => {
+    let out = '';
+    for (let i = 0; i < len; i++) {
+      if (frame / 2 > i || final[i] === ' ') out += final[i];
+      else out += glyphs[(Math.random() * glyphs.length) | 0];
+    }
+    el.textContent = out; frame++;
+    if (frame / 2 <= len) el._raf = requestAnimationFrame(run);
+  };
+  run();
+}
+$$('.scramble').forEach(el => {
+  ScrollTrigger.create({ trigger: el, start: 'top 90%', onEnter: () => scramble(el) });
+  el.addEventListener('pointerenter', () => scramble(el));
+});
+
+/* ============ cursor ============ */
+const dot = $('#curDot'), ring = $('#curRing');
+let rx = mouse.x, ry = mouse.y;
+function stepCursor() {
+  rx = lerp(rx, mouse.x, 0.16); ry = lerp(ry, mouse.y, 0.16);
+  dot.style.transform = `translate3d(${mouse.x}px,${mouse.y}px,0)`;
+  ring.style.transform = `translate3d(${rx}px,${ry}px,0)`;
+}
+document.addEventListener('pointerover', e => {
+  const t = e.target.closest('a,button,.ocard,#ml,.tilt,.marquee span');
+  ring.classList.remove('big', 'hover'); ring.textContent = '';
+  if (!t) return;
+  if (t.dataset.cursor) { ring.classList.add('big'); ring.textContent = t.dataset.cursor; }
+  else if (t.id === 'ml') { ring.classList.add('big'); ring.textContent = '+ PODATEK'; }
+  else if (t.matches('a,button')) ring.classList.add('hover');
+  else if (t.matches('.ocard')) { ring.classList.add('big'); ring.textContent = 'VLEČI'; }
+});
+
+/* ============ magnetic ============ */
+$$('.magnetic').forEach(el => {
+  const xTo = gsap.quickTo(el, 'x', { duration: .6, ease: 'elastic.out(1,.4)' });
+  const yTo = gsap.quickTo(el, 'y', { duration: .6, ease: 'elastic.out(1,.4)' });
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect();
+    xTo((e.clientX - r.left - r.width / 2) * 0.35); yTo((e.clientY - r.top - r.height / 2) * 0.35);
+  });
+  el.addEventListener('pointerleave', () => { xTo(0); yTo(0); });
+});
+
+/* ============ 3D tilt ============ */
+$$('.tilt').forEach(el => {
+  const max = +el.dataset.tilt || 10;
+  const rX = gsap.quickTo(el, 'rotationX', { duration: .5, ease: 'power3' });
+  const rY = gsap.quickTo(el, 'rotationY', { duration: .5, ease: 'power3' });
+  gsap.set(el, { transformPerspective: 900 });
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect(); const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+    rY((px - .5) * max * 2); rX(-(py - .5) * max * 2);
+    el.style.setProperty('--gx', px * 100 + '%'); el.style.setProperty('--gy', py * 100 + '%');
+    el.style.setProperty('--mx', e.clientX - r.left + 'px'); el.style.setProperty('--my', e.clientY - r.top + 'px');
+  });
+  el.addEventListener('pointerleave', () => { rX(0); rY(0); });
+});
+// spotlight shared across benefit grid
+const bgrid = $('.ben-grid');
+bgrid.addEventListener('pointermove', e => $$('.bcard', bgrid).forEach(c => {
+  const r = c.getBoundingClientRect(); c.style.setProperty('--mx', e.clientX - r.left + 'px'); c.style.setProperty('--my', e.clientY - r.top + 'px');
+}));
+
+/* ============ nav / progress ============ */
+const nav = $('#nav'), prog = $('#progress');
+let lastY = 0;
+lenis.on('scroll', ({ scroll, limit, velocity }) => {
+  prog.style.transform = `scaleX(${scroll / limit})`;
+  nav.classList.toggle('scrolled', scroll > 40);
+  nav.classList.toggle('hidden', scroll > 300 && scroll > lastY);
+  lastY = scroll;
+});
+
+/* ============ reveal + parallax ============ */
+$$('[data-reveal]').forEach(el => gsap.from(el, { y: 40, opacity: 0, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 92%' } }));
+$$('[data-speed]').forEach(el => {
+  const s = +el.dataset.speed;
+  gsap.fromTo(el, { yPercent: -s * 60 }, { yPercent: s * 60, ease: 'none', scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+});
+$$('section:not(.hero) h2').forEach(h => gsap.from($$('.w', h), { yPercent: 120, rotate: 6, opacity: 0, duration: 1.1, stagger: .06, ease: 'expo.out', scrollTrigger: { trigger: h, start: 'top 88%' } }));
+$$('.words').forEach(p => gsap.from($$('.ww', p), { opacity: 0, filter: 'blur(6px)', duration: .8, stagger: .015, ease: 'power2.out', scrollTrigger: { trigger: p, start: 'top 90%' } }));
+gsap.from('.agents-list li', { x: -40, opacity: 0, stagger: .1, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.agents-list', start: 'top 85%' } });
+gsap.from('.bcard', { y: 120, rotationX: -40, opacity: 0, stagger: .12, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.ben-grid', start: 'top 85%' } });
+gsap.from('.advisor', { y: 80, opacity: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.advisor', start: 'top 92%' } });
+gsap.from('.mega .w', { yPercent: 100, opacity: 0, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: '.mega', start: 'top 95%' } });
+
+/* ============ horizontal use cases ============ */
+const track = $('#hsTrack');
+const hsDist = () => Math.max(0, track.scrollWidth - innerWidth);
+gsap.to(track, {
+  x: () => -hsDist(), ease: 'none',
+  scrollTrigger: { trigger: '#primeri', pin: true, scrub: 1, end: () => '+=' + hsDist(), invalidateOnRefresh: true,
+    onUpdate: st => $('#hsBar').style.transform = `scaleX(${st.progress})` }
+});
+
+/* ============ marquee ============ */
+const partners = ['Microsoft', 'DELL', 'Fortinet', 'Veeam', 'VMware', 'HP', 'HPE', 'Lenovo', 'IBM', 'Hitachi', 'Palo Alto', 'Aruba', 'Commvault', 'Proxmox'];
+const marquees = $$('.marquee').map((m, i) => {
+  const list = i ? [...partners].reverse() : partners;
+  m.innerHTML = [...list, ...list, ...list].map(p => `<span>${p}</span>`).join('');
+  return { m, dir: +m.dataset.dir, x: 0, w: 0 };
+});
+function measureMarquees() { marquees.forEach(q => q.w = q.m.scrollWidth / 3); }
+let skew = 0;
+function stepMarquee() {
+  const v = lenis.velocity || 0;
+  skew = lerp(skew, clamp(v * 0.4, -12, 12), 0.1);
+  marquees.forEach(q => {
+    q.x += q.dir * (0.6 + Math.abs(v) * 0.35) * (v < 0 ? -1 : 1);
+    if (q.x <= -q.w) q.x += q.w; if (q.x > 0) q.x -= q.w;
+    q.m.style.transform = `translate3d(${q.x}px,0,0) skewX(${-skew}deg)`;
+  });
+}
+
+/* ============ agents orbit ============ */
+const orbit = $('#orbit'), ocards = $$('.ocard', orbit), linksSvg = $('#orbitLinks');
+linksSvg.innerHTML = ocards.map(() => '<line stroke="rgba(250,179,30,.35)" stroke-width="1" stroke-dasharray="4 6"/>').join('') + ocards.map(() => '<circle r="3" fill="#FAB31E"/>').join('');
+const lines = $$('line', linksSvg), pulses = $$('circle', linksSvg);
+let oAng = 0, oVel = 0.004, dragging = false, dragX = 0, hoverCard = -1, focusAng = null;
+orbit.addEventListener('pointerdown', e => { dragging = true; dragX = e.clientX; orbit.setPointerCapture(e.pointerId); focusAng = null; });
+orbit.addEventListener('pointermove', e => { if (!dragging) return; const dx = e.clientX - dragX; dragX = e.clientX; oVel = dx * 0.0025; oAng += dx * 0.006; });
+orbit.addEventListener('pointerup', () => dragging = false);
+ocards.forEach((c, i) => { c.addEventListener('pointerenter', () => setHover(i)); c.addEventListener('pointerleave', () => setHover(-1)); });
+$$('#agentsList li').forEach(li => {
+  const i = +li.dataset.i;
+  li.addEventListener('pointerenter', () => { setHover(i); focusAng = -i * Math.PI / 2; });
+  li.addEventListener('pointerleave', () => { setHover(-1); focusAng = null; });
+});
+function setHover(i) {
+  hoverCard = i;
+  ocards.forEach((c, j) => c.classList.toggle('on', j === i));
+  $$('#agentsList li').forEach((l, j) => l.classList.toggle('on', j === i));
+}
+function stepOrbit(t) {
+  if (!orbit._vis) return;
+  const W = orbit.clientWidth, H = orbit.clientHeight, R = Math.min(W * 0.36, 250);
+  if (focusAng !== null) {
+    let d = focusAng - oAng; d = Math.atan2(Math.sin(d), Math.cos(d)); oAng += d * 0.08; oVel = 0;
+  } else if (!dragging) { oVel = lerp(oVel, hoverCard >= 0 ? 0 : 0.004, 0.03); oAng += oVel; }
+  const tiltX = mouse.ny * 0.25;
+  ocards.forEach((c, i) => {
+    const a = oAng + i * Math.PI / 2;
+    const x = Math.sin(a) * R, z = Math.cos(a) * R;
+    const y = -Math.cos(a) * R * (0.22 + tiltX) + Math.sin(t * 0.0015 + i) * 8;
+    const depth = (z / R + 1) / 2;
+    const s = 0.62 + depth * 0.45;
+    c.style.transform = `translate3d(${x}px,${y}px,${z}px) scale(${s})`;
+    c.style.opacity = 0.35 + depth * 0.65;
+    c.style.zIndex = Math.round(depth * 1000);
+    c.style.filter = `blur(${(1 - depth) * 2.2}px)`;
+    const pr = 1200 / (1200 - z), sx = x * pr, sy = y * pr;
+    const l = lines[i]; l.setAttribute('x1', W / 2); l.setAttribute('y1', H / 2); l.setAttribute('x2', W / 2 + sx); l.setAttribute('y2', H / 2 + sy);
+    l.style.opacity = 0.3 + depth * 0.7;
+    const p = (t * 0.0006 + i * 0.25) % 1;
+    pulses[i].setAttribute('cx', W / 2 + sx * p); pulses[i].setAttribute('cy', H / 2 + sy * p);
+  });
+}
+new IntersectionObserver(([e]) => orbit._vis = e.isIntersecting).observe(orbit);
+
+/* ============ ML interactive chart ============ */
+const mlc = $('#ml'), mctx = mlc.getContext('2d');
+let pts = [], coef = [0, 0, 0, 0], target = [0, 0, 0, 0], epoch = 0, hoverX = null, mlVis = false;
+const trueF = x => 0.25 + 0.45 * x + 0.12 * Math.sin(x * 7);
+function genData() {
+  pts = []; for (let i = 0; i < 26; i++) { const x = Math.random() * 0.78 + 0.02; pts.push({ x, y: clamp(trueF(x) + (Math.random() - .5) * 0.14, .03, .97), born: performance.now() + i * 30 }); }
+  retrain(true);
+}
+function fit() { // least squares cubic
+  const n = 4, A = Array.from({ length: n }, () => Array(n + 1).fill(0));
+  pts.forEach(p => { const pw = [1, p.x, p.x ** 2, p.x ** 3]; for (let i = 0; i < n; i++) { for (let j = 0; j < n; j++) A[i][j] += pw[i] * pw[j]; A[i][n] += pw[i] * p.y; } });
+  for (let i = 0; i < n; i++) A[i][i] += 1e-6;
+  for (let i = 0; i < n; i++) { let m = i; for (let k = i + 1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[m][i])) m = k; [A[i], A[m]] = [A[m], A[i]];
+    for (let k = 0; k < n; k++) if (k !== i) { const f = A[k][i] / A[i][i]; for (let j = i; j <= n; j++) A[k][j] -= f * A[i][j]; } }
+  return A.map((r, i) => r[n] / r[i]);
+}
+const poly = (c, x) => c[0] + c[1] * x + c[2] * x * x + c[3] * x ** 3;
+function retrain(fromZero) { target = fit(); if (fromZero) { coef = [0.5, 0, 0, 0]; epoch = 0; } }
+function r2() { const m = pts.reduce((s, p) => s + p.y, 0) / pts.length; let ss = 0, sr = 0; pts.forEach(p => { ss += (p.y - m) ** 2; sr += (p.y - poly(coef, p.x)) ** 2; }); return Math.max(0, 1 - sr / ss); }
+function sizeML() { const d = Math.min(devicePixelRatio, 2); mlc.width = mlc.clientWidth * d; mlc.height = mlc.clientHeight * d; mctx.setTransform(d, 0, 0, d, 0, 0); }
+mlc.addEventListener('pointermove', e => { const r = mlc.getBoundingClientRect(); hoverX = (e.clientX - r.left) / r.width; });
+mlc.addEventListener('pointerleave', () => hoverX = null);
+mlc.addEventListener('click', e => {
+  const r = mlc.getBoundingClientRect(); const pad = 24;
+  const x = (e.clientX - r.left - pad) / (r.width - pad * 2), y = 1 - (e.clientY - r.top - pad) / (r.height - pad * 2);
+  pts.push({ x: clamp(x, 0, 1), y: clamp(y, 0, 1), born: performance.now() }); retrain(false);
+});
+$('#mlRetrain').onclick = () => retrain(true);
+$('#mlReset').onclick = () => genData();
+new IntersectionObserver(([e]) => { mlVis = e.isIntersecting; if (mlVis && epoch === 0) retrain(true); }).observe(mlc);
+function stepML(t) {
+  if (!mlVis) return;
+  const W = mlc.clientWidth, H = mlc.clientHeight, pad = 24, X = x => pad + x * (W - pad * 2), Y = y => pad + (1 - y) * (H - pad * 2);
+  let moving = false;
+  coef = coef.map((c, i) => { const n = lerp(c, target[i], 0.035); if (Math.abs(n - target[i]) > 1e-4) moving = true; return n; });
+  if (moving) epoch += 3;
+  mctx.clearRect(0, 0, W, H);
+  const L = isLight(), ink = L ? '18,18,17' : '255,255,255';
+  // grid
+  mctx.strokeStyle = `rgba(${ink},.07)`; mctx.lineWidth = 1;
+  for (let i = 0; i <= 10; i++) { mctx.beginPath(); mctx.moveTo(X(i / 10), pad); mctx.lineTo(X(i / 10), H - pad); mctx.stroke(); }
+  for (let i = 0; i <= 6; i++) { mctx.beginPath(); mctx.moveTo(pad, Y(i / 6)); mctx.lineTo(W - pad, Y(i / 6)); mctx.stroke(); }
+  // forecast zone
+  mctx.fillStyle = 'rgba(250,179,30,.05)'; mctx.fillRect(X(.8), pad, X(1) - X(.8), H - pad * 2);
+  mctx.fillStyle = 'rgba(250,179,30,.6)'; mctx.font = '600 10px JetBrains Mono'; mctx.fillText('NAPOVED', X(.8) + 8, pad + 14);
+  // confidence band
+  const band = 0.05 + (1 - r2()) * 0.12;
+  mctx.beginPath();
+  for (let i = 0; i <= 100; i++) { const x = i / 100, w = band * (x > .8 ? 1 + (x - .8) * 6 : 1); mctx.lineTo(X(x), Y(poly(coef, x) + w)); }
+  for (let i = 100; i >= 0; i--) { const x = i / 100, w = band * (x > .8 ? 1 + (x - .8) * 6 : 1); mctx.lineTo(X(x), Y(poly(coef, x) - w)); }
+  mctx.fillStyle = 'rgba(250,179,30,.08)'; mctx.fill();
+  // curve
+  const grad = mctx.createLinearGradient(0, 0, W, 0); grad.addColorStop(0, L ? '#d18f00' : '#fff3c9'); grad.addColorStop(1, L ? '#9a6500' : '#FAB31E');
+  mctx.lineWidth = 2.5; mctx.strokeStyle = grad; mctx.shadowColor = '#FAB31E'; mctx.shadowBlur = L ? 6 : 14;
+  mctx.beginPath(); for (let i = 0; i <= 80; i++) { const x = i / 100; mctx[i ? 'lineTo' : 'moveTo'](X(x), Y(poly(coef, x))); } mctx.stroke();
+  mctx.setLineDash([6, 6]); mctx.beginPath(); for (let i = 80; i <= 100; i++) { const x = i / 100; mctx[i > 80 ? 'lineTo' : 'moveTo'](X(x), Y(poly(coef, x))); } mctx.stroke();
+  mctx.setLineDash([]); mctx.shadowBlur = 0;
+  // points
+  pts.forEach((p, i) => {
+    const age = clamp((t - p.born) / 500, 0, 1), s = age < 1 ? 1 + Math.sin(age * Math.PI) * 1.4 : 1;
+    const wob = Math.sin(t * 0.002 + i) * 1.2;
+    const err = Math.abs(p.y - poly(coef, p.x));
+    mctx.strokeStyle = `rgba(${ink},.14)`; mctx.beginPath(); mctx.moveTo(X(p.x), Y(p.y) + wob); mctx.lineTo(X(p.x), Y(poly(coef, p.x))); mctx.stroke();
+    mctx.fillStyle = err < band ? (L ? '#121211' : '#f5f5f3') : (L ? '#e2531f' : '#ff8a5c');
+    mctx.beginPath(); mctx.arc(X(p.x), Y(p.y) + wob, 4 * s * (age || 0.01), 0, 7); mctx.fill();
+  });
+  // hover probe
+  if (hoverX !== null) {
+    const x = clamp((hoverX * W - pad) / (W - pad * 2), 0, 1), y = poly(coef, x);
+    mctx.strokeStyle = 'rgba(250,179,30,.5)'; mctx.beginPath(); mctx.moveTo(X(x), pad); mctx.lineTo(X(x), H - pad); mctx.stroke();
+    mctx.fillStyle = '#FAB31E'; mctx.beginPath(); mctx.arc(X(x), Y(y), 6, 0, 7); mctx.fill();
+    const label = (x > .8 ? 'napoved ' : 'model ') + (y * 100).toFixed(1);
+    mctx.font = '600 11px JetBrains Mono'; const tw = mctx.measureText(label).width + 16, lx = Math.min(X(x) + 10, W - tw - 4);
+    mctx.fillStyle = L ? 'rgba(18,18,17,.92)' : 'rgba(0,0,0,.8)'; mctx.fillRect(lx, Y(y) - 30, tw, 22); mctx.fillStyle = '#FAB31E'; mctx.fillText(label, lx + 8, Y(y) - 15);
+  }
+  $('#mlEpoch').textContent = 'EPOHA ' + epoch;
+  $('#mlR2').textContent = r2().toFixed(3);
+  $('#mlN').textContent = pts.length;
+  $('#mlPred').textContent = (poly(coef, 1) * 100).toFixed(1);
+}
+genData();
+
+/* ============ THREE.js particle morph world ============ */
+const canvas = $('#gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+camera.position.set(0, 0, 9);
+const N = innerWidth < 700 ? 6000 : 14000;
+const shapes = [0, 1, 2, 3, 4, 5].map(() => new Float32Array(N * 3));
+const rnd = new Float32Array(N);
+const rand = (a = 1) => (Math.random() * 2 - 1) * a;
+function sph(r, out, i, cx = 0, cy = 0, cz = 0, shell = true) {
+  const u = Math.random(), v = Math.random(), th = u * Math.PI * 2, ph = Math.acos(2 * v - 1), rr = shell ? r * (0.92 + Math.random() * 0.08) : r * Math.cbrt(Math.random());
+  out[i * 3] = cx + rr * Math.sin(ph) * Math.cos(th); out[i * 3 + 1] = cy + rr * Math.sin(ph) * Math.sin(th); out[i * 3 + 2] = cz + rr * Math.cos(ph);
+}
+for (let i = 0; i < N; i++) {
+  rnd[i] = Math.random();
+  // 0: neural brain sphere (fibonacci + jitter)
+  { const k = i + .5, ph = Math.acos(1 - 2 * k / N), th = Math.PI * (1 + Math.sqrt(5)) * k, r = 2.4 + Math.sin(ph * 6 + th * 3) * 0.12;
+    shapes[0].set([r * Math.cos(th) * Math.sin(ph), r * Math.sin(th) * Math.sin(ph), r * Math.cos(ph)], i * 3); }
+  // 1: central agent + 4 specialised satellites + links
+  { const q = i / N;
+    if (q < .38) sph(1.15, shapes[1], i);
+    else if (q < .78) { const s = Math.floor((q - .38) / .1), a = s * Math.PI / 2 + .6; sph(.48, shapes[1], i, Math.cos(a) * 3, Math.sin(a * 2) * .5, Math.sin(a) * 3); }
+    else { const s = i % 4, a = s * Math.PI / 2 + .6, t = Math.random(); shapes[1].set([Math.cos(a) * 3 * t + rand(.03), Math.sin(a * 2) * .5 * t + rand(.03), Math.sin(a) * 3 * t + rand(.03)], i * 3); } }
+  // 2: ML loss landscape surface
+  { const gx = rand(4), gz = rand(3); const y = Math.sin(gx * 1.3) * Math.cos(gz * 1.5) * .7 + Math.exp(-((gx - 1) ** 2 + gz ** 2)) * -1.2;
+    shapes[2].set([gx, y - .2, gz], i * 3); }
+  // 3: data center – double helix + data rings
+  { const q = i / N;
+    if (q < .6) { const t = rand(1) * Math.PI * 3, strand = i % 2 ? Math.PI : 0; shapes[3].set([Math.cos(t + strand) * 1.4 + rand(.05), t * .45, Math.sin(t + strand) * 1.4 + rand(.05)], i * 3); }
+    else if (q < .75) { const t = rand(1) * Math.PI * 3, k = Math.random(); const step = Math.round(t / .5) * .5; shapes[3].set([lerp(Math.cos(step) * 1.4, Math.cos(step + Math.PI) * 1.4, k), step * .45, lerp(Math.sin(step) * 1.4, Math.sin(step + Math.PI) * 1.4, k)], i * 3); }
+    else { const a = Math.random() * Math.PI * 2, r = 2.6 + rand(.08) + Math.floor(Math.random() * 3) * .5; shapes[3].set([Math.cos(a) * r, rand(.05) + (Math.floor(Math.random() * 3) - 1) * 1.6, Math.sin(a) * r], i * 3); } }
+  // 4: galaxy spiral (value)
+  { const arm = i % 4, d = Math.pow(Math.random(), .6) * 4.2, a = arm * Math.PI / 2 + d * 1.1 + rand(.25);
+    shapes[4].set([Math.cos(a) * d, rand(.15) * (1 - d / 5), Math.sin(a) * d], i * 3); }
+  // 5: logo diamonds (three rhombi like LANCom mark)
+  { const which = i % 3, cx = (which - 1) * 2.2, sz = which === 1 ? 1.3 : .8, u = rand(1), v = rand(1);
+    const rx = (u + v) / 2 * sz, ry = (u - v) / 2 * sz * 1.1; shapes[5].set([cx + rx, ry + (which === 1 ? .3 : 0), rand(.15)], i * 3); }
+}
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(shapes[0].slice(), 3));
+shapes.forEach((s, k) => geo.setAttribute('aS' + k, new THREE.BufferAttribute(s, 3)));
+geo.setAttribute('aRand', new THREE.BufferAttribute(rnd, 1));
+const uniforms = {
+  uTime: { value: 0 }, uMorph: { value: 0 }, uMouse: { value: new THREE.Vector3(99, 99, 0) }, uHover: { value: 0 },
+  uShock: { value: new THREE.Vector3(0, 0, -10) }, uPx: { value: renderer.getPixelRatio() }, uVel: { value: 0 }, uIntro: { value: 0 }, uLight: { value: isLight() ? 1 : 0 }
+};
+const mat = new THREE.ShaderMaterial({
+  uniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  vertexShader: `
+    attribute vec3 aS0,aS1,aS2,aS3,aS4,aS5; attribute float aRand;
+    uniform float uTime,uMorph,uHover,uPx,uVel,uIntro; uniform vec3 uMouse,uShock;
+    varying float vGlow; varying float vRand;
+    vec3 pick(float m){
+      vec3 p=aS0;
+      p=mix(p,aS1,smoothstep(0.,1.,clamp(m,0.,1.)));
+      p=mix(p,aS2,smoothstep(0.,1.,clamp(m-1.,0.,1.)));
+      p=mix(p,aS3,smoothstep(0.,1.,clamp(m-2.,0.,1.)));
+      p=mix(p,aS4,smoothstep(0.,1.,clamp(m-3.,0.,1.)));
+      p=mix(p,aS5,smoothstep(0.,1.,clamp(m-4.,0.,1.)));
+      return p;
+    }
+    void main(){
+      // per-particle delay makes morphs ripple instead of snapping
+      vec3 p = pick(uMorph + (aRand-.5)*.25*sin(fract(uMorph)*3.1416));
+      p += vec3(sin(uTime*.7+aRand*40.),cos(uTime*.6+aRand*30.),sin(uTime*.5+aRand*20.))*.035;
+      p *= mix(4.,1.,uIntro);
+      vec4 wp = modelMatrix*vec4(p,1.);
+      vec3 d = wp.xyz-uMouse; float dl=length(d);
+      float f = smoothstep(1.6,0.,dl)*uHover;
+      wp.xyz += normalize(d+1e-4)*f*.9 + vec3(0,0,f*.6);
+      float st = uTime-uShock.z; vec3 sd = wp.xyz-vec3(uShock.xy,0.); float sl=length(sd.xy);
+      float ring = exp(-pow(sl-st*5.,2.)*3.)*exp(-st*1.4)*step(0.,st);
+      wp.xyz += normalize(sd+1e-4)*ring*.8; wp.z += ring*.6;
+      wp.y += uVel*aRand*.02;
+      vec4 mv = viewMatrix*wp;
+      gl_Position = projectionMatrix*mv;
+      vGlow = clamp(f+ring,0.,1.); vRand=aRand;
+      gl_PointSize = uPx*(1.4+aRand*2.4+vGlow*5.)*(9./-mv.z);
+    }`,
+  fragmentShader: `
+    uniform float uLight;
+    varying float vGlow; varying float vRand;
+    void main(){
+      float d=length(gl_PointCoord-.5); if(d>.5) discard;
+      float a=smoothstep(.5,0.,d);
+      vec3 base=mix(vec3(.92,.92,.9),vec3(.09,.09,.08),uLight);
+      vec3 gold=mix(vec3(.98,.70,.12),vec3(.85,.55,.0),uLight);
+      vec3 col=mix(base,gold,clamp(step(.82,vRand)*.9+vGlow,0.,1.));
+      float alpha=a*(.32+vGlow*.6+step(.82,vRand)*.25);
+      gl_FragColor=vec4(col,alpha*mix(1.,1.25,uLight));
+    }`
+});
+const points = new THREE.Points(geo, mat);
+const holder = new THREE.Group(); holder.add(points); scene.add(holder);
+
+// faint wireframe shell / orbit rings
+const ringMat = new THREE.LineBasicMaterial({ color: 0xFAB31E, transparent: true, opacity: .12 });
+const rings = new THREE.Group();
+[3.2, 3.8, 4.6].forEach((r, i) => {
+  const g = new THREE.BufferGeometry().setFromPoints(new THREE.EllipseCurve(0, 0, r, r).getPoints(160));
+  const l = new THREE.LineLoop(g, ringMat); l.rotation.x = Math.PI / 2 + (i - 1) * .35; l.rotation.y = i * .4; rings.add(l);
+});
+holder.add(rings);
+// ambient dust
+const dustG = new THREE.BufferGeometry(); const dN = 900, dp = new Float32Array(dN * 3);
+for (let i = 0; i < dN; i++) dp.set([rand(14), rand(9), rand(6) - 3], i * 3);
+dustG.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+const dust = new THREE.Points(dustG, new THREE.PointsMaterial({ size: .025, color: 0xffffff, transparent: true, opacity: .35, depthWrite: false }));
+scene.add(dust);
+
+const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), hit = new THREE.Vector3();
+function screenToWorld(x, y) {
+  ray.setFromCamera(new THREE.Vector2(x / innerWidth * 2 - 1, -(y / innerHeight) * 2 + 1), camera);
+  return ray.ray.intersectPlane(plane, hit) ? hit.clone() : new THREE.Vector3();
+}
+function glShock(x, y) { const w = screenToWorld(x, y); uniforms.uShock.value.set(w.x, w.y, uniforms.uTime.value); }
+
+// map scroll -> morph + x offset using section centres
+const morphSecs = $$('[data-morph]');
+let morph = 0, posX = 1.9;
+function scrollTargets() {
+  const mid = innerHeight / 2, mobile = innerWidth < 900;
+  const c = morphSecs.map(s => { const r = s.getBoundingClientRect(); return { c: r.top + Math.min(r.height, innerHeight) / 2, m: +s.dataset.morph, x: mobile ? 0 : +s.dataset.x }; });
+  if (mid <= c[0].c) return c[0];
+  for (let i = 0; i < c.length - 1; i++) if (mid >= c[i].c && mid <= c[i + 1].c) {
+    const k = (mid - c[i].c) / (c[i + 1].c - c[i].c);
+    return { m: lerp(c[i].m, c[i + 1].m, k), x: lerp(c[i].x, c[i + 1].x, k) };
+  }
+  return c[c.length - 1];
+}
+// shift particles in the pinned section along with progress
+let rotY = 0, rotX = 0, hover = 0;
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth / innerHeight; camera.position.z = innerWidth < 700 ? 13 : 9; camera.updateProjectionMatrix();
+  sizeML(); measureMarquees();
+}
+addEventListener('resize', () => { resize(); ScrollTrigger.refresh(); });
+resize();
+
+const clock = new THREE.Clock();
+function render(t) {
+  const dt = Math.min(clock.getDelta(), .05);
+  uniforms.uTime.value += dt;
+  const tg = scrollTargets();
+  morph = lerp(morph, tg.m, .06); posX = lerp(posX, tg.x, .05);
+  uniforms.uMorph.value = morph;
+  const v = lenis.velocity || 0; uniforms.uVel.value = lerp(uniforms.uVel.value, v, .1);
+  // mouse in world
+  hover = lerp(hover, mouse.active ? 1 : 0, .05); uniforms.uHover.value = hover;
+  mouse.sx = lerp(mouse.sx, mouse.x, .2); mouse.sy = lerp(mouse.sy, mouse.y, .2);
+  uniforms.uMouse.value.copy(screenToWorld(mouse.sx, mouse.sy));
+  // rotation: idle spin + mouse parallax + scroll
+  rotY += dt * .08 + v * .0015;
+  rotX = lerp(rotX, mouse.ny * .35, .04);
+  holder.rotation.y = rotY + mouse.nx * .45;
+  holder.rotation.x = rotX + Math.max(0, 1 - Math.abs(morph - 2)) * .45;
+  holder.position.x = posX;
+  holder.position.y = Math.sin(uniforms.uTime.value * .5) * .08;
+  rings.rotation.z += dt * .1; ringMat.opacity = .12 * (1 - clamp(Math.abs(morph - 1) , 0, 1)) + .04;
+  dust.rotation.y += dt * .01; dust.position.y = -(lenis.scroll || 0) * .0008;
+  camera.position.x = lerp(camera.position.x, mouse.nx * .5, .03); camera.position.y = lerp(camera.position.y, mouse.ny * .3, .03); camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+
+  stepRepel(); stepCursor(); stepMarquee(); stepOrbit(t); stepML(t);
+}
+
+/* ============ theme toggle ============ */
+function applyGLTheme() {
+  const L = isLight();
+  mat.blending = L ? THREE.NormalBlending : THREE.AdditiveBlending; mat.needsUpdate = true;
+  dust.material.color.set(L ? 0x121211 : 0xffffff); dust.material.opacity = L ? .25 : .35;
+  ringMat.color.set(L ? 0xb87a00 : 0xFAB31E);
+  uniforms.uLight.value = L ? 1 : 0;
+}
+applyGLTheme();
+const toggle = $('#themeToggle');
+toggle.addEventListener('click', e => {
+  const next = isLight() ? 'dark' : 'light';
+  const swap = () => { document.documentElement.dataset.theme = next; try { localStorage.setItem('lc-theme', next); } catch (_) {} applyGLTheme(); };
+  if (!document.startViewTransition || reduced) { swap(); return; }
+  const x = e.clientX, y = e.clientY, r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  document.startViewTransition(swap).ready.then(() => {
+    document.documentElement.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+      { duration: 900, easing: 'cubic-bezier(.7,0,.2,1)', pseudoElement: '::view-transition-new(root)' });
+  });
+  glShock(x, y);
+});
+
+/* ============ intro ============ */
+const lc = $('#lc'); const prog0 = { v: 0 };
+gsap.to(prog0, { v: 100, duration: reduced ? .2 : 1.4, ease: 'power2.inOut', onUpdate: () => lc.textContent = String(Math.round(prog0.v)).padStart(3, '0'),
+  onComplete: () => {
+    gsap.to('#loader', { yPercent: -100, duration: 1, ease: 'expo.inOut', onComplete: () => $('#loader').remove() });
+    gsap.to(uniforms.uIntro, { value: 1, duration: 2.6, ease: 'expo.out', delay: .3 });
+    gsap.from('.hero h1 .w', { yPercent: 120, rotate: 10, opacity: 0, duration: 1.4, stagger: .12, ease: 'expo.out', delay: .5 });
+    gsap.from('.hero .ww', { opacity: 0, filter: 'blur(8px)', duration: 1, stagger: .03, delay: .9 });
+    scramble($('.hero .eyebrow'));
+  } });
+uniforms.uIntro.value = 0;
+gsap.ticker.add(() => render(performance.now()));
+</script>
+</body>
+</html>

@@ -5,6 +5,9 @@ const VARUH_REPORTS_URL =
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: process.cwd(),
+  async rewrites() {
+    return [{ source: "/lancom", destination: "/lancom/index.html" }];
+  },
   async redirects() {
     return [
       {
