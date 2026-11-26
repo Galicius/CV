@@ -22,7 +22,7 @@ const TICK_MS = 100;
 const RESULT_SHOWN_MS = 1200;
 
 /**
- * The theme switch on /new/1. Going dark is instant; going light from dark
+ * The theme switch on /. Going dark is instant; going light from dark
  * drops a C4 charge under the switch. Cut both wires within five seconds and
  * the page stays dark. Let the timer run out and the lights come on.
  * Escape or a press outside walks away from it, which also stays dark.

@@ -10,11 +10,11 @@ const description =
 export const metadata: Metadata = {
   title: "Gal Guštin",
   description,
-  alternates: { canonical: "/new" },
-  openGraph: { title: "Gal Guštin", description, type: "profile", url: "/new" },
+  alternates: { canonical: "/" },
+  openGraph: { title: "Gal Guštin", description, type: "profile", url: "/" },
   twitter: { card: "summary_large_image", title: "Gal Guštin", description },
 };
 
-export default function NewLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function PortfolioLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <div className={`mn ${host.variable}`}>{children}</div>;
 }

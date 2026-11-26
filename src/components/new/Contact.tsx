@@ -25,7 +25,7 @@ export function Contact() {
         <a href={profile.cv} download>
           CV (PDF)
         </a>
-        <Link href="/">Classic CV</Link>
+        <Link href="/new/1">Classic CV</Link>
       </p>
 
       {/* Nothing is sent from here: a valid draft opens in the visitor's email app. */}

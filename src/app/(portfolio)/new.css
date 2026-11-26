@@ -1,4 +1,4 @@
-/* /new portfolio. Scoped to .mn so the classic CV at / is untouched. */
+/* Portfolio at / and /new. Scoped to .mn so the classic CV at /new/1 is untouched. */
 
 :root:has(.mn) {
   --paper: light-dark(#ffffff, #000000);

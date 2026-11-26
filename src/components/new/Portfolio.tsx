@@ -21,7 +21,7 @@ function Section({ id, title, wide = false, children }: { id: string; title: str
   );
 }
 
-/** The /new page. `particles` swaps the floating screenshot for the particle stage (shown at /new/1). */
+/** The /new page. `particles` swaps the floating screenshot for the particle stage (shown at /). */
 export function Portfolio({ particles = false }: { particles?: boolean }) {
   return (
     <>

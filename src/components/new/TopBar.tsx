@@ -18,7 +18,7 @@ const NAV = [
   { href: "#contact", label: "Contact" },
 ];
 
-/** `bomb`: going from dark to light first means defusing a C4 charge (shown at /new/1). */
+/** `bomb`: going from dark to light first means defusing a C4 charge (shown at /). */
 export function TopBar({ bomb = false }: { bomb?: boolean }) {
   const [theme, setTheme] = useState<Theme | null>(null);
 
